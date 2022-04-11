@@ -28,9 +28,6 @@ const request = require("request");
 const ms = require("parse-ms");
 const { Sticker, createSticker, StickerTypes } = require('wa-sticker-formatter');
 
-// Exif
-const Exif = require("../lib/exif")
-const exif = new Exif()
 
 // DB Game
 let tictactoe = [];
@@ -356,7 +353,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 				if (isImage || isQuotedImage) {
 				var stream = await downloadContentFromMessage(msg.message.imageMessage || msg.message.extendedTextMessage?.contextInfo.quotedMessage.imageMessage, 'image')
-                var media = await downloadAndSaveMediaMessage('image', 'stiker.jpg')
+                var media = await downloadAndSaveMediaMessage('image',"./media/"+sender+".jpg")
                 let stc = new Sticker(media, {
       pack: `Sticker Request by\n${pushname}`, // The pack name
       author: `Create by ユウキ||Yuuki Bot\nBot Create by @Rafly¹¹~\n01-12-2020`, // The author name
@@ -554,13 +551,6 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				}).catch(() => reply(mess.error.api))
 			    break
 			// Owner Menu
-			case prefix+'exif':
-			    if (!isOwner) return reply(mess.OnlyOwner)
-			    var namaPack = q.split('|')[0] ? q.split('|')[0] : q
-                var authorPack = q.split('|')[1] ? q.split('|')[1] : ''
-                exif.create(namaPack, authorPack)
-				reply(`Sukses membuat exif`)
-				break
 			case prefix+'leave':
 			    if (!isOwner) return reply(mess.OnlyOwner)
 				if (!isGroup) return reply(mess.OnlyGrup)
