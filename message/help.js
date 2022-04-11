@@ -24,19 +24,19 @@ exports.allmenu = (sender, prefix, pushname, isOwner, isPremium, balance, limit,
 	
   _*${ucapanWaktu} ${pushname !== undefined ? pushname : 'Kak'}*_
 
-    Library : *Baileys-MD*.
     Prefix : ( ${prefix} )
     Tanggal Server : ${moment.tz('Asia/Jakarta').format('DD/MM/YY')}
     Waktu Server : ${moment.tz('Asia/Jakarta').format('HH:mm:ss')}
 
-	Status : ${isOwner ? 'Owner' : isPremium ? 'Premium' : 'Free'}
-	Limit Harian : ${isOwner ? '-' : isPremium ? 'Unlimited' : getLimit(sender, limitCount, limit)}
-	Limit Game : ${isOwner ? '-' : cekGLimit(sender, gcount, glimit)}
-	Balance : $${toCommas(getBalance(sender, balance))}`
+  	Status : ${isOwner ? 'Owner' : isPremium ? 'Premium' : 'Free'}
+  	Limit Harian : ${isOwner ? '-' : isPremium ? 'Unlimited' : getLimit(sender, limitCount, limit)}
+  	Limit Game : ${isOwner ? '-' : cekGLimit(sender, gcount, glimit)}
+  	Balance : $${toCommas(getBalance(sender, balance))}\n${readmore}`
 
 +`
 ┏━━━⊱ ⸨ *GENERAL* ⸩
 ┣──────────────────⊱
+┣➥ ${prefix}profile
 ┣➥ ${prefix}owner
 ┣➥ ${prefix}donate
 ┣➥ ${prefix}speed
@@ -67,7 +67,7 @@ exports.allmenu = (sender, prefix, pushname, isOwner, isPremium, balance, limit,
 ┣──────────────────⊱
 ┣➥ ${prefix}lirik
 ┣➥ ${prefix}ytsearch
-┣➥ ${prefix}
+┣➥ ${prefix}pinterest
 ┣➥ ${prefix}
 ┣➥ ${prefix}
 ┗──────────────────⊱

@@ -323,15 +323,6 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			      sendContact(from, x.split('@s.whatsapp.net')[0], 'Owner', msg)
 			    }
 			    break
-			case prefix+'cekprem':
-            case prefix+'cekpremium':
-                if (!isPremium) return reply(`Kamu bukan user premium, kirim perintah *${prefix}daftarprem* untuk membeli premium`)
-                if (isOwner) return reply(`Lu owner bego!`)
-                if (_prem.getPremiumExpired(sender, premium) == "PERMANENT") return reply(`PERMANENT`)
-                let cekvip = ms(_prem.getPremiumExpired(sender, premium) - Date.now())
-                let premiumnya = `*Expire :* ${cekvip.days} day(s) ${cekvip.hours} hour(s) ${cekvip.minutes} minute(s)`
-                reply(premiumnya)
-                break
             case prefix+'listprem':
                 let txt = `List Prem\nJumlah : ${premium.length}\n\n`
                 let men = [];
@@ -381,36 +372,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
     const stikk = await sticker.toBuffer() 
     conn.sendMessage(from, {sticker: stikk}, {quoted: msg})
 	   }
-	   break
-			/*case prefix+'toimg': case prefix+'toimage':
-			case prefix+'tovid': case prefix+'tovideo':
-			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
-			    if (!isQuotedSticker) return reply(`Reply stikernya!`)
-			    var stream = await downloadContentFromMessage(msg.message.extendedTextMessage?.contextInfo.quotedMessage.stickerMessage, 'sticker')
-			    var buffer = Buffer.from([])
-			    for await(const chunk of stream) {
-			       buffer = Buffer.concat([buffer, chunk])
-			    }
-			    var rand1 = 'sticker/'+getRandom('.webp')
-			    var rand2 = 'sticker/'+getRandom('.png')
-			    fs.writeFileSync(`./${rand1}`, buffer)
-			    if (isQuotedSticker && msg.message.extendedTextMessage.contextInfo.quotedMessage.stickerMessage.isAnimated !== true) {
-			    exec(`ffmpeg -i ./${rand1} ./${rand2}`, (err) => {
-			      fs.unlinkSync(`./${rand1}`)
-			      if (err) return reply(mess.error.api)
-			      conn.sendMessage(from, { image: { url: `./${rand2}` }}, { quoted: msg })
-			      limitAdd(sender, limit)
-				  fs.unlinkSync(`./${rand2}`)
-			    })
-			    } else {
-			    reply(mess.wait)
-		          webp2mp4File(`./${rand1}`).then( data => {
-			       fs.unlinkSync(`./${rand1}`)
-			       conn.sendMessage(from, { video: { url: data.result }}, { quoted: msg })
-			       limitAdd(sender, limit)
-				  })
-			    }
-			    break*/
+        break;
 	        // Downloader Menu
 			case prefix+'tiktok':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
@@ -483,7 +445,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			      limitAdd(sender, limit)
 				}).catch(() => reply(mess.error.api))
 			    break
-			case prefix+'getvideo': case prefix+'getvidio':
+			case prefix+'video': case prefix+'vidio':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			    if (!isQuotedImage) return reply(`Balas hasil pencarian dari ${prefix}ytsearch dengan teks ${command} <no urutan>`)
 				if (!quotedMsg.fromMe) return reply(`Hanya bisa mengambil hasil dari pesan bot`)
@@ -501,7 +463,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			       limitAdd(sender, limit)
 				}).catch(() => reply(mess.error.api))
 		        break
-			case prefix+'getmusik': case prefix+'getmusic':
+			case prefix+'musik': case prefix+'music':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			    if (!isQuotedImage) return reply(`Balas hasil pencarian dari ${prefix}ytsearch dengan teks ${command} <no urutan>`)
 				if (!quotedMsg.fromMe) return reply(`Hanya bisa mengambil hasil dari pesan bot`)
@@ -934,6 +896,22 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                     textImg(`Limit : ${isPremium ? 'Unlimited' : limitPrib}\nLimit Game : ${cekGLimit(sender, gcount, glimit)}/${gcount}\nBalance : $${getBalance(sender, balance)}\n\nKamu dapat membeli limit dengan ${prefix}buylimit dan ${prefix}buyglimit untuk membeli game limit`)
                 }
 				break
+
+			//PROFILE
+
+			case prefix+'profile':
+            case prefix+'me':
+                if (_prem.getPremiumExpired(sender, premium) == "PERMANENT") return reply(`PERMANENT`)
+                let cekvip = ms(_prem.getPremiumExpired(sender, premium) - Date.now())
+				let premiumnya = `*Expire :* ${cekvip.days} day(s) ${cekvip.hours} hour(s) ${cekvip.minutes} minute(s)`
+				let header = `❒ *「 Profile User 」* ❒\n`
+				let type = `*Type* : ${isOwner ? 'Owner' : isPremium ? 'Premium' : 'Free'}`
+				let limith = `*Limit :* ${isOwner ? '∞' : isPremium ? 'Unlimited' : getLimit(sender, limitCount, limit)}`
+                let limitg = `*Game Limit :* ${isOwner ? '∞' : cekGLimit(sender, gcount, glimit)}`
+				let expired = `*Expired :* ${isOwner ? '∞' : premiumnya}`
+				var profile = `${header}\n${type}\n${limith}\n${limitg}\n${expired}\n`
+				reply(profile)
+                break
 			default:
 			if (!isGroup && isCmd) {
 				reply(`Command belum tersedia, coba beberapa hari kedepan yaa! _^`)
