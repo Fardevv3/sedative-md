@@ -975,8 +975,8 @@
             "_chains": {
               "Ba9vmSrWrVoPJXc3ChAH8uawBLgo1miIDEEP9Zy3bDh+": {
                 "chainKey": {
-                  "counter": 0,
-                  "key": "FUXAsI/eyWSOOvkAR/4h59thSOqe6L56Y7AFTDKdWew="
+                  "counter": 1,
+                  "key": "tMCv+fJdfxigowm+GHDmqt/rsbuVrLLLiy7AytiLV6A="
                 },
                 "chainType": 2,
                 "messageKeys": {}
