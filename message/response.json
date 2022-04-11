@@ -1,0 +1,13 @@
+{
+  "wait": "*_LOADING..._*",
+  "error": {
+    "Iv": "*_INVALID URL_*",
+    "api": "*_ERROR_*"
+  },
+  "OnlyGrup": "*_GROUP ONLY_* ฅ^•ﻌ•^ฅ",
+  "OnlyPM": "*_PERSONAL CHAT ONLY_* (☞ ಠ_ಠ)☞",
+  "GrupAdmin": "*_GROUP ADMIN ONLY_* ミ●﹏☉ミ",
+  "BotAdmin": "*_MAKE BOT ADMIN_* ಥ‿ಥ",
+  "OnlyOwner": "*_THIS CMD FOR MY MASTER ONYLY_* (┛◉Д◉)┛彡┻━┻",
+  "OnlyPrem": "*_FOR PREMIUM USER_* ( ͡°ᴥ ͡° ʋ)"
+}
