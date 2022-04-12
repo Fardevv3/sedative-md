@@ -48,7 +48,7 @@ exports.allmenu = (sender, prefix, pushname, isOwner, isPremium, balance, limit,
 ┣──────────────────⊱
 ┣➥ ${prefix}sticker
 ┣➥ ${prefix}toimg
-┣➥ ${prefix}tovid
+┣➥ ${prefix}
 ┣➥ ${prefix}
 ┣➥ ${prefix}
 ┗──────────────────⊱

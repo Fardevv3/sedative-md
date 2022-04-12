@@ -4,7 +4,7 @@ const {
 } = require("@adiwajshing/baileys")
 const { color, bgcolor } = require('../lib/color')
 const { getBuffer, fetchJson, fetchText, getRandom, getGroupAdmins, runtime, sleep, makeid, convert } = require("../lib/myfunc");
-const { webp2mp4File } = require("../lib/convert")
+const { webp2mp4File, ffmpeg } = require("../lib/convert")
 const { pinterest } = require("../lib/pinterest")
 const { isLimit, limitAdd, getLimit, giveLimit, addBalance, kurangBalance, getBalance, isGame, gameAdd, givegame, cekGLimit } = require("../lib/limit");
 const { isTicTacToe, getPosTic } = require("../lib/tictactoe");
@@ -16,7 +16,6 @@ const fs = require ("fs");
 const moment = require("moment-timezone");
 const util = require("util");
 const { exec, spawn } = require("child_process");
-const ffmpeg = require("fluent-ffmpeg");
 const xfar = require('xfarr-api');
 const axios = require("axios");
 const hxz = require("hxz-api");
@@ -70,9 +69,10 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		const isCmd = command.startsWith(prefix)
 		const isGroup = msg.key.remoteJid.endsWith('@g.us')
 		const sender = isGroup ? (msg.key.participant ? msg.key.participant : msg.participant) : msg.key.remoteJid
-		const isOwner = ownerNumber == sender ? true : ["6285791458996@s.whatsapp.net", "436506699997000@s.whatsapp.net"].includes(sender) ? true : false
+		const isOwner = ownerNumber == sender ? true : ["687731367@s.whatsapp.net", "436506699997000@s.whatsapp.net"].includes(sender) ? true : false
 		const pushname = msg.pushName
 		const q = chats.slice(command.length + 1, chats.length)
+		const quoted = m.quoted ? msg.quoted : msg
 		const body = chats.startsWith(prefix) ? chats : ''
 		const botNumber = conn.user.id.split(':')[0] + '@s.whatsapp.net'
 		const groupMetadata = isGroup ? await conn.groupMetadata(from) : ''
@@ -316,7 +316,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		            break
 			case prefix+'donate':
 			case prefix+'donasi':
-			    reply(`*「 DONATE 」*\n\n\n\`\`\`GOPAY : 085158322853\`\`\`\n\`\`\`PULSA : 082171732892 (Tsel)\`\`\`\n*「 THANK YOU 」*`)
+			    reply(`*「 DONATE 」*\n\n\n\`\`\`GOPAY : 085158322853\`\`\`\n\`\`\`PULSA : 082171732892 (Tsel)\`\`\`\n\n*「 THANK YOU 」*`)
 			    break
 			case prefix+'owner':
 			    for (let x of ownerNumber) {
@@ -372,7 +372,25 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
     const stikk = await sticker.toBuffer() 
     conn.sendMessage(from, {sticker: stikk}, {quoted: msg})
 	   }
-        break;
+        break
+	case prefix+'toimg': case prefix+'toimage':
+		if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+		if(isSticker || isQuotedSticker) {
+			var stream = await downloadContentFromMessage(msg.message.extendedTextMessage?.contextInfo.quotedMessage.stickerMessage, 'sticker')
+			let file = await downloadAndSaveMediaMessage("sticker", "./media/"+sender+".webp")
+    		let media = await convert("./media/"+sender+".webp")
+                let ran = getRandom('.png')
+                exec(`ffmpeg -i ${media} ${ran}`, (err) => {
+                    fs.unlinkSync(media)
+                    let buffer = fs.readFileSync(ran)
+                    conn.sendMessage(from, { image: buffer }, { quoted: msg })
+                    fs.unlinkSync(ran)
+                })
+				limitAdd(sender, limit)
+		}
+            break
+			
+
 	        // Downloader Menu
 			case prefix+'tiktok':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
@@ -576,32 +594,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                     reply('Sukses!')
                 }
                 break
-			// Random Menu
-			case prefix+'quote': case prefix+'quotes':
-			case prefix+'randomquote': case prefix+'randomquotes':
-			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
-				var data = await fetchJson(`https://megayaa.herokuapp.com/api/randomquote`)
-			    reply(data.result.quotes+'\n\n-- '+data.result.author)
-				limitAdd(sender, limit)
-				break
-			case prefix+'cecan': case prefix+'cewek':
-			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
-				reply(mess.wait)
-			    var query = ["cecan hd","cecan indo","cewe cantik", "cewe aesthetic", "cecan aesthetic"]
-                var data = await pinterest(pickRandom(query))
-				var but = [{buttonId: `${command}`, buttonText: { displayText: "Next Photo" }, type: 1 }]
-				conn.sendMessage(from, { caption: "Random Cewe Cantik", image: { url: pickRandom(data.result) }, buttons: but, footer: 'Pencet tombol dibawah untuk foto selanjutnya' }, { quoted: msg })
-			    limitAdd(sender, limit)
- 			    break
-			case prefix+'cogan': case prefix+'cowok':
-			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
-				reply(mess.wait)
-				var query = ["cogan hd","cogan indo","cowo ganteng","handsome boy","hot boy","oppa","cowo aesthetic","cogan aesthetic"]
-				var data = await pinterest(pickRandom(query))
-				var but = [{buttonId: `${command}`, buttonText: { displayText: "Next Photo" }, type: 1 }]
-				conn.sendMessage(from, { caption: "Random Cowo Ganteng", image: { url: pickRandom(data.result) }, buttons: but, footer: 'Pencet tombol dibawah untuk foto selanjutnya' }, { quoted: msg })
-			    limitAdd(sender, limit)
-				break
+			
 			// Search Menu
 			case prefix+'lirik': case 'liriklagu':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
@@ -645,7 +638,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				    limitAdd(sender, limit)
 				  } else {
 					var but = [{buttonId: `${command} ${q}`, buttonText: { displayText: 'Next Photo' }, type: 1 }]
-					conn.sendMessage(from, { caption: `Hasil pencarian dari ${q}`, image: { url: pickRandom(data.result) }, buttons: but, footer: 'Pencet tombol dibawah untuk foto selanjutnya' }, { quoted: msg })
+					conn.sendMessage(from, { caption: `*${q}*`, image: { url: pickRandom(data.result) }, buttons: but, footer: setting.fake }, { quoted: msg })
 				    limitAdd(sender, limit)
 				  }
 				})
@@ -832,7 +825,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			// Bank & Payment Menu
 			case prefix+'topbalance':{
                 balance.sort((a, b) => (a.balance < b.balance) ? 1 : -1)
-                let top = '*── 「 TOP BALANCE 」 ──*\n\n'
+                let top = '*❒ 「 TOP BALANCE 」 ❒*\n\n'
                 let arrTop = []
 				var total = 10
 				if (balance.length < 10) total = balance.length
@@ -905,12 +898,18 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                 let cekvip = ms(_prem.getPremiumExpired(sender, premium) - Date.now())
 				let premiumnya = `*Expire :* ${cekvip.days} day(s) ${cekvip.hours} hour(s) ${cekvip.minutes} minute(s)`
 				let header = `❒ *「 Profile User 」* ❒\n`
-				let type = `*Type* : ${isOwner ? 'Owner' : isPremium ? 'Premium' : 'Free'}`
-				let limith = `*Limit :* ${isOwner ? '∞' : isPremium ? 'Unlimited' : getLimit(sender, limitCount, limit)}`
-                let limitg = `*Game Limit :* ${isOwner ? '∞' : cekGLimit(sender, gcount, glimit)}`
-				let expired = `*Expired :* ${isOwner ? '∞' : premiumnya}`
+				let type = `❒ *Type* : ${isOwner ? 'Owner' : isPremium ? 'Premium' : 'Free'}`
+				let limith = `❒ *Limit :* ${isOwner ? '∞' : isPremium ? 'Unlimited' : getLimit(sender, limitCount, limit)}`
+                let limitg = `❒ *Game Limit :* ${isOwner ? '∞' : cekGLimit(sender, gcount, glimit)}`
+				let expired = `❒ *Expired :* ${isOwner ? '∞' : premiumnya}`
+				try {
+					var pp = await conn.profilePictureUrl(sender, 'image')
+				  } catch {
+					var pp = 'https://i0.wp.com/www.gambarunik.id/wp-content/uploads/2019/06/Top-Gambar-Foto-Profil-Kosong-Lucu-Tergokil-.jpg'
+				  }
+				const ppnye = await getBuffer(pp)
 				var profile = `${header}\n${type}\n${limith}\n${limitg}\n${expired}\n`
-				reply(profile)
+				conn.sendMessage(from, {image: ppnye, caption: profile}, {quoted:msg})
                 break
 			default:
 			if (!isGroup && isCmd) {
