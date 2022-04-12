@@ -354,7 +354,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
       quality: 75, // The quality of the output file
       background: 'transparent' // The sticker background color (only for full stickers)
       })
-      buffer = await stc.toBuffer()
+      var buffer = await stc.toBuffer()
       conn.sendMessage(from, {sticker: buffer}, {quoted: msg})
 	} else if (isVideo || isQuotedVideo) {
 	if (isQuotedVideo ? msg.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage.seconds > 15 : msg.message.videoMessage.seconds > 15) return textImg('too long duration, max 15 seconds')
