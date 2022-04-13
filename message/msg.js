@@ -4,7 +4,7 @@ const {
 } = require("@adiwajshing/baileys")
 const { color, bgcolor } = require('../lib/color')
 const { getBuffer, fetchJson, fetchText, getRandom, getGroupAdmins, runtime, sleep, makeid, convert } = require("../lib/myfunc");
-const { webp2mp4File, ffmpeg } = require("../lib/convert")
+const { webp2mp4File, ffmpeg, upload } = require("../lib/convert")
 const { pinterest } = require("../lib/pinterest")
 const { isLimit, limitAdd, getLimit, giveLimit, addBalance, kurangBalance, getBalance, isGame, gameAdd, givegame, cekGLimit } = require("../lib/limit");
 const { isTicTacToe, getPosTic } = require("../lib/tictactoe");
@@ -300,6 +300,13 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		}
 
 		switch(command) {
+			
+			case prefix:
+			case 'test':
+				const test = `${ucapanWaktu} ${pushname}`
+				const thumbtest = fs.readFileSync(setting.pathimg) 
+				conn.sendMessage(from, { caption: `${test}`, image: thumbtest, buttons: [{buttonId: `${prefix}help`, buttonText: { displayText: "MENU" }, type: 1 }], footer: setting.fake }, { quoted: msg })
+				break
 			// Main Menu
 			case prefix+'menu':
 			case prefix+'help':
@@ -389,6 +396,14 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				limitAdd(sender, limit)
 		}
             break
+	case prefix+'tourl': case prefix+'imagetourl': case prefix+'imgtourl':
+		if (isImage || isQuotedImage) {
+			var stream = await downloadContentFromMessage(msg.message.imageMessage || msg.message.extendedTextMessage?.contextInfo.quotedMessage.imageMessage, 'image')
+			var media = await downloadAndSaveMediaMessage('image',"./media/"+sender+".jpg")
+			var res = await upload(media)
+			reply(res)
+		}
+			break
 			
 
 	        // Downloader Menu
@@ -402,7 +417,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			      conn.sendMessage(from, {
 				   video: { url: data.medias[0].url },
 				   caption: `${data.title}\n\nKamu bisa mengubahnya menjadi Vidio Tanpa Watermark atau Audio, pencet tombol dibawah untuk mengubahnya!`,
-				   buttons: [{buttonId: `${prefix}tiktoknowm ${args[1]}`, buttonText: { displayText: "Without Watermark" }, type: 1 },
+				   buttons: [{buttonId: `${prefix}tiktoknowm ${args[1]}`, buttonText: { displayText: "Video No-Wm" }, type: 1 },
 					{buttonId: `${prefix}tiktokaudio ${args[1]}`, buttonText: { displayText: "Audio" }, type: 1 }],
 				   footer: setting.fake
 			      }, { quoted: msg })
@@ -431,6 +446,17 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			       limitAdd(sender, limit)
 				}).catch(() => reply(mess.error.api))
 		        break
+					case prefix+'pindl':
+					case prefix+'pinvid':
+					case prefix+'pinterestvid':
+					case prefix+'pinterestvideo':
+						if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+						if (args.length < 2) return reply(`Kirim perintah ${command} link`)
+					var data = await fetchJson(`https://bot25-api.herokuapp.com/downloader/pindl?link=${q}`)
+					const pin = await getBuffer(data.result)
+					await conn.sendMessage(from, { video: pin }, { quoted: msg })
+					limitAdd(sender, limit)
+					break
             case prefix+'play':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
                 if (args.length < 2) return reply(`Kirim perintah ${command} query\nContoh : ${command} monokrom`)
@@ -463,7 +489,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			      limitAdd(sender, limit)
 				}).catch(() => reply(mess.error.api))
 			    break
-			case prefix+'video': case prefix+'vidio':
+			case prefix+'getvideo': case prefix+'getvidio':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			    if (!isQuotedImage) return reply(`Balas hasil pencarian dari ${prefix}ytsearch dengan teks ${command} <no urutan>`)
 				if (!quotedMsg.fromMe) return reply(`Hanya bisa mengambil hasil dari pesan bot`)
@@ -481,7 +507,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			       limitAdd(sender, limit)
 				}).catch(() => reply(mess.error.api))
 		        break
-			case prefix+'musik': case prefix+'music':
+			case prefix+'getmusik': case prefix+'getmusic':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			    if (!isQuotedImage) return reply(`Balas hasil pencarian dari ${prefix}ytsearch dengan teks ${command} <no urutan>`)
 				if (!quotedMsg.fromMe) return reply(`Hanya bisa mengambil hasil dari pesan bot`)
