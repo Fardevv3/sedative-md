@@ -48,9 +48,6 @@ exports.allmenu = (sender, prefix, pushname, isOwner, isPremium, balance, limit,
 ┣──────────────────⊱
 ┣➥ ${prefix}sticker
 ┣➥ ${prefix}toimg
-┣➥ ${prefix}
-┣➥ ${prefix}
-┣➥ ${prefix}
 ┗──────────────────⊱
 
 ┏━━━⊱ ⸨ *DOWNLOADER* ⸩
@@ -59,8 +56,6 @@ exports.allmenu = (sender, prefix, pushname, isOwner, isPremium, balance, limit,
 ┣➥ ${prefix}ytmp3
 ┣➥ ${prefix}ytmp4
 ┣➥ ${prefix}tiktok
-┣➥ ${prefix}video
-┣➥ ${prefix}music
 ┗──────────────────⊱
 
 ┏━━━⊱ ⸨ *SEARCH* ⸩
@@ -68,8 +63,7 @@ exports.allmenu = (sender, prefix, pushname, isOwner, isPremium, balance, limit,
 ┣➥ ${prefix}lirik
 ┣➥ ${prefix}ytsearch
 ┣➥ ${prefix}pinterest
-┣➥ ${prefix}
-┣➥ ${prefix}
+┣➥ ${prefix}pinterestvid
 ┗──────────────────⊱
 
 ┏━━━⊱ ⸨ *GAME* ⸩
@@ -94,7 +88,6 @@ exports.allmenu = (sender, prefix, pushname, isOwner, isPremium, balance, limit,
 ┣➥ ${prefix}group
 ┣➥ ${prefix}revoke
 ┣➥ ${prefix}hidetag
-┗──────────────────⊱
-`+'     \`\`\`Powered by @Rafly11~\`\`\`'
+┗──────────────────⊱`
 +`\n\n`
 }
