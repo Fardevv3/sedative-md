@@ -1,6 +1,6 @@
 # SEDATIVE-MD BOT BY RAFLY
 <p align="center">
-<img src="https://telegra.ph/file/434a4cb9d7e56cf3417b1.jpg" alt="JPEG" width="150" height="200"/>
+<img src="https://telegra.ph/file/c758946b610dd9187fc30.jpg" alt="JPEG" width="150" height="220"/>
 </p>
 <p align="center">
 <a href="#"><img title="sedativemd Bot" src="https://img.shields.io/badge/sedativemd Bot-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge"></a>
