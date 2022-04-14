@@ -149,17 +149,6 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		       return conn.sendMessage(from, { document: doc, mimetype: mime, caption: caption }, options)
 		    }
 		}
-        async function sendPlay(from, query) {
-           var url = await yts(query)
-           url = url.videos[0].url
-           hxz.youtube(url).then(async(data) => {
-             var button = [{ buttonId: `$ytmp3 ${url}`, buttonText: { displayText: `🎵 Audio (${data.size_mp3})` }, type: 1 }, { buttonId: `$ytmp4 ${url}`, buttonText: { displayText: `🎥 Video (${data.size})` }, type: 1 }]
-             conn.sendMessage(from, { caption: `*Title :* ${data.title}\n*Quality :* ${data.quality}\n*Url :* https://youtu.be/${data.id}`, location: { jpegThumbnail: await getBuffer(data.thumb) }, buttons: button, footer: 'Pilih Salah Satu Button Dibawah⬇️', mentions: [sender] })
-           }).catch((e) => {
-             conn.sendMessage(from, { text: mess.error.api }, { quoted: msg })
-               ownerNumber.map( i => conn.sendMessage(from, { text: `Send Play Error : ${e}` }))
-           })
-        }
 		const isUrl = (url) => {
 			return url.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)/, 'gi'))
 		}
@@ -460,46 +449,62 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
             case prefix+'play':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
                 if (args.length < 2) return reply(`Kirim perintah ${command} query\nContoh : ${command} monokrom`)
-                reply(mess.wait)
-                await sendPlay(from, q)
-				limitAdd(sender, limit)
+                var data = await fetchJson(`https://tyz-api.herokuapp.com/downloader/play?query=${q}`)
+				var thumb = await getBuffer(data.thumb)
+				var cptn = `*YOUTUBE PLAY*\n\n`
+				+`*Title:* ${data.title}\n`
+				+`*Video Size:* ${data.filesize_video}\n`
+				+`*Audio Size:* ${data.filesize_audio}\n`
+				conn.sendMessage(from, {
+					image: thumb,
+					caption: cptn,
+					buttons: [{buttonId: `${prefix}playvid ${args[1]}`, buttonText: { displayText: "Video" }, type: 1 },
+					 {buttonId: `${prefix}playaud ${args[1]}`, buttonText: { displayText: "Audio" }, type: 1 }],
+					footer: setting.fake
+				   }, { quoted: msg })
+				   limitAdd(sender, limit)
                 break
-			case prefix+'ytmp4': case prefix+'mp4':
+			case prefix+'playvid':
+				var data = await fetchJson(`https://tyz-api.herokuapp.com/downloader/play?query=${q}`)
+				var vid = await getBuffer(data.video)
+				conn.sendMessage(from, {video: vid}, {quoted: msg})
+				break
+			case prefix+'playaud':
+				var data = await fetchJson(`https://tyz-api.herokuapp.com/downloader/play?query=${q}`)
+				var aud = await getBuffer(data.audio)
+				conn.sendMessage(from, {document: aud, fileName: `${data.title}.mp3`, mimetype: "audio/mp3"}, {quoted: msg})
+				break
+			case prefix+'mp4': case prefix+'ytmp4':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			    if (args.length < 2) return reply(`Kirim perintah ${command} link`)
 			    if (!isUrl(args[1])) return reply(mess.error.Iv)
 			    if (!args[1].includes('youtu.be') && !args[1].includes('youtube.com')) return reply(mess.error.Iv)
-			    data = await fetchJson(`https://bot25-api.herokuapp.com/downloader/youtube?link=${q}`)
-				var thumb = await getBuffer(data.thumb)
+			    var data = await fetchJson(`https://tyz-api.herokuapp.com/downloader/youtube?link=${q}`)
 				var cptn = `*YOUTUBE VIDEO DOWNLOADER*\n\n`
 				+`*Title:* ${data.title}\n`
-				+`*Like:* ${data.like}\n`
-				+`*Upload:* ${data.uploadDate}\n`
-				+`*Size:* ${data.filesize_video}\n\n`
-				+`*Desc:*\n${data.desc}`
+				+`*Size:* ${data.filesize_video}\n`
 				var vid = await getBuffer(data.video)
 				conn.sendMessage(from, {video: vid, caption: cptn}, {quoted: msg})
 				limitAdd(sender, limit)
 				break
-			case prefix+'ytmp3': case prefix+'mp3':
+			case prefix+'mp3': case prefix+'ytmp3':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			    if (args.length < 2) return reply(`Kirim perintah ${command} link`)
 			    if (!isUrl(args[1])) return reply(mess.error.Iv)
 			    if (!args[1].includes('youtu.be') && !args[1].includes('youtube.com')) return reply(mess.error.Iv)
-			    data = await fetchJson(`https://bot25-api.herokuapp.com/downloader/youtube?link=${q}`)
+			    data = await fetchJson(`https://tyz-api.herokuapp.com/downloader/youtube?link=${q}`)
 				var thumb = await getBuffer(data.thumb)
 				var cptn = `*YOUTUBE AUDIO DOWNLOADER*\n\n`
 				+`*Title:* ${data.title}\n`
-				+`*Like:* ${data.like}\n`
-				+`*Upload:* ${data.uploadDate}\n`
-				+`*Size:* ${data.filesize_audio}\n\n`
-				+`*Desc:*\n${data.desc}`
+				+`*Size:* ${data.filesize_audio}\n`
+				+`*_Uploading Media..._*`
 				await conn.sendMessage(from, {image: thumb, caption: cptn}, {quoted: msg})
 				var aud = await getBuffer(data.audio)
 				conn.sendMessage(from, {document: aud, fileName: `${data.title}.mp3`, mimetype: "audio/mp3"}, {quoted: msg})
 				limitAdd(sender, limit)
 			    break
-			case prefix+'getvideo': case prefix+'getvidio':
+			
+				case prefix+'getvideo':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			    if (!isQuotedImage) return reply(`Balas hasil pencarian dari ${prefix}ytsearch dengan teks ${command} <no urutan>`)
 				if (!quotedMsg.fromMe) return reply(`Hanya bisa mengambil hasil dari pesan bot`)
@@ -511,12 +516,14 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                 if (isNaN(args[1])) return reply(`Hanya support angka! pilih angka 1 sampai 10\nContoh : ${command} 2`)
                 if (args[1] > arrey.length) return reply(`Urutan Hasil *${prefix}ytsearch* Hanya Sampai *${arrey.length}*`)
 			    reply(mess.wait)
-			    xfar.Youtube(`https://youtube.com/watch?v=${arrey[args[1] -1]}`).then( data => {
-			      var teks = `*Youtube Video Downloader*\n\n*≻ Title :* ${data.title}\n*≻ Quality :* ${data.medias[1].quality}\n*≻ Size :* ${data.medias[1].formattedSize}\n*≻ Url Source :* ${data.url}\n\n_wait a minute sending media..._`
-			      conn.sendMessage(from, { video: { url: data.medias[1].url }, caption: teks }, { quoted: msg })
-			       limitAdd(sender, limit)
-				}).catch(() => reply(mess.error.api))
-		        break
+				var data = await fetchJson(`https://tyz-api.herokuapp.com/downloader/youtube?link=${arrey[args[1] -1]}`)
+				var cptn = `*YOUTUBE VIDEO DOWNLOADER*\n\n`
+				+`*Title:* ${data.title}\n`
+				+`*Size:* ${data.filesize_video}\n`
+				var vid = await getBuffer(data.video)
+				conn.sendMessage(from, {video: vid, caption: cptn}, {quoted: msg})
+				limitAdd(sender, limit)
+				break
 			case prefix+'getmusik': case prefix+'getmusic':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			    if (!isQuotedImage) return reply(`Balas hasil pencarian dari ${prefix}ytsearch dengan teks ${command} <no urutan>`)
@@ -529,12 +536,16 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                 if (isNaN(args[1])) return reply(`Hanya support angka! pilih angka 1 sampai 10\nContoh : ${command} 2`)
                 if (args[1] > arrey.length) return reply(`Urutan Hasil *${prefix}ytsearch* Hanya Sampai *${arrey.length}*`)
 			    reply(mess.wait)
-			    xfar.Youtube(`https://youtube.com/watch?v=${arrey[args[1] -1]}`).then( data => {
-			      var teks = `*Youtube Audio Downloader*\n\n*≻ Title :* ${data.title}\n*≻ Quality :* ${data.medias[7].quality}\n*≻ Size :* ${data.medias[7].formattedSize}\n*≻ Url Source :* ${data.url}\n\n_wait a minute sending media..._`
-			      conn.sendMessage(from, { image: { url: data.thumbnail }, caption: teks }, { quoted: msg })
-			      conn.sendMessage(from, { document: { url: data.medias[7].url }, fileName: `${data.title}.mp3`, mimetype: 'audio/mp3' }, { quoted: msg })
-			      limitAdd(sender, limit)
-				}).catch(() => reply(mess.error.api))
+			    data = await fetchJson(`https://tyz-api.herokuapp.com/downloader/youtube?link=${arrey[args[1] -1]}`)
+				var thumb = await getBuffer(data.thumb)
+				var cptn = `*YOUTUBE AUDIO DOWNLOADER*\n\n`
+				+`*Title:* ${data.title}\n`
+				+`*Size:* ${data.filesize_audio}\n`
+				+`*_Uploading Media..._*`
+				await conn.sendMessage(from, {image: thumb, caption: cptn}, {quoted: msg})
+				var aud = await getBuffer(data.audio)
+				conn.sendMessage(from, {document: aud, fileName: `${data.title}.mp3`, mimetype: "audio/mp3"}, {quoted: msg})
+				limitAdd(sender, limit)
 			    break
 			case prefix+'igdl': case prefix+'instagram': case prefix+'ig':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
