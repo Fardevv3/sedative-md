@@ -250,7 +250,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		cekWaktuGame(conn, tebakgambar)
 		if (isPlayGame(from, tebakgambar) && isUser) {
 		  if (chats.toLowerCase() == getJawabanGame(from, tebakgambar)) {
-		    var htgm = randomNomor(100, 150)
+		    var htgm = randomNomor(500, 1000)
 			addBalance(sender, htgm, balance)
 		    reply(`*Selamat Jawaban Kamu Benar 🎉*\n\nJawaban : ${getJawabanGame(from, tebakgambar)}\nHadiah : ${htgm} balance\n\nIngin bermain lagi? ketik *${prefix}tebakgambar*`)
 		    tebakgambar.splice(getGamePosi(from, tebakgambar), 1)
@@ -469,25 +469,35 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			    if (args.length < 2) return reply(`Kirim perintah ${command} link`)
 			    if (!isUrl(args[1])) return reply(mess.error.Iv)
 			    if (!args[1].includes('youtu.be') && !args[1].includes('youtube.com')) return reply(mess.error.Iv)
-			    reply(mess.wait)
-			    xfar.Youtube(args[1]).then( data => {
-			      var teks = `*Youtube Video Downloader*\n\n*≻ Title :* ${data.title}\n*≻ Quality :* ${data.medias[1].quality}\n*≻ Size :* ${data.medias[1].formattedSize}\n*≻ Url Source :* ${data.url}\n\n_wait a minute sending media..._`
-			      conn.sendMessage(from, { video: { url: data.medias[1].url }, caption: teks }, { quoted: msg })
-			      limitAdd(sender, limit)
-				}).catch(() => reply(mess.error.api))
-			    break
+			    data = await fetchJson(`https://bot25-api.herokuapp.com/downloader/youtube?link=${q}`)
+				var thumb = await getBuffer(data.thumb)
+				var cptn = `*YOUTUBE VIDEO DOWNLOADER*\n\n`
+				+`*Title:* ${data.title}\n`
+				+`*Like:* ${data.like}\n`
+				+`*Upload:* ${data.uploadDate}\n`
+				+`*Size:* ${data.filesize_video}\n\n`
+				+`*Desc:*\n${data.desc}`
+				var vid = await getBuffer(data.video)
+				conn.sendMessage(from, {video: vid, caption: cptn}, {quoted: msg})
+				limitAdd(sender, limit)
+				break
 			case prefix+'ytmp3': case prefix+'mp3':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			    if (args.length < 2) return reply(`Kirim perintah ${command} link`)
 			    if (!isUrl(args[1])) return reply(mess.error.Iv)
 			    if (!args[1].includes('youtu.be') && !args[1].includes('youtube.com')) return reply(mess.error.Iv)
-			    reply(mess.wait)
-			    xfar.Youtube(args[1]).then( data => {
-			      var teks = `*Youtube Audio Downloader*\n\n*≻ Title :* ${data.title}\n*≻ Quality :* ${data.medias[7].quality}\n*≻ Size :* ${data.medias[7].formattedSize}\n*≻ Url Source :* ${data.url}\n\n_wait a minute sending media..._`
-			      conn.sendMessage(from, { image: { url: data.thumbnail }, caption: teks }, { quoted: msg })
-			      conn.sendMessage(from, { document: { url: data.medias[7].url }, fileName: `${data.title}.mp3`, mimetype: 'audio/mp3' }, { quoted: msg })
-			      limitAdd(sender, limit)
-				}).catch(() => reply(mess.error.api))
+			    data = await fetchJson(`https://bot25-api.herokuapp.com/downloader/youtube?link=${q}`)
+				var thumb = await getBuffer(data.thumb)
+				var cptn = `*YOUTUBE AUDIO DOWNLOADER*\n\n`
+				+`*Title:* ${data.title}\n`
+				+`*Like:* ${data.like}\n`
+				+`*Upload:* ${data.uploadDate}\n`
+				+`*Size:* ${data.filesize_audio}\n\n`
+				+`*Desc:*\n${data.desc}`
+				await conn.sendMessage(from, {image: thumb, caption: cptn}, {quoted: msg})
+				var aud = await getBuffer(data.audio)
+				conn.sendMessage(from, {document: aud, fileName: `${data.title}.mp3`, mimetype: "audio/mp3"}, {quoted: msg})
+				limitAdd(sender, limit)
 			    break
 			case prefix+'getvideo': case prefix+'getvidio':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
