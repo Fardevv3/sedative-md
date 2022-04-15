@@ -949,14 +949,14 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				let type = `❒ *Type* : ${isOwner ? 'Owner' : isPremium ? 'Premium' : 'Free'}`
 				let limith = `❒ *Limit :* ${isOwner ? '∞' : isPremium ? 'Unlimited' : getLimit(sender, limitCount, limit)}`
                 let limitg = `❒ *Game Limit :* ${isOwner ? '∞' : cekGLimit(sender, gcount, glimit)}`
-				let expired = `❒ *Expired :* ${isOwner ? '∞' : premiumnya}`
+				let expired = `❒ *Expired :* ${isOwner ? '∞' : isPremium ? premiumnya : '-'}`
 				try {
 					var pp = await conn.profilePictureUrl(sender, 'image')
 				  } catch {
 					var pp = 'https://i0.wp.com/www.gambarunik.id/wp-content/uploads/2019/06/Top-Gambar-Foto-Profil-Kosong-Lucu-Tergokil-.jpg'
 				  }
 				const ppnye = await getBuffer(pp)
-				var profile = `${header}\n${type}\n${limith}\n${limitg}\n${expired}\n`
+				var profile = `${header}\n${type}\n${expired}\n${limitg}\n${limith}\n`
 				conn.sendMessage(from, {image: ppnye, caption: profile}, {quoted:msg})
                 break
 			default:
