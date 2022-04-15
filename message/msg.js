@@ -455,6 +455,9 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				+`*Title:* ${data.title}\n`
 				+`*Video Size:* ${data.filesize_video}\n`
 				+`*Audio Size:* ${data.filesize_audio}\n`
+				+`*Views:* ${data.views}\n`
+				+`*Likes:* ${data.likes}\n\n`
+				+`*Desc:*\n${data.desc}`
 				conn.sendMessage(from, {
 					image: thumb,
 					caption: cptn,
@@ -517,7 +520,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                 if (isNaN(args[1])) return reply(`Hanya support angka! pilih angka 1 sampai 10\nContoh : ${command} 2`)
                 if (args[1] > arrey.length) return reply(`Urutan Hasil *${prefix}ytsearch* Hanya Sampai *${arrey.length}*`)
 			    reply(mess.wait)
-				var data = await fetchJson(`https://bot25-api.herokuapp.com/downloader/youtube?link=${arrey[args[1] -1]}`)
+				var data = await fetchJson(`https://bot25-api.herokuapp.com/downloader/youtube?link=https://youtube.com/watch?v=${arrey[args[1] -1]}`)
 				var cptn = `*YOUTUBE VIDEO DOWNLOADER*\n\n`
 				+`*Title:* ${data.title}\n`
 				+`*Size:* ${data.filesize_video}\n`
@@ -537,7 +540,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                 if (isNaN(args[1])) return reply(`Hanya support angka! pilih angka 1 sampai 10\nContoh : ${command} 2`)
                 if (args[1] > arrey.length) return reply(`Urutan Hasil *${prefix}ytsearch* Hanya Sampai *${arrey.length}*`)
 			    reply(mess.wait)
-			    data = await fetchJson(`https://bot25-api.herokuapp.com/downloader/youtube?link=${arrey[args[1] -1]}`)
+			    data = await fetchJson(`https://bot25-api.herokuapp.com/downloader/youtube?link=https://youtube.com/watch?v=${arrey[args[1] -1]}`)
 				var thumb = await getBuffer(data.thumb)
 				var cptn = `*YOUTUBE AUDIO DOWNLOADER*\n\n`
 				+`*Title:* ${data.title}\n`
