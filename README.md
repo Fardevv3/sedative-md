@@ -1,9 +1,9 @@
 # SEDATIVE-MD BOT BY RAFLY
 <p align="center">
-<img src="https://telegra.ph/file/c758946b610dd9187fc30.jpg" alt="JPEG" width="150" height="220"/>
+<img src="https://telegra.ph/file/c758946b610dd9187fc30.jpg" alt="JPEG" width="300" height="440"/>
 </p>
 <p align="center">
-<a href="#"><img title="sedativemd Bot" src="https://img.shields.io/badge/sedativemd Bot-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge"></a>
+<a href="#"><img title="SEDATIVE BOT MULTI DEVICE" src="https://img.shields.io/badge/Sedative Bot Multi Device-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge"></a>
 </p>
 <p align="center">
 <a href="https://github.com/dragneel1111"><img title="Author" src="https://img.shields.io/badge/Author-Rafly¹¹~-blue.svg?style=for-the-badge&logo=github"></a>
