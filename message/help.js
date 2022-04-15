@@ -48,6 +48,7 @@ exports.allmenu = (sender, prefix, pushname, isOwner, isPremium, balance, limit,
 ┣──────────────────⊱
 ┣➥ ${prefix}sticker
 ┣➥ ${prefix}toimg
+┣➥ ${prefix}tourl
 ┗──────────────────⊱
 
 ┏━━━⊱ ⸨ *DOWNLOADER* ⸩
@@ -56,6 +57,7 @@ exports.allmenu = (sender, prefix, pushname, isOwner, isPremium, balance, limit,
 ┣➥ ${prefix}ytmp3
 ┣➥ ${prefix}ytmp4
 ┣➥ ${prefix}tiktok
+┣➥ ${prefix}pinterestvid
 ┗──────────────────⊱
 
 ┏━━━⊱ ⸨ *SEARCH* ⸩
@@ -63,7 +65,6 @@ exports.allmenu = (sender, prefix, pushname, isOwner, isPremium, balance, limit,
 ┣➥ ${prefix}lirik
 ┣➥ ${prefix}ytsearch
 ┣➥ ${prefix}pinterest
-┣➥ ${prefix}pinterestvid
 ┗──────────────────⊱
 
 ┏━━━⊱ ⸨ *GAME* ⸩

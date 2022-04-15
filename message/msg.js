@@ -393,7 +393,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			reply(res)
 		}
 			break
-			
+		
 
 	        // Downloader Menu
 			case prefix+'tiktok':
@@ -449,7 +449,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
             case prefix+'play':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
                 if (args.length < 2) return reply(`Kirim perintah ${command} query\nContoh : ${command} monokrom`)
-                var data = await fetchJson(`https://tyz-api.herokuapp.com/downloader/play?query=${q}`)
+                var data = await fetchJson(`https://bot25-api.herokuapp.com/downloader/play?query=${q}`)
 				var thumb = await getBuffer(data.thumb)
 				var cptn = `*YOUTUBE PLAY*\n\n`
 				+`*Title:* ${data.title}\n`
@@ -458,19 +458,20 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				conn.sendMessage(from, {
 					image: thumb,
 					caption: cptn,
-					buttons: [{buttonId: `${prefix}playvid ${args[1]}`, buttonText: { displayText: "Video" }, type: 1 },
-					 {buttonId: `${prefix}playaud ${args[1]}`, buttonText: { displayText: "Audio" }, type: 1 }],
+					buttons: [{buttonId: `${prefix}playvid ${q}`, buttonText: { displayText: "Video" }, type: 1 },
+					 {buttonId: `${prefix}playaud ${q}`, buttonText: { displayText: "Audio" }, type: 1 }],
 					footer: setting.fake
 				   }, { quoted: msg })
 				   limitAdd(sender, limit)
                 break
+			
 			case prefix+'playvid':
-				var data = await fetchJson(`https://tyz-api.herokuapp.com/downloader/play?query=${q}`)
+				data = await fetchJson(`https://bot25-api.herokuapp.com/downloader/play?query=${q}`)
 				var vid = await getBuffer(data.video)
 				conn.sendMessage(from, {video: vid}, {quoted: msg})
 				break
 			case prefix+'playaud':
-				var data = await fetchJson(`https://tyz-api.herokuapp.com/downloader/play?query=${q}`)
+				data = await fetchJson(`https://bot25-api.herokuapp.com/downloader/play?query=${q}`)
 				var aud = await getBuffer(data.audio)
 				conn.sendMessage(from, {document: aud, fileName: `${data.title}.mp3`, mimetype: "audio/mp3"}, {quoted: msg})
 				break
@@ -479,7 +480,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			    if (args.length < 2) return reply(`Kirim perintah ${command} link`)
 			    if (!isUrl(args[1])) return reply(mess.error.Iv)
 			    if (!args[1].includes('youtu.be') && !args[1].includes('youtube.com')) return reply(mess.error.Iv)
-			    var data = await fetchJson(`https://tyz-api.herokuapp.com/downloader/youtube?link=${q}`)
+			    var data = await fetchJson(`https://bot25-api.herokuapp.com/downloader/youtube?link=${q}`)
 				var cptn = `*YOUTUBE VIDEO DOWNLOADER*\n\n`
 				+`*Title:* ${data.title}\n`
 				+`*Size:* ${data.filesize_video}\n`
@@ -492,7 +493,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			    if (args.length < 2) return reply(`Kirim perintah ${command} link`)
 			    if (!isUrl(args[1])) return reply(mess.error.Iv)
 			    if (!args[1].includes('youtu.be') && !args[1].includes('youtube.com')) return reply(mess.error.Iv)
-			    data = await fetchJson(`https://tyz-api.herokuapp.com/downloader/youtube?link=${q}`)
+			    data = await fetchJson(`https://bot25-api.herokuapp.com/downloader/youtube?link=${q}`)
 				var thumb = await getBuffer(data.thumb)
 				var cptn = `*YOUTUBE AUDIO DOWNLOADER*\n\n`
 				+`*Title:* ${data.title}\n`
@@ -516,7 +517,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                 if (isNaN(args[1])) return reply(`Hanya support angka! pilih angka 1 sampai 10\nContoh : ${command} 2`)
                 if (args[1] > arrey.length) return reply(`Urutan Hasil *${prefix}ytsearch* Hanya Sampai *${arrey.length}*`)
 			    reply(mess.wait)
-				var data = await fetchJson(`https://tyz-api.herokuapp.com/downloader/youtube?link=${arrey[args[1] -1]}`)
+				var data = await fetchJson(`https://bot25-api.herokuapp.com/downloader/youtube?link=${arrey[args[1] -1]}`)
 				var cptn = `*YOUTUBE VIDEO DOWNLOADER*\n\n`
 				+`*Title:* ${data.title}\n`
 				+`*Size:* ${data.filesize_video}\n`
@@ -536,7 +537,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                 if (isNaN(args[1])) return reply(`Hanya support angka! pilih angka 1 sampai 10\nContoh : ${command} 2`)
                 if (args[1] > arrey.length) return reply(`Urutan Hasil *${prefix}ytsearch* Hanya Sampai *${arrey.length}*`)
 			    reply(mess.wait)
-			    data = await fetchJson(`https://tyz-api.herokuapp.com/downloader/youtube?link=${arrey[args[1] -1]}`)
+			    data = await fetchJson(`https://bot25-api.herokuapp.com/downloader/youtube?link=${arrey[args[1] -1]}`)
 				var thumb = await getBuffer(data.thumb)
 				var cptn = `*YOUTUBE AUDIO DOWNLOADER*\n\n`
 				+`*Title:* ${data.title}\n`
