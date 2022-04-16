@@ -539,7 +539,8 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			    var data = await fetchJson(`https://bot25-api.herokuapp.com/downloader/youtube?link=${q}`)
 				var cptn = `*YOUTUBE VIDEO DOWNLOADER*\n\n`
 				+`*Title:* ${data.title}\n`
-				+`*Size:* ${data.filesize_video}\n`
+				+`*Size:* ${data.filesize_video}\n\n`
+				+`*Desc:*\n${data.desc}`
 				var vid = await getBuffer(data.video)
 				conn.sendMessage(from, {video: vid, caption: cptn}, {quoted: msg})
 				limitAdd(sender, limit)
@@ -553,8 +554,8 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				var thumb = await getBuffer(data.thumb)
 				var cptn = `*YOUTUBE AUDIO DOWNLOADER*\n\n`
 				+`*Title:* ${data.title}\n`
-				+`*Size:* ${data.filesize_audio}\n`
-				+`*_Uploading Media..._*`
+				+`*Size:* ${data.filesize_audio}\n\n`
+				+`*Desc:*\n${data.desc}`
 				await conn.sendMessage(from, {image: thumb, caption: cptn}, {quoted: msg})
 				var aud = await getBuffer(data.audio)
 				conn.sendMessage(from, {document: aud, fileName: `${data.title}.mp3`, mimetype: "audio/mp3"}, {quoted: msg})
@@ -670,7 +671,8 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 					{quoted: msg})
 				break
 			
-
+			
+			
 			// Owner Menu
 			case prefix+'leave':
 			    if (!isOwner) return reply(mess.OnlyOwner)
