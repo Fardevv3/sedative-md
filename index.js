@@ -10,6 +10,7 @@ const {
 	delay
 } = require("@adiwajshing/baileys")
 const figlet = require("figlet");
+const lolcatjs = require('lolcatjs');
 const fs = require("fs");
 const moment = require('moment')
 const chalk = require('chalk')
@@ -25,15 +26,12 @@ const { state, saveState } = useSingleFileAuthState(session)
 let welcome = JSON.parse(fs.readFileSync('./database/welcome.json'));
 
 function title() {
-      console.clear()
-	  console.log(chalk.bold.green(figlet.textSync('RAFLY', {
-		font: 'Standard',
-		horizontalLayout: 'default',
-		verticalLayout: 'default',
-		width: 80,
-		whitespaceBreak: false
-	})))
-	console.log(chalk.yellow(`\n                        ${chalk.yellow('[ Created By Rafly ]')}\n\n${chalk.red('ユウキ || Yuuki')} : ${chalk.white('WhatsApp Bot Multi Device')}\n`))
+    console.clear()
+	console.log('------------------------------------------------')
+	lolcatjs.fromString(color(figlet.textSync('RAFLY', { horizontalLayout: 'full' })))
+  	console.log('------------------------------------------------')
+	lolcatjs.fromString('[SERVER] Server Started!')
+	console.log('------------------------------------------------')
 }
 
 /**
@@ -42,7 +40,7 @@ function title() {
 * @param {function} cb <optional> ;
 */
 function nocache(module, cb = () => { }) {
-	console.log(`Module ${module} sedang diperhatikan terhadap perubahan`) 
+	lolcatjs.fromString(`Module ${module} sedang diperhatikan terhadap perubahan`) 
 	fs.watchFile(require.resolve(module), async () => {
 		await uncache(require.resolve(module))
 		cb(module)
