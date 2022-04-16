@@ -13,6 +13,7 @@ const tictac = require("../lib/tictac");
 const _prem = require("../lib/premium");
 
 const fs = require ("fs");
+const fetch = require('node-fetch');
 const moment = require("moment-timezone");
 const util = require("util");
 const { exec, spawn } = require("child_process");
@@ -31,6 +32,7 @@ const { Sticker, createSticker, StickerTypes } = require('wa-sticker-formatter')
 // DB Game
 let tictactoe = [];
 let tebakgambar = []
+let tebakkimia = []
 
 // Database
 let pendaftar = JSON.parse(fs.readFileSync('./database/user.json'))
@@ -180,7 +182,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
  		    }
 		}
 		const reply = (teks) => {
-			conn.sendMessage(from, { text: teks }, { quoted: msg })
+			return conn.sendMessage(from, { text: teks, jpegThumbnail: fs.readFileSync(setting.pathimg) }, { quoted: msg })
 		}
 		const textImg = (teks) => {
 			return conn.sendMessage(from, { text: teks, jpegThumbnail: fs.readFileSync(setting.pathimg) }, { quoted: msg })
@@ -206,7 +208,8 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			{ callButton: { displayText: `OWNER NUMBER`, phoneNumber: `+687 73.13.67` } },
 			{ urlButton: { displayText: `BOT GROUP`, url : `https://chat.whatsapp.com/FNvoKzB3VlY8MInlFJcecg` } },
 			{ quickReplyButton: { displayText: `Owner`, id: `${prefix}owner` } },
-			{ quickReplyButton: { displayText: `Donate`, id: `${prefix}donate` } }
+			{ quickReplyButton: { displayText: `Donate`, id: `${prefix}donate` } },
+			{ quickReplyButton: { displayText: `Changelog`, id: `${prefix}changelog` } }
 		]
         
 		const isImage = (type == 'imageMessage')
@@ -239,10 +242,19 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		cekWaktuGame(conn, tebakgambar)
 		if (isPlayGame(from, tebakgambar) && isUser) {
 		  if (chats.toLowerCase() == getJawabanGame(from, tebakgambar)) {
-		    var htgm = randomNomor(500, 1000)
+		    var htgm = randomNomor(200, 300)
 			addBalance(sender, htgm, balance)
 		    reply(`*Selamat Jawaban Kamu Benar 🎉*\n\nJawaban : ${getJawabanGame(from, tebakgambar)}\nHadiah : ${htgm} balance\n\nIngin bermain lagi? ketik *${prefix}tebakgambar*`)
 		    tebakgambar.splice(getGamePosi(from, tebakgambar), 1)
+		  }
+		}
+		cekWaktuGame(conn, tebakkimia)
+		if (isPlayGame(from, tebakkimia) && isUser) {
+		  if (chats.toLowerCase() == getJawabanGame(from, tebakkimia)) {
+		    var htgm = randomNomor(200, 300)
+			addBalance(sender, htgm, balance)
+		    reply(`*Selamat Jawaban Kamu Benar 🎉*\n\nJawaban : ${getJawabanGame(from, tebakkimia)}\nHadiah : ${htgm} balance\n\nIngin bermain lagi? ketik *${prefix}tebakkimia*`)
+		    tebakkimia.splice(getGamePosi(from, tebakkimia), 1)
 		  }
 		}
 
@@ -299,8 +311,25 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			// Main Menu
 			case prefix+'menu':
 			case prefix+'help':
-			    var teks = allmenu(sender, prefix, pushname, isOwner, isPremium, balance, limit, limitCount, glimit, gcount)
+			    var teks = allmenu(prefix, pushname)
 			    conn.sendMessage(from, { caption: teks, location: { jpegThumbnail: fs.readFileSync(setting.pathimg) }, templateButtons: buttonsDefault, footer: setting.fake, mentions: [sender] })
+				break
+			case prefix+'changelog':
+				var cptn = `*CHANGLOG*\n\n`
+				+`*[14-04-2022]*\n`
+				+`Change Library from Legacy to Multi Mevice\n\n`
+				+`*[15-04-2022]*\n`
+				+`Add some games feature\n`
+				+`${prefix}tictactoe\n`
+				+`${prefix}tebakgambar\n\n`
+				+`*[16-04-2022]*\n`
+				+`${prefix}igdl\n\n`
+				+`${prefix}waifu\n`
+				+`${prefix}loli\n`
+				+`${prefix}neko\n`
+				+`${prefix}cosplay\n\n`
+				+`${prefix}tebakkimia\n`
+				reply(cptn)
 				break
 			case prefix+'runtime':
 			    reply(runtime(process.uptime()))
@@ -343,7 +372,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                 var media = await downloadAndSaveMediaMessage('image',"./media/"+sender+".jpg")
                 let stc = new Sticker(media, {
       pack: `Sticker Request by\n${pushname}`, // The pack name
-      author: `Create by ユウキ||Yuuki Bot\nBot Create by @Rafly¹¹~\n01-12-2020`, // The author name
+      author: `Create by ユウキ||Yuuki Bot`, // The author name
       type: StickerTypes.FULL, // The sticker type
       categories: ['🤩', '🎉'], // The sticker category
       id: '12345', // The sticker id
@@ -358,7 +387,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
     let ahsuhfkj = await convert("./media/"+sender+".mp4")
     let sticker = new Sticker(fs.readFileSync(ahsuhfkj), {
         pack: `Sticker Request by\n${pushname}`, // The pack name
-      author: `Create by ユウキ||Yuuki Bot\nBot Create by @Rafly¹¹~\n01-12-2020`, // The author name
+        author: `Create by ユウキ||Yuuki Bot`, // The author name
         type: StickerTypes.FULL, // The sticker type
         categories: ['🤩', '🎉'], // The sticker category
         id: '12345', // The sticker id
@@ -367,9 +396,34 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
     })
     const stikk = await sticker.toBuffer() 
     conn.sendMessage(from, {sticker: stikk}, {quoted: msg})
+	   } else {
+		   reply(`Kirim gambar/video dengan caption ${prefix}sticker`)
 	   }
         break
-	case prefix+'toimg': case prefix+'toimage':
+		case prefix+'take': case prefix+'swm':
+			if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+			if(isSticker || isQuotedSticker) {
+				var stream = await downloadContentFromMessage(msg.message.extendedTextMessage?.contextInfo.quotedMessage.stickerMessage, 'sticker')
+				let file = await downloadAndSaveMediaMessage("sticker", "./media/"+sender+".webp")
+				anu = q.split("|");
+			   var satu = anu[0] !== "" ? anu[0] : ``;
+			   var dua = typeof anu[1] !== "undefined" ? anu[1] : ``;
+					let stc = new Sticker(file, {
+		  pack: `${satu}`, // The pack name
+		  author: `${dua}`, // The author name
+		  type: StickerTypes.FULL, // The sticker type
+		  categories: ['🤩', '🎉'], // The sticker category
+		  id: '12345', // The sticker id
+		  quality: 75, // The quality of the output file
+		  background: 'transparent' // The sticker background color (only for full stickers)
+		  })
+		  var buffer = await stc.toBuffer()
+		  conn.sendMessage(from, {sticker: buffer}, {quoted: msg})
+			} else {
+				reply(`Tag sticker dengan caption ${prefix}take`)
+			}
+			break
+	  case prefix+'toimg': case prefix+'toimage':
 		if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 		if(isSticker || isQuotedSticker) {
 			var stream = await downloadContentFromMessage(msg.message.extendedTextMessage?.contextInfo.quotedMessage.stickerMessage, 'sticker')
@@ -393,7 +447,6 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			reply(res)
 		}
 			break
-		
 
 	        // Downloader Menu
 			case prefix+'tiktok':
@@ -557,16 +610,17 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			    if (!isUrl(args[1])) return reply(mess.error.Iv)
 			    if (!args[1].includes('instagram.com')) return reply(mess.error.Iv)
 			    reply(mess.wait)
-			    xfar.Instagram(args[1]).then( data => {
-			     var teks = `*Instagram Downloader*\n\n*≻ Title :* ${data.title}\n*≻ Jumlah Media :* ${data.medias.length}\n*≻ Url Source :* ${data.url}\n\n_wait a minute sending media..._`
-			     reply(teks)
-			     for (let i of data.medias) {
-				  if (i.extension === "mp4") {
-				   conn.sendMessage(from, { video: { url: i.url }})
-				  } else if (i.extension === "jpg") {
-				   conn.sendMessage(from, { image: { url: i.url }})
-			      }
-			     }
+			    hxz.igdl(q)
+	.then(async(result) => {
+		for(let i of result.medias){
+			if(i.url.includes('mp4')){
+				let link = await getBuffer(i.url)
+                    conn.sendMessage(from,{video: link}, {quoted: msg})
+                } else {
+                    let link = await getBuffer(i.url)
+                    conn.sendMessage(from, {image: link})                  
+                }
+            }
 				 limitAdd(sender, limit)
 			    }).catch(() => reply(mess.error.api))
 			    break
@@ -581,6 +635,42 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			      limitAdd(sender, limit)
 				}).catch(() => reply(mess.error.api))
 			    break
+
+			//Animanga
+			case prefix+'waifu':
+				var data = await getBuffer(`https://bot25-api.herokuapp.com/randomimg/waifu`)
+				await conn.sendMessage(from, {image: data, 
+					caption: `*WAIFU*`,
+					buttons : [{buttonId: `${prefix}waifu`, buttonText: { displayText: "Next" }, type: 1 }],
+					footer: setting.fake},
+					{quoted: msg})
+				break
+			case prefix+'loli':
+				var data = await getBuffer(`https://bot25-api.herokuapp.com/randomimg/loli`)
+				await conn.sendMessage(from, {image: data, 
+					caption: `*LOLI*`,
+					buttons : [{buttonId: `${prefix}loli`, buttonText: { displayText: "Next" }, type: 1 }],
+					footer: setting.fake},
+					{quoted: msg})
+				break
+			case prefix+'neko':
+				var data = await getBuffer(`https://bot25-api.herokuapp.com/randomimg/akaneko?param=neko`)
+				await conn.sendMessage(from, {image: data, 
+					caption: `*NEKO*`,
+					buttons : [{buttonId: `${prefix}neko`, buttonText: { displayText: "Next" }, type: 1 }],
+					footer: setting.fake},
+					{quoted: msg})
+				break
+			case prefix+'cosplay':
+				var data = await getBuffer(`https://bot25-api.herokuapp.com/randomimg/cosplay`)
+				await conn.sendMessage(from, {image: data, 
+					caption: `*COSPLAY*`,
+					buttons : [{buttonId: `${prefix}cosplay`, buttonText: { displayText: "Next" }, type: 1 }],
+					footer: setting.fake},
+					{quoted: msg})
+				break
+			
+
 			// Owner Menu
 			case prefix+'leave':
 			    if (!isOwner) return reply(mess.OnlyOwner)
@@ -645,6 +735,18 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                     reply('Sukses!')
                 }
                 break
+			case prefix +'react':
+				if (!isOwner) return
+				const reactionMessage = {
+                    react: {
+                        text: args[2],
+                        key: { remoteJid: from, fromMe: true, id: quoted.id }
+                    }
+                }
+                conn.sendMessage(from, reactionMessage)
+            
+			break
+
 			
 			// Search Menu
 			case prefix+'lirik': case 'liriklagu':
@@ -780,6 +882,22 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				  })
 				})
 			    break
+				case prefix+'tebakkimia': case prefix+'tebakimia':
+				if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
+			    if (isPlayGame(from, tebakkimia)) return conn.reply(from, `Masih ada game yang belum diselesaikan`, tebakkimia[getGamePosi(from, tebakkimia)].msg)
+				var data = await fetchJson(`https://docs-jojo.herokuapp.com/api/tebak-unsur-kimia`)
+				var jawaban = data.lambang.split('Lambang ').join('')
+				var cptn = `*TEBAK KIMIA*\n\nLambang dari ${data.nama}\n\nWaktu : ${gamewaktu}s`
+				reply(cptn)
+				.then( res => {
+				var jawab = jawaban.toLowerCase()
+				addPlayGame(from, 'Tebak Kimia', jawab, gamewaktu, res, tebakkimia)
+					gameAdd(sender, glimit)
+				})
+					break
+
+
+
 			// Group Menu
 			case prefix+'linkgrup': case prefix+'link': case prefix+'linkgc':
 			    if (!isGroup) return reply(mess.OnlyGrup)
@@ -873,6 +991,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                               reply(`Pilih enable atau disable`)
                             }
                             break
+			
 			// Bank & Payment Menu
 			case prefix+'topbalance':{
                 balance.sort((a, b) => (a.balance < b.balance) ? 1 : -1)

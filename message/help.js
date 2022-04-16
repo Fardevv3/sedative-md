@@ -19,20 +19,15 @@ function toCommas(x) {
 	return x;
 }
 
-exports.allmenu = (sender, prefix, pushname, isOwner, isPremium, balance, limit, limitCount, glimit, gcount) => {
+exports.allmenu = (prefix, pushname) => {
 	return `*── 「 ${setting.botName} - Beta 」 ──*
 	
   _*${ucapanWaktu} ${pushname !== undefined ? pushname : 'Kak'}*_
 
     Prefix : ( ${prefix} )
     Tanggal Server : ${moment.tz('Asia/Jakarta').format('DD/MM/YY')}
-    Waktu Server : ${moment.tz('Asia/Jakarta').format('HH:mm:ss')}
-
-  	Status : ${isOwner ? 'Owner' : isPremium ? 'Premium' : 'Free'}
-  	Limit Harian : ${isOwner ? '-' : isPremium ? 'Unlimited' : getLimit(sender, limitCount, limit)}
-  	Limit Game : ${isOwner ? '-' : cekGLimit(sender, gcount, glimit)}
-  	Balance : $${toCommas(getBalance(sender, balance))}\n${readmore}`
-
+    Waktu Server : ${moment.tz('Asia/Jakarta').format('HH:mm:ss')}${readmore}
+`
 +`
 ┏━━━⊱ ⸨ *GENERAL* ⸩
 ┣──────────────────⊱
@@ -47,6 +42,7 @@ exports.allmenu = (sender, prefix, pushname, isOwner, isPremium, balance, limit,
 ┏━━━⊱ ⸨ *CONVERT* ⸩
 ┣──────────────────⊱
 ┣➥ ${prefix}sticker
+┣➥ ${prefix}take
 ┣➥ ${prefix}toimg
 ┣➥ ${prefix}tourl
 ┗──────────────────⊱
@@ -57,6 +53,7 @@ exports.allmenu = (sender, prefix, pushname, isOwner, isPremium, balance, limit,
 ┣➥ ${prefix}ytmp3
 ┣➥ ${prefix}ytmp4
 ┣➥ ${prefix}tiktok
+┣➥ ${prefix}igdl
 ┣➥ ${prefix}pinterestvid
 ┗──────────────────⊱
 
@@ -67,11 +64,21 @@ exports.allmenu = (sender, prefix, pushname, isOwner, isPremium, balance, limit,
 ┣➥ ${prefix}pinterest
 ┗──────────────────⊱
 
+┏━━━⊱ ⸨ *ANIMANGA* ⸩
+┣──────────────────⊱
+┣➥ ${prefix}waifu
+┣➥ ${prefix}loli
+┣➥ ${prefix}neko
+┣➥ ${prefix}cosplay
+┗──────────────────⊱
+
 ┏━━━⊱ ⸨ *GAME* ⸩
 ┣──────────────────⊱
 ┣➥ ${prefix}tictactoe
 ┣➥ ${prefix}delttt
 ┣➥ ${prefix}tebakgambar
+┣➥ ${prefix}tebakkimia
+┣──────────────────⊱
 ┣➥ ${prefix}buylimit
 ┣➥ ${prefix}buyglimit
 ┣➥ ${prefix}transfer
