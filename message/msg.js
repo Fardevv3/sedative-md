@@ -33,6 +33,7 @@ const { Sticker, createSticker, StickerTypes } = require('wa-sticker-formatter')
 let tictactoe = [];
 let tebakgambar = []
 let tebakkimia = []
+let susunkata = []
 
 // Database
 let pendaftar = JSON.parse(fs.readFileSync('./database/user.json'))
@@ -41,6 +42,7 @@ let premium = JSON.parse(fs.readFileSync('./database/premium.json'));
 let balance = JSON.parse(fs.readFileSync('./database/balance.json'));
 let limit = JSON.parse(fs.readFileSync('./database/limit.json'));
 let glimit = JSON.parse(fs.readFileSync('./database/glimit.json'));
+
 
 moment.tz.setDefault("Asia/Jakarta").locale("id");
 
@@ -208,7 +210,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			{ callButton: { displayText: `OWNER NUMBER`, phoneNumber: `+687 73.13.67` } },
 			{ urlButton: { displayText: `BOT GROUP`, url : `https://chat.whatsapp.com/FNvoKzB3VlY8MInlFJcecg` } },
 			{ quickReplyButton: { displayText: `Owner`, id: `${prefix}owner` } },
-			{ quickReplyButton: { displayText: `Donate`, id: `${prefix}donate` } },
+			{ quickReplyButton: { displayText: `Info`, id: `${prefix}info` } },
 			{ quickReplyButton: { displayText: `Changelog`, id: `${prefix}changelog` } }
 		]
         
@@ -227,9 +229,10 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		conn.sendPresenceUpdate('available', from)
 		
 		// Auto Registrasi
-		if (isCmd && !isUser) {
+		if (chats && !isUser && !fromMe) {
 		  pendaftar.push(sender)
 		  fs.writeFileSync('./database/user.json', JSON.stringify(pendaftar, null, 2))
+		  console.log(color('[REGISTER]','red'), color(sender,'yellow'), color(from, 'cyan'))
 		}
 		
 		// Premium
@@ -257,6 +260,15 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		    tebakkimia.splice(getGamePosi(from, tebakkimia), 1)
 		  }
 		}
+		cekWaktuGame(conn, susunkata)
+		if (isPlayGame(from, susunkata) && isUser) {
+		  if (chats.toLowerCase() == getJawabanGame(from, susunkata)) {
+		    var htgm = randomNomor(200, 300)
+			addBalance(sender, htgm, balance)
+		    reply(`*Selamat Jawaban Kamu Benar 🎉*\n\nJawaban : ${getJawabanGame(from, susunkata)}\nHadiah : ${htgm} balance\n\nIngin bermain lagi? ketik *${prefix}susunkata*`)
+		    susunkata.splice(getGamePosi(from, susunkata), 1)
+		  }
+		}
 
 		if (chats.startsWith("> ") && isOwner) {
 		console.log(color('[EVAL]'), color(moment(msg.messageTimestamp * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`Dari Owner aowkoakwoak`))
@@ -274,13 +286,13 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
            textImg(util.format(e))
           }
 		} else if (chats.startsWith("$ ") && isOwner) {
-        console.log(color('[EXEC]'), color(moment(msg.messageTimestamp * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`Dari Owner aowkoakwoak`))
+        console.log(color('[EXEC]'), color(moment(msg.messageTimestamp * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`From Owner`))
           exec(chats.slice(2), (err, stdout) => {
 		    if (err) return reply(`${err}`)
 		    if (stdout) reply(`${stdout}`)
 		  })
         } else if (chats.startsWith("x ") && isOwner) {
-	    console.log(color('[EVAL]'), color(moment(msg.messageTimestamp * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`Dari Owner aowkaokwoak`))
+	    console.log(color('[EVAL]'), color(moment(msg.messageTimestamp * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`From Owner`))
 		 try {
 	       let evaled = await eval(chats.slice(2))
 		   if (typeof evaled !== 'string') evaled = require("util").inspect(evaled)
@@ -304,41 +316,64 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			
 			case prefix:
 			case 'test':
+			case 'bot':
 				const test = `${ucapanWaktu} ${pushname}`
-				const thumbtest = fs.readFileSync(setting.pathimg) 
+				const thumbtest = await getBuffer(`https://api.lolhuman.xyz/api/random2/kemonomimi?apikey=Rafly11`)
 				conn.sendMessage(from, { caption: `${test}`, image: thumbtest, buttons: [{buttonId: `${prefix}help`, buttonText: { displayText: "MENU" }, type: 1 }], footer: setting.fake }, { quoted: msg })
 				break
 			// Main Menu
 			case prefix+'menu':
 			case prefix+'help':
-			    var teks = allmenu(prefix, pushname)
+			    var teks = allmenu(pushname, prefix)
 			    conn.sendMessage(from, { caption: teks, location: { jpegThumbnail: fs.readFileSync(setting.pathimg) }, templateButtons: buttonsDefault, footer: setting.fake, mentions: [sender] })
+				break
+			case prefix+'info':
+				const user = JSON.parse(fs.readFileSync('./database/user.json'))
+				const _user = user.length
+				var timestamp = speed();
+                var latensi = speed() - timestamp
+				var data = await getBuffer(`https://api.lolhuman.xyz/api/random/waifu?apikey=Rafly11`)
+				var info = `*SIMPLE BOT WHATSAPP*\n\n`
+				+`*Bot Name:* ${setting.botName}\n`
+				+`*Prefix:* ${prefix}\n`
+				+`*Registered*: ${_user}\n`
+				+`*Library:* Baileys-md\n`
+				+`*Runtime:* ${runtime(process.uptime())}\n`
+				+`*SpeedTest:* ${latensi.toFixed(4)} Second\n\n`
+				+`*Date:* ${moment.tz('Asia/Jakarta').format('DD/MM/YY')}\n`
+				+`*Time:* ${moment.tz('Asia/Jakarta').format('HH:mm:ss')}\n\n`
+				+`--------------------------\n`
+				+`*SIMPLE RULES:*\n`
+				+`Call/Spam = Block!!!\n`
+				+`Kelewat gblk = block!!!\n`
+				await conn.sendMessage(from, {image: data, caption: info}, {quoted: msg})
 				break
 			case prefix+'changelog':
 				var cptn = `*CHANGLOG*\n\n`
 				+`*[14-04-2022]*\n`
-				+`Change Library from Legacy to Multi Mevice\n\n`
+				+`Change Library from Legacy to Multi Device\n\n`
 				+`*[15-04-2022]*\n`
 				+`Add some games feature\n`
 				+`${prefix}tictactoe\n`
 				+`${prefix}tebakgambar\n\n`
 				+`*[16-04-2022]*\n`
-				+`${prefix}igdl\n\n`
 				+`${prefix}waifu\n`
 				+`${prefix}loli\n`
 				+`${prefix}neko\n`
+				+`${prefix}megumin\n`
+				+`${prefix}sagiri\n`
+				+`${prefix}elaina\n`
+				+`${prefix}shinobu\n`
+				+`${prefix}elf\n`
 				+`${prefix}cosplay\n\n`
+				+`*[17-04-2022]*\n`
+				+`${prefix}susunkata\n`
 				+`${prefix}tebakkimia\n`
 				reply(cptn)
 				break
 			case prefix+'runtime':
 			    reply(runtime(process.uptime()))
 			    break
-			case prefix+'speed':
-			    let timestamp = speed();
-                            let latensi = speed() - timestamp
-                            textImg(`${latensi.toFixed(4)} Second`)
-		            break
 			case prefix+'donate':
 			case prefix+'donasi':
 			    reply(`*「 DONATE 」*\n\n\n\`\`\`GOPAY : 085158322853\`\`\`\n\`\`\`PULSA : 082171732892 (Tsel)\`\`\`\n\n*「 THANK YOU 」*`)
@@ -423,7 +458,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				reply(`Tag sticker dengan caption ${prefix}take`)
 			}
 			break
-	  case prefix+'toimg': case prefix+'toimage':
+	  	case prefix+'toimg': case prefix+'toimage':
 		if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 		if(isSticker || isQuotedSticker) {
 			var stream = await downloadContentFromMessage(msg.message.extendedTextMessage?.contextInfo.quotedMessage.stickerMessage, 'sticker')
@@ -439,7 +474,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				limitAdd(sender, limit)
 		}
             break
-	case prefix+'tourl': case prefix+'imagetourl': case prefix+'imgtourl':
+		case prefix+'tourl': case prefix+'imagetourl': case prefix+'imgtourl':
 		if (isImage || isQuotedImage) {
 			var stream = await downloadContentFromMessage(msg.message.imageMessage || msg.message.extendedTextMessage?.contextInfo.quotedMessage.imageMessage, 'image')
 			var media = await downloadAndSaveMediaMessage('image',"./media/"+sender+".jpg")
@@ -629,46 +664,132 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			    if (args.length < 2) return reply(`Kirim perintah ${command} link`)
 			    if (!isUrl(args[1])) return reply(mess.error.Iv)
-			    if (!args[1].includes('facebook.com')) return reply(mess.error.Iv)
 			    reply(mess.wait)
 			    xfar.Facebook(args[1]).then( data => {
 			      conn.sendMessage(from, { video: { url: data.medias[0].url }, caption: data.title }, { quoted: msg })
 			      limitAdd(sender, limit)
 				}).catch(() => reply(mess.error.api))
 			    break
+			case prefix+'zippyshare': case prefix+'zippy': case prefix+'zp':
+				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+				if (args.length < 2) return reply(`Kirim perintah ${command} link`)
+				if (!args[1].includes('zippy')) return reply(mess.error.Iv)
+				var data = await fetchJson(`https://api.lolhuman.xyz/api/zippyshare?apikey=Rafly11&url=${q}`)
+				var hasil = data.result
+				var cptn = `*ZIPPYSHARE DOWNLOADER*\n\n`
+				+`*Title:* ${hasil.name_file}\n`
+				+`*Size:* ${hasil.size}\n\n`
+				+`*UPLOADING MEDIA...*`
+				reply(cptn)
+				if (hasil.download_url.includes(".mp4")){
+					var zpvid = await getBuffer(hasil.download_url)
+					await conn.sendMessage(from, {document: zpvid, fileName: `${hasil.name_file}.mp4`, mimetype: "video/mp4"}, {quoted: msg})
+				} else {
+				if(hasil.download_url.includes(".pdf"))
+					var zppdf = await getBuffer(hasil.download_url)
+					await conn.sendMessage(from, {document: zppdf, fileName: `${hasil.name_file}.pdf`, mimetype: "pdf"}, {quoted: msg})
+				}
+				limitAdd(sender, limit)
+				break
+
 
 			//Animanga
+			case prefix+'storyanime': case prefix+'animestory':
+				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+				var data = await fetchJson(`https://api.lolhuman.xyz/api/storynime?apikey=Rafly11`)
+				var vid = await getBuffer(data.result)
+				await conn.sendMessage(from, {video: vid, caption: '*ANIME STORY*'}, {quoted: msg})
+				limitAdd(sender, limit)
+				break
+
 			case prefix+'waifu':
-				var data = await getBuffer(`https://bot25-api.herokuapp.com/randomimg/waifu`)
+				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+				var data = await getBuffer(`https://api.lolhuman.xyz/api/random/waifu?apikey=Rafly11`)
 				await conn.sendMessage(from, {image: data, 
 					caption: `*WAIFU*`,
-					buttons : [{buttonId: `${prefix}waifu`, buttonText: { displayText: "Next" }, type: 1 }],
+					buttons : [{buttonId: `${command}`, buttonText: { displayText: "Next" }, type: 1 }],
 					footer: setting.fake},
 					{quoted: msg})
+					limitAdd(sender, limit)
 				break
 			case prefix+'loli':
+				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 				var data = await getBuffer(`https://bot25-api.herokuapp.com/randomimg/loli`)
 				await conn.sendMessage(from, {image: data, 
 					caption: `*LOLI*`,
-					buttons : [{buttonId: `${prefix}loli`, buttonText: { displayText: "Next" }, type: 1 }],
+					buttons : [{buttonId: `${command}`, buttonText: { displayText: "Next" }, type: 1 }],
 					footer: setting.fake},
 					{quoted: msg})
+					limitAdd(sender, limit)
 				break
 			case prefix+'neko':
-				var data = await getBuffer(`https://bot25-api.herokuapp.com/randomimg/akaneko?param=neko`)
+				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+				var data = await getBuffer(`https://api.lolhuman.xyz/api/random/neko?apikey=Rafly11`)
 				await conn.sendMessage(from, {image: data, 
 					caption: `*NEKO*`,
-					buttons : [{buttonId: `${prefix}neko`, buttonText: { displayText: "Next" }, type: 1 }],
+					buttons : [{buttonId: `${command}`, buttonText: { displayText: "Next" }, type: 1 }],
 					footer: setting.fake},
 					{quoted: msg})
 				break
 			case prefix+'cosplay':
+				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 				var data = await getBuffer(`https://bot25-api.herokuapp.com/randomimg/cosplay`)
 				await conn.sendMessage(from, {image: data, 
 					caption: `*COSPLAY*`,
-					buttons : [{buttonId: `${prefix}cosplay`, buttonText: { displayText: "Next" }, type: 1 }],
+					buttons : [{buttonId: `${command}`, buttonText: { displayText: "Next" }, type: 1 }],
 					footer: setting.fake},
 					{quoted: msg})
+					limitAdd(sender, limit)
+				break
+			case prefix+'elf':
+				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+				var data = await getBuffer(`https://api.lolhuman.xyz/api/random/elf?apikey=Rafly11`)
+				await conn.sendMessage(from, {image: data, 
+					caption: `*ELF*`,
+					buttons : [{buttonId: `${command}`, buttonText: { displayText: "Next" }, type: 1 }],
+					footer: setting.fake},
+					{quoted: msg})
+					limitAdd(sender, limit)
+				break
+			case prefix+'megumin':
+				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+				var data = await getBuffer(`https://api.lolhuman.xyz/api/random/megumin?apikey=Rafly11`)
+				await conn.sendMessage(from, {image: data, 
+					caption: `*MEGUMIN*`,
+					buttons : [{buttonId: `${command}`, buttonText: { displayText: "Next" }, type: 1 }],
+					footer: setting.fake},
+					{quoted: msg})
+					limitAdd(sender, limit)
+				break
+			case prefix+'sagiri':
+				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+				var data = await getBuffer(`https://api.lolhuman.xyz/api/random/sagiri?apikey=Rafly11`)
+				await conn.sendMessage(from, {image: data, 
+					caption: `*SAGIRI*`,
+					buttons : [{buttonId: `${command}`, buttonText: { displayText: "Next" }, type: 1 }],
+					footer: setting.fake},
+					{quoted: msg})
+					limitAdd(sender, limit)
+				break
+			case prefix+'elaina':
+				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+				var data = await getBuffer(`https://api.lolhuman.xyz/api/random/elaina?apikey=Rafly11`)
+				await conn.sendMessage(from, {image: data, 
+					caption: `*ELAINA*`,
+					buttons : [{buttonId: `${command}`, buttonText: { displayText: "Next" }, type: 1 }],
+					footer: setting.fake},
+					{quoted: msg})
+					limitAdd(sender, limit)
+				break
+			case prefix+'shinobu':
+				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+				var data = await getBuffer(`https://api.lolhuman.xyz/api/random/shinobu?apikey=Rafly11`)
+				await conn.sendMessage(from, {image: data, 
+					caption: `*shinobu*`,
+					buttons : [{buttonId: `${command}`, buttonText: { displayText: "Next" }, type: 1 }],
+					footer: setting.fake},
+					{quoted: msg})
+					limitAdd(sender, limit)
 				break
 			
 			
@@ -884,7 +1005,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				  })
 				})
 			    break
-				case prefix+'tebakkimia': case prefix+'tebakimia':
+			case prefix+'tebakkimia': case prefix+'tebakimia':
 				if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
 			    if (isPlayGame(from, tebakkimia)) return conn.reply(from, `Masih ada game yang belum diselesaikan`, tebakkimia[getGamePosi(from, tebakkimia)].msg)
 				var data = await fetchJson(`https://docs-jojo.herokuapp.com/api/tebak-unsur-kimia`)
@@ -896,9 +1017,20 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				addPlayGame(from, 'Tebak Kimia', jawab, gamewaktu, res, tebakkimia)
 					gameAdd(sender, glimit)
 				})
-					break
-
-
+				break
+			case prefix+'susunkata':
+				if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
+			    if (isPlayGame(from, susunkata)) return conn.reply(from, `Masih ada game yang belum diselesaikan`, susunkata[getGamePosi(from, susunkata)].msg)
+				var data = await fetchJson(`https://api.lolhuman.xyz/api/tebak/susunkata?apikey=Rafly11`)
+				var jawaban = data.result.jawaban.split('Jawaban ').join('')
+				var cptn = `*SUSUN KATA*\n\n${data.result.pertanyaan}\n\nWaktu : ${gamewaktu}s`
+				reply(cptn)
+				.then( res => {
+				var jawab = jawaban.toLowerCase()
+				addPlayGame(from, 'susunkata', jawab, gamewaktu, res, susunkata)
+					gameAdd(sender, glimit)
+				})
+				break
 
 			// Group Menu
 			case prefix+'linkgrup': case prefix+'link': case prefix+'linkgc':
@@ -974,35 +1106,35 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		        groupMembers.map( i => mem.push(i.id) )
 				conn.sendMessage(from, { text: q ? q : '', mentions: mem })
 			    break
-                        case prefix+'welcome':
-                            if (!isGroup) return reply(mess.OnlyGrup)
-                            if (!isGroupAdmins && !isOwner) return reply(mess.GrupAdmin)
-                            if (args.length < 2) return reply(`Pilih enable atau disable`)
-                            if (args[1].toLowerCase() === "enable") {
-                              if (isWelcome) return reply(`Welcome sudah aktif`)
-                              welcome.push(from)
-                              fs.writeFileSync('./database/welcome.json', JSON.stringify(welcome, null, 2))
-                              reply(`Sukses mengaktifkan welcome di grup ini`)
-                            } else if (args[1].toLowerCase() === "disable") {
-                              if (!isWelcome) return reply(`Welcome sudah nonaktif`)
-                              var posi = welcome.indexOf(from)
-                              welcome.splice(posi, 1)
-                              fs.writeFileSync('./database/welcome.json', JSON.stringify(welcome, null, 2))
-                              reply(`Sukses menonaktifkan welcome di grup ini`)
-                            } else {
-                              reply(`Pilih enable atau disable`)
-                            }
-                            break
+				case prefix+'welcome':
+					if (!isGroup) return reply(mess.OnlyGrup)
+					if (!isGroupAdmins && !isOwner) return reply(mess.GrupAdmin)
+					if (args.length < 2) return reply(`Pilih enable atau disable`)
+					if (args[1].toLowerCase() === "enable") {
+					  if (isWelcome) return reply(`Welcome sudah aktif`)
+					  welcome.push(from)
+					  fs.writeFileSync('./database/welcome.json', JSON.stringify(welcome, null, 2))
+					  reply(`Sukses mengaktifkan welcome di grup ini`)
+					} else if (args[1].toLowerCase() === "disable") {
+					  if (!isWelcome) return reply(`Welcome sudah nonaktif`)
+					  var posi = welcome.indexOf(from)
+					  welcome.splice(posi, 1)
+					  fs.writeFileSync('./database/welcome.json', JSON.stringify(welcome, null, 2))
+					  reply(`Sukses menonaktifkan welcome di grup ini`)
+					} else {
+					  reply(`Pilih enable atau disable`)
+					}
+					break
 			
 			// Bank & Payment Menu
-			case prefix+'topbalance':{
+			case prefix+'topbalance': case prefix+'top':{
                 balance.sort((a, b) => (a.balance < b.balance) ? 1 : -1)
                 let top = '*❒ 「 TOP BALANCE 」 ❒*\n\n'
                 let arrTop = []
 				var total = 10
 				if (balance.length < 10) total = balance.length
                 for (let i = 0; i < total; i ++){
-                    top += `${i + 1}. @${balance[i].id.split("@")[0]}\n=> Balance : $${balance[i].balance}\n\n`
+                    top += `${i + 1}. @${balance[i].id.split("@")[0]}\n┗➥ Balance : $${balance[i].balance}\n\n`
                     arrTop.push(balance[i].id)
                 }
                 mentions(top, arrTop, true)

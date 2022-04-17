@@ -19,14 +19,10 @@ function toCommas(x) {
 	return x;
 }
 
-exports.allmenu = (prefix, pushname) => {
+exports.allmenu = (pushname, prefix) => {
 	return `*── 「 ${setting.botName} - Beta 」 ──*
 	
-  _*${ucapanWaktu} ${pushname !== undefined ? pushname : 'Kak'}*_
-
-    Prefix : ( ${prefix} )
-    Tanggal Server : ${moment.tz('Asia/Jakarta').format('DD/MM/YY')}
-    Waktu Server : ${moment.tz('Asia/Jakarta').format('HH:mm:ss')}${readmore}
+  _*${ucapanWaktu} ${pushname !== undefined ? pushname : 'Kak'}*_\n${readmore}
 `
 +`
 ┏━━━⊱ ⸨ *GENERAL* ⸩
@@ -34,7 +30,7 @@ exports.allmenu = (prefix, pushname) => {
 ┣➥ ${prefix}profile
 ┣➥ ${prefix}owner
 ┣➥ ${prefix}donate
-┣➥ ${prefix}speed
+┣➥ ${prefix}info
 ┣➥ ${prefix}runtime
 ┣➥ ${prefix}listprem
 ┗──────────────────⊱
@@ -53,8 +49,10 @@ exports.allmenu = (prefix, pushname) => {
 ┣➥ ${prefix}ytmp3
 ┣➥ ${prefix}ytmp4
 ┣➥ ${prefix}tiktok
-┣➥ ${prefix}igdl
+┣➥ ${prefix}instagram
+┣➥ ${prefix}facebook
 ┣➥ ${prefix}pinterestvid
+┣➥ ${prefix}zippyshare
 ┗──────────────────⊱
 
 ┏━━━⊱ ⸨ *SEARCH* ⸩
@@ -66,10 +64,16 @@ exports.allmenu = (prefix, pushname) => {
 
 ┏━━━⊱ ⸨ *ANIMANGA* ⸩
 ┣──────────────────⊱
+┣➥ ${prefix}animestory
 ┣➥ ${prefix}waifu
 ┣➥ ${prefix}loli
 ┣➥ ${prefix}neko
 ┣➥ ${prefix}cosplay
+┣➥ ${prefix}elf
+┣➥ ${prefix}megumin
+┣➥ ${prefix}sagiri
+┣➥ ${prefix}elaina
+┣➥ ${prefix}shinobu
 ┗──────────────────⊱
 
 ┏━━━⊱ ⸨ *GAME* ⸩
@@ -78,6 +82,7 @@ exports.allmenu = (prefix, pushname) => {
 ┣➥ ${prefix}delttt
 ┣➥ ${prefix}tebakgambar
 ┣➥ ${prefix}tebakkimia
+┣➥ ${prefix}susunkata
 ┣──────────────────⊱
 ┣➥ ${prefix}buylimit
 ┣➥ ${prefix}buyglimit
@@ -96,6 +101,7 @@ exports.allmenu = (prefix, pushname) => {
 ┣➥ ${prefix}group
 ┣➥ ${prefix}revoke
 ┣➥ ${prefix}hidetag
+┣➥ ${prefix}welcome
 ┗──────────────────⊱`
 +`\n\n`
 }
