@@ -42,14 +42,83 @@ let premium = JSON.parse(fs.readFileSync('./database/premium.json'));
 let balance = JSON.parse(fs.readFileSync('./database/balance.json'));
 let limit = JSON.parse(fs.readFileSync('./database/limit.json'));
 let glimit = JSON.parse(fs.readFileSync('./database/glimit.json'));
+let _level = JSON.parse(fs.readFileSync('./database/level.json'));
 
+//LEVELING
+const getLevelingXp = (sender) => {
+	let position = false
+	Object.keys(_level).forEach((i) => {
+		if (_level[i].id === sender) {
+			position = i
+		}
+	})
+	if (position !== false) {
+		return _level[position].xp
+	}
+}
+
+const getLevelingLevel = (sender) => {
+	let position = false
+	Object.keys(_level).forEach((i) => {
+		if (_level[i].id === sender) {
+			position = i
+		}
+	})
+	if (position !== false) {
+		return _level[position].level
+	}
+}
+
+const getLevelingId = (sender) => {
+	let position = false
+	Object.keys(_level).forEach((i) => {
+		if (_level[i].id === sender) {
+			position = i
+		}
+	})
+	if (position !== false) {
+		return _level[position].id
+	}
+}
+
+const addLevelingXp = (sender, amount) => {
+	let position = false
+	Object.keys(_level).forEach((i) => {
+		if (_level[i].id === sender) {
+			position = i
+		}
+	})
+	if (position !== false) {
+		_level[position].xp += amount
+		fs.writeFileSync('./database/level.json', JSON.stringify(_level))
+	}
+}
+
+const addLevelingLevel = (sender, amount) => {
+	let position = false
+	Object.keys(_level).forEach((i) => {
+		if (_level[i].id === sender) {
+			position = i
+		}
+	})
+	if (position !== false) {
+		_level[position].level += amount
+		fs.writeFileSync('./database/level.json', JSON.stringify(_level))
+	}
+}
+
+const addLevelingId = (sender) => {
+	const obj = {id: sender, xp: 1, level: 1}
+	_level.push(obj)
+	fs.writeFileSync('./database/level.json', JSON.stringify(_level), null, 2)
+}
 
 moment.tz.setDefault("Asia/Jakarta").locale("id");
 
 module.exports = async(conn, msg, m, setting, store, welcome) => {
 	try {
 		let { ownerNumber, botName, gamewaktu, limitCount } = setting
-		let { allmenu } = require('./help')
+		let { allmenu, levelup } = require('./help')
 		const { type, quotedMsg, mentioned, now, fromMe } = msg
 		if (msg.isBaileys) return
 		const jam = moment.tz('asia/jakarta').format('HH:mm:ss')
@@ -238,6 +307,25 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		// Premium
 		_prem.expiredCheck(conn, premium)
 
+		//function leveling
+		if (isGroup && isUser) {
+            const currentLevel = getLevelingLevel(sender)
+            const checkId = getLevelingId(sender)
+            try {
+                if (currentLevel === undefined && checkId === undefined) addLevelingId(sender)
+                const amountXp = Math.floor(Math.random() * 10) + 500
+                const requiredXp = 5000 * (Math.pow(2, currentLevel) - 1)
+                const getLevel = getLevelingLevel(sender)
+                addLevelingXp(sender, amountXp)
+                if (requiredXp <= getLevelingXp(sender)) {
+                    addLevelingLevel(sender, 1)
+                    await reply(levelup(pushname, sender, getLevelingXp,  getLevel, getLevelingLevel))
+                }
+            } catch (err) {
+                console.error(err)
+            }
+        }
+
 		// Tictactoe
 		if (isTicTacToe(from, tictactoe)) tictac(chats, prefix, tictactoe, from, sender, reply, mentions, addBalance, balance)
 
@@ -317,8 +405,9 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			case prefix:
 			case 'test':
 			case 'bot':
+			case '@421951902500':
 				const test = `${ucapanWaktu} ${pushname}`
-				const thumbtest = await getBuffer(`https://api.lolhuman.xyz/api/random2/kemonomimi?apikey=Rafly11`)
+				const thumbtest = await getBuffer(`https://api.lolhuman.xyz/api/random/art?apikey=Rafly11`)
 				conn.sendMessage(from, { caption: `${test}`, image: thumbtest, buttons: [{buttonId: `${prefix}help`, buttonText: { displayText: "MENU" }, type: 1 }], footer: setting.fake }, { quoted: msg })
 				break
 			// Main Menu
@@ -338,8 +427,8 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				+`*Prefix:* ${prefix}\n`
 				+`*Registered*: ${_user}\n`
 				+`*Library:* Baileys-md\n`
-				+`*Runtime:* ${runtime(process.uptime())}\n`
-				+`*SpeedTest:* ${latensi.toFixed(4)} Second\n\n`
+				+`*SpeedTest:* ${latensi.toFixed(4)} Second\n`
+				+`*RunTime:* ${runtime(process.uptime())}\n\n`
 				+`*Date:* ${moment.tz('Asia/Jakarta').format('DD/MM/YY')}\n`
 				+`*Time:* ${moment.tz('Asia/Jakarta').format('HH:mm:ss')}\n\n`
 				+`--------------------------\n`
@@ -368,7 +457,10 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				+`${prefix}cosplay\n\n`
 				+`*[17-04-2022]*\n`
 				+`${prefix}susunkata\n`
-				+`${prefix}tebakkimia\n`
+				+`${prefix}tebakkimia\n\n`
+				+`*[20-04-2022]*\n`
+				+`Added Leveling System\n`
+				+`${prefix}storyanime`
 				reply(cptn)
 				break
 			case prefix+'runtime':
@@ -640,7 +732,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				conn.sendMessage(from, {document: aud, fileName: `${data.title}.mp3`, mimetype: "audio/mp3"}, {quoted: msg})
 				limitAdd(sender, limit)
 			    break
-			case prefix+'igdl': case prefix+'instagram': case prefix+'ig':
+			case prefix+'ig': case prefix+'igdl': case prefix+'instagram':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 				if (args.length < 2) return reply(`Kirim perintah ${command} link`)
 			    if (!isUrl(args[1])) return reply(mess.error.Iv)
@@ -671,6 +763,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				}).catch(() => reply(mess.error.api))
 			    break
 			case prefix+'zippyshare': case prefix+'zippy': case prefix+'zp':
+				if (!isGroup) return reply(mess.OnlyGrup)
 				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 				if (args.length < 2) return reply(`Kirim perintah ${command} link`)
 				if (!args[1].includes('zippy')) return reply(mess.error.Iv)
@@ -1139,7 +1232,6 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                 }
                 mentions(top, arrTop, true)
             }
-                break
             case prefix+'buylimit':{
                 if (args.length < 2) return reply(`Kirim perintah *${prefix}buylimit* jumlah limit yang ingin dibeli\n\nHarga 1 limit = $150 balance`)
                 if (args[1].includes('-')) return reply(`Jangan menggunakan -`)
@@ -1203,6 +1295,8 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				let premiumnya = `*Expire :* ${cekvip.days} day(s) ${cekvip.hours} hour(s) ${cekvip.minutes} minute(s)`
 				let header = `❒ *「 Profile User 」* ❒\n`
 				let type = `❒ *Type* : ${isOwner ? 'Owner' : isPremium ? 'Premium' : 'Free'}`
+				var xp = `❒ *Xp:* ${getLevelingXp(sender)}`
+				var level = `❒ *Level:* ${getLevelingLevel(sender)}`
 				let limith = `❒ *Limit :* ${isOwner ? '∞' : isPremium ? 'Unlimited' : getLimit(sender, limitCount, limit)}`
                 let limitg = `❒ *Game Limit :* ${isOwner ? '∞' : cekGLimit(sender, gcount, glimit)}`
 				let expired = `❒ *Expired :* ${isOwner ? '∞' : isPremium ? premiumnya : '-'}`
@@ -1212,12 +1306,14 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 					var pp = 'https://i0.wp.com/www.gambarunik.id/wp-content/uploads/2019/06/Top-Gambar-Foto-Profil-Kosong-Lucu-Tergokil-.jpg'
 				  }
 				const ppnye = await getBuffer(pp)
-				var profile = `${header}\n${type}\n${expired}\n${limitg}\n${limith}\n`
+				var profile = `${header}\n${type}\n${xp}\n${level}\n${expired}\n${limitg}\n${limith}\n`
 				conn.sendMessage(from, {image: ppnye, caption: profile}, {quoted:msg})
                 break
+
+			
 			default:
 			if (!isGroup && isCmd) {
-				reply(`Command belum tersedia, coba beberapa hari kedepan yaa! _^`)
+				reply(`*CMD Not Found* ಠ_ಠ`)
 			}
 		}
 	} catch (err) {

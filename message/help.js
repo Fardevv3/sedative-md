@@ -19,6 +19,17 @@ function toCommas(x) {
 	return x;
 }
 
+exports.levelup = (pushname, sender, getLevelingXp,  getLevel, getLevelingLevel, role) => {
+	return`
+┏━━━⊱ ⸨ *LEVEL UP* ⸩
+┣──────────────────⊱
+┣➥ *Name* : ${pushname}
+┣➥ *Number* : wa.me/${sender.split("@")[0]}
+┣➥ *Xp* : ${getLevelingXp(sender)}
+┣➥ *Level* : ${getLevel} ⊱ ${getLevelingLevel(sender)}
+┗──────────────────⊱
+`}
+
 exports.allmenu = (pushname, prefix) => {
 	return `*── 「 ${setting.botName} - Beta 」 ──*
 	
