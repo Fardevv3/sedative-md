@@ -30,10 +30,11 @@ const { Sticker, createSticker, StickerTypes } = require('wa-sticker-formatter')
 
 
 // DB Game
-let tictactoe = [];
+let tictactoe = []
 let tebakgambar = []
 let tebakkimia = []
 let susunkata = []
+let tebakchara = []
 
 // Database
 let pendaftar = JSON.parse(fs.readFileSync('./database/user.json'))
@@ -325,6 +326,27 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                 console.error(err)
             }
         }
+		
+		//function rank 
+		const levelRole = getLevelingLevel(sender)
+		var role = 'Destroyer'
+		if (levelRole <= 3) {
+			role = 'Warrior'
+		} else if (levelRole <= 5) {
+			role = 'Knight'
+		} else if (levelRole <= 9) {
+			role = 'General'
+		} else if (levelRole <= 13) {
+			role = 'Guardian'
+		} else if (levelRole <= 17) {
+			role = 'Monster Tamer'
+		} else if (levelRole <= 25) {
+			role = 'Dragon Slayer'
+		} else if (levelRole <= 32) {
+			role = 'Demon Lord'
+		} else if (levelRole <= 50) {
+			role = 'Fallen Angel'
+		}
 
 		// Tictactoe
 		if (isTicTacToe(from, tictactoe)) tictac(chats, prefix, tictactoe, from, sender, reply, mentions, addBalance, balance)
@@ -357,6 +379,16 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		    susunkata.splice(getGamePosi(from, susunkata), 1)
 		  }
 		}
+		cekWaktuGame(conn, tebakchara)
+		if (isPlayGame(from, tebakchara) && isUser) {
+		  if (chats.toLowerCase() == getJawabanGame(from, tebakchara)) {
+		    var htgm = randomNomor(200, 300)
+			addBalance(sender, htgm, balance)
+		    reply(`*Selamat Jawaban Kamu Benar 🎉*\n\nJawaban : ${getJawabanGame(from, tebakchara)}\nHadiah : ${htgm} balance\n\nIngin bermain lagi? ketik *${prefix}tebakchara*`)
+		    tebakchara.splice(getGamePosi(from, tebakchara), 1)
+		  }
+		}
+
 
 		if (chats.startsWith("> ") && isOwner) {
 		console.log(color('[EVAL]'), color(moment(msg.messageTimestamp * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`Dari Owner aowkoakwoak`))
@@ -414,7 +446,8 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			case prefix+'menu':
 			case prefix+'help':
 			    var teks = allmenu(pushname, prefix)
-			    conn.sendMessage(from, { caption: teks, location: { jpegThumbnail: fs.readFileSync(setting.pathimg) }, templateButtons: buttonsDefault, footer: setting.fake, mentions: [sender] })
+				var thumbhelp = fs.readFileSync(setting.pathimg)
+			    conn.sendMessage(from, { caption: teks, image: thumbhelp, templateButtons: buttonsDefault, footer: setting.fake, mentions: [sender] })
 				break
 			case prefix+'info':
 				const user = JSON.parse(fs.readFileSync('./database/user.json'))
@@ -431,10 +464,11 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				+`*RunTime:* ${runtime(process.uptime())}\n\n`
 				+`*Date:* ${moment.tz('Asia/Jakarta').format('DD/MM/YY')}\n`
 				+`*Time:* ${moment.tz('Asia/Jakarta').format('HH:mm:ss')}\n\n`
-				+`--------------------------\n`
 				+`*SIMPLE RULES:*\n`
 				+`Call/Spam = Block!!!\n`
 				+`Kelewat gblk = block!!!\n`
+				+`--------------------------\n`
+				+`Create by @Rafly~\n01-12-2020`
 				await conn.sendMessage(from, {image: data, caption: info}, {quoted: msg})
 				break
 			case prefix+'changelog':
@@ -460,7 +494,10 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				+`${prefix}tebakkimia\n\n`
 				+`*[20-04-2022]*\n`
 				+`Added Leveling System\n`
-				+`${prefix}storyanime`
+				+`${prefix}storyanime\n\n`
+				+`*[21-04-2022]*\n`
+				+`ytmp3/ytmp4, play fixed\n`
+				+`${tebakchara}\n`
 				reply(cptn)
 				break
 			case prefix+'runtime':
@@ -599,45 +636,45 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			    if (!isUrl(args[1])) return reply(mess.error.Iv)
 			    if (!args[1].includes('tiktok')) return reply(mess.error.Iv)
 			    reply(mess.wait)
-			    hxz.ttdownloader(args[1]).then( data => {
-			      conn.sendMessage(from, { video: { url: data.nowm }}, { quoted: msg })
-			      limitAdd(sender, limit)
-				}).catch(() => reply(mess.error.api))
-			    break
+			    data = await fetchJson(`https://api.lolhuman.xyz/api/tiktok?apikey=Rafly11&url=${q}`)
+				var vid = await getBuffer(data.result.link)
+				await conn.sendMessage(from, {video : vid}, {quoted: msg})
+				limitAdd(sender, limit)
+			   break
 			case prefix+'tiktokaudio':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			    if (args.length < 2) return reply(`Kirim perintah ${command} link`)
 			    if (!isUrl(args[1])) return reply(mess.error.Iv)
 			    if (!args[1].includes('tiktok')) return reply(mess.error.Iv)
 			    reply(mess.wait)
-			    hxz.ttdownloader(args[1]).then( data => {
-			      conn.sendMessage(from, { audio: { url: data.nowm }, mimetype: 'audio/mp4' }, { quoted: msg })
-			       limitAdd(sender, limit)
-				}).catch(() => reply(mess.error.api))
+			    var data = await getBuffer(`https://api.lolhuman.xyz/api/tiktokmusic?apikey=Rafly11&url=${q}`)
+				await conn.sendMessage(from, {audio: data}, {quoted: msg})
 		        break
-					case prefix+'pindl':
-					case prefix+'pinvid':
-					case prefix+'pinterestvid':
-					case prefix+'pinterestvideo':
-						if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
-						if (args.length < 2) return reply(`Kirim perintah ${command} link`)
+			case prefix+'pindl':
+			case prefix+'pinvid':
+			case prefix+'pinterestvid':
+			case prefix+'pinterestvideo':
+				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+				if (args.length < 2) return reply(`Kirim perintah ${command} link`)
 					var data = await fetchJson(`https://bot25-api.herokuapp.com/downloader/pindl?link=${q}`)
 					const pin = await getBuffer(data.result)
 					await conn.sendMessage(from, { video: pin }, { quoted: msg })
 					limitAdd(sender, limit)
 					break
             case prefix+'play':
+				try {
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
                 if (args.length < 2) return reply(`Kirim perintah ${command} query\nContoh : ${command} monokrom`)
-                var data = await fetchJson(`https://bot25-api.herokuapp.com/downloader/play?query=${q}`)
-				var thumb = await getBuffer(data.thumb)
+                var data = await fetchJson(`https://api.lolhuman.xyz/api/ytplay?apikey=Rafly11&query=${q}`)
+				var hasil = data.result
+				var thumb = await getBuffer(hasil.info.thumbnail)
 				var cptn = `*YOUTUBE PLAY*\n\n`
-				+`*Title:* ${data.title}\n`
-				+`*Video Size:* ${data.filesize_video}\n`
-				+`*Audio Size:* ${data.filesize_audio}\n`
-				+`*Views:* ${data.views}\n`
-				+`*Likes:* ${data.likes}\n\n`
-				+`*Desc:*\n${data.desc}`
+				+`*Title:* ${hasil.info.title}\n`
+				+`*Video Size:* ${hasil.video.size}\n`
+				+`*Audio Size:* ${hasil.audio.size}\n`
+				+`*Views:* ${hasil.info.view}\n`
+				+`*Likes:* ${hasil.info.like}\n\n`
+				+`*Desc:*\n${hasil.info.description}`
 				conn.sendMessage(from, {
 					image: thumb,
 					caption: cptn,
@@ -646,29 +683,37 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 					footer: setting.fake
 				   }, { quoted: msg })
 				   limitAdd(sender, limit)
+				} catch(err) {
+					reply(mess.error.api)
+				}
                 break
 			
 			case prefix+'playvid':
-				data = await fetchJson(`https://bot25-api.herokuapp.com/downloader/play?query=${q}`)
-				var vid = await getBuffer(data.video)
+				data = await fetchJson(`https://api.lolhuman.xyz/api/ytplay?apikey=Rafly11&query=${q}`)
+				var hasil = data.result
+				var result = hasil.video
+				var vid = await getBuffer(result.link)
 				conn.sendMessage(from, {video: vid}, {quoted: msg})
 				break
 			case prefix+'playaud':
-				data = await fetchJson(`https://bot25-api.herokuapp.com/downloader/play?query=${q}`)
-				var aud = await getBuffer(data.audio)
-				conn.sendMessage(from, {document: aud, fileName: `${data.title}.mp3`, mimetype: "audio/mp3"}, {quoted: msg})
+				data = await fetchJson(`https://api.lolhuman.xyz/api/ytplay?apikey=Rafly11&query=${q}`)
+				var hasil = data.result
+				var result = hasil.audio
+				var aud = await getBuffer(result.link)
+				conn.sendMessage(from, {document: aud, fileName: `${hasil.info.title}.mp3`, mimetype: "audio/mp3"}, {quoted: msg})
 				break
 			case prefix+'mp4': case prefix+'ytmp4':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			    if (args.length < 2) return reply(`Kirim perintah ${command} link`)
 			    if (!isUrl(args[1])) return reply(mess.error.Iv)
 			    if (!args[1].includes('youtu.be') && !args[1].includes('youtube.com')) return reply(mess.error.Iv)
-			    var data = await fetchJson(`https://bot25-api.herokuapp.com/downloader/youtube?link=${q}`)
+			    var data = await fetchJson(`https://api.lolhuman.xyz/api/ytvideo?apikey=Rafly11&url=${q}`)
+				var hasil = data.result
 				var cptn = `*YOUTUBE VIDEO DOWNLOADER*\n\n`
-				+`*Title:* ${data.title}\n`
-				+`*Size:* ${data.filesize_video}\n\n`
-				+`*Desc:*\n${data.desc}`
-				var vid = await getBuffer(data.video)
+				+`*Title:* ${hasil.title}\n`
+				+`*Duration:* ${hasil.duration}\n`
+				+`*Desc:*\n${hasil.description}`
+				var vid = await getBuffer(hasil.link.link)
 				conn.sendMessage(from, {video: vid, caption: cptn}, {quoted: msg})
 				limitAdd(sender, limit)
 				break
@@ -677,15 +722,17 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			    if (args.length < 2) return reply(`Kirim perintah ${command} link`)
 			    if (!isUrl(args[1])) return reply(mess.error.Iv)
 			    if (!args[1].includes('youtu.be') && !args[1].includes('youtube.com')) return reply(mess.error.Iv)
-			    data = await fetchJson(`https://bot25-api.herokuapp.com/downloader/youtube?link=${q}`)
-				var thumb = await getBuffer(data.thumb)
+			    data = await fetchJson(`https://api.lolhuman.xyz/api/ytaudio?apikey=Rafly11&url=${q}`)
+				var hasil = data.result
+				var thumb = await getBuffer(hasil.thumbnail)
 				var cptn = `*YOUTUBE AUDIO DOWNLOADER*\n\n`
-				+`*Title:* ${data.title}\n`
-				+`*Size:* ${data.filesize_audio}\n\n`
-				+`*Desc:*\n${data.desc}`
+				+`*Title:* ${hasil.title}\n`
+				+`*Size:* ${hasil.link.size}\n`
+				+`*Duration'* ${hasil.duration}\n`
+				+`*Desc:*\n${hasil.description}`
 				await conn.sendMessage(from, {image: thumb, caption: cptn}, {quoted: msg})
-				var aud = await getBuffer(data.audio)
-				conn.sendMessage(from, {document: aud, fileName: `${data.title}.mp3`, mimetype: "audio/mp3"}, {quoted: msg})
+				var aud = await getBuffer(hasil.link.link)
+				conn.sendMessage(from, {document: aud, fileName: `${hasil.title}.mp3`, mimetype: "audio/mp3"}, {quoted: msg})
 				limitAdd(sender, limit)
 			    break
 			
@@ -1006,7 +1053,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 					}
 				    limitAdd(sender, limit)
 				  } else {
-					var but = [{buttonId: `${command} ${q}`, buttonText: { displayText: 'Next Photo' }, type: 1 }]
+					var but = [{buttonId: `${command} ${q}`, buttonText: { displayText: 'Next' }, type: 1 }]
 					conn.sendMessage(from, { caption: `*${q}*`, image: { url: pickRandom(data.result) }, buttons: but, footer: setting.fake }, { quoted: msg })
 				    limitAdd(sender, limit)
 				  }
@@ -1124,6 +1171,20 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 					gameAdd(sender, glimit)
 				})
 				break
+			case prefix+'tebakchara': case prefix+'tebakcharacter':
+		        if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
+			    if (isPlayGame(from, tebakchara)) return conn.reply(from, `Masih ada game yang belum diselesaikan`, tebakchara[getGamePosi(from, tebakchara)].msg)
+				var data = await fetchJson(`https://api.lolhuman.xyz/api/tebakchara?apikey=Rafly11`)
+				var thumb = await getBuffer(data.result.image)
+				  jawaban = data.result.name.split('name ').join('')
+				  var teks = `*TEBAK KARAKTER*\n\n`+monospace(`Petunjuk : ${data.result.name.replace(/[b|c|d|f|g|h|j|k|l|m|n|p|q|r|s|t|v|w|x|y|z]/gi, '_')}\nWaktu : ${gamewaktu}s`)
+				  conn.sendMessage(from, { image: thumb, caption: teks }, { quoted: msg })
+				  .then( res => {
+					var jawab = jawaban.toLowerCase()
+					addPlayGame(from, 'Tebak Karakter', jawab, gamewaktu, res, tebakchara)
+					gameAdd(sender, glimit)
+				  })
+			    break
 
 			// Group Menu
 			case prefix+'linkgrup': case prefix+'link': case prefix+'linkgc':
@@ -1220,7 +1281,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 					break
 			
 			// Bank & Payment Menu
-			case prefix+'topbalance': case prefix+'top':{
+			case prefix+'topbalance': {
                 balance.sort((a, b) => (a.balance < b.balance) ? 1 : -1)
                 let top = '*❒ 「 TOP BALANCE 」 ❒*\n\n'
                 let arrTop = []
@@ -1231,7 +1292,21 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                     arrTop.push(balance[i].id)
                 }
                 mentions(top, arrTop, true)
+			}
+			break
+			case prefix+'toplevel':{
+                _level.sort((a, b) => (a.xp < b.xp) ? 1 : -1)
+                let topl = '*❒ 「 TOP LEVEL 」 ❒*\n\n'
+                let arrTopl = []
+				var total = 10
+				if (_level.length < 10) total = _level.length
+                for (let i = 0; i < total; i ++){
+                    topl += `${i + 1}. @${_level[i].id.split("@")[0]}\n┗⊱ *XP*: ${_level[i].xp} *Level*: ${_level[i].level}\n\n`
+                    arrTopl.push(_level[i].id)
+                }
+                mentions(topl, arrTopl, true)
             }
+			break
             case prefix+'buylimit':{
                 if (args.length < 2) return reply(`Kirim perintah *${prefix}buylimit* jumlah limit yang ingin dibeli\n\nHarga 1 limit = $150 balance`)
                 if (args[1].includes('-')) return reply(`Jangan menggunakan -`)
@@ -1297,6 +1372,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				let type = `❒ *Type* : ${isOwner ? 'Owner' : isPremium ? 'Premium' : 'Free'}`
 				var xp = `❒ *Xp:* ${getLevelingXp(sender)}`
 				var level = `❒ *Level:* ${getLevelingLevel(sender)}`
+				var roleny = `❒ *Role:* ${role}`
 				let limith = `❒ *Limit :* ${isOwner ? '∞' : isPremium ? 'Unlimited' : getLimit(sender, limitCount, limit)}`
                 let limitg = `❒ *Game Limit :* ${isOwner ? '∞' : cekGLimit(sender, gcount, glimit)}`
 				let expired = `❒ *Expired :* ${isOwner ? '∞' : isPremium ? premiumnya : '-'}`
@@ -1306,11 +1382,11 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 					var pp = 'https://i0.wp.com/www.gambarunik.id/wp-content/uploads/2019/06/Top-Gambar-Foto-Profil-Kosong-Lucu-Tergokil-.jpg'
 				  }
 				const ppnye = await getBuffer(pp)
-				var profile = `${header}\n${type}\n${xp}\n${level}\n${expired}\n${limitg}\n${limith}\n`
+				var profile = `${header}\n${type}\n${xp}\n${level}\n${roleny}\n${expired}\n${limitg}\n${limith}\n`
 				conn.sendMessage(from, {image: ppnye, caption: profile}, {quoted:msg})
                 break
-
 			
+
 			default:
 			if (!isGroup && isCmd) {
 				reply(`*CMD Not Found* ಠ_ಠ`)

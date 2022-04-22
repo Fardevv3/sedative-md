@@ -94,12 +94,14 @@ exports.allmenu = (pushname, prefix) => {
 ┣➥ ${prefix}tebakgambar
 ┣➥ ${prefix}tebakkimia
 ┣➥ ${prefix}susunkata
+┣➥ ${prefix}tebakchara
 ┣──────────────────⊱
 ┣➥ ${prefix}buylimit
 ┣➥ ${prefix}buyglimit
 ┣➥ ${prefix}transfer
 ┣➥ ${prefix}limit
 ┣➥ ${prefix}balance
+┣➥ ${prefix}toplevel
 ┣➥ ${prefix}topbalance
 ┗──────────────────⊱
 
