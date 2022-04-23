@@ -3,9 +3,10 @@
   "ownerName": ["@Rafly11~"],
   "botName": "ユウキ || Yuuki",
   "sessionName": "rafly-md",
-  "pathimg": "./media/menu.jpeg",
+  "pathimg": "./media/menupic.jpeg",
+  "pathgif": "./media/menugif.mp4",
   "fake" : "𝚂𝙴𝙳𝙰𝚃𝙸𝚅𝙴 𝙰𝚁𝙴𝙰 | ボット",
-  "gamewaktu": 60,
+  "gamewaktu": 90,
   "limitCount": 25,
   "gcount": {
 	"prem": 35,
