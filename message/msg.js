@@ -275,10 +275,34 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			+ 'END:VCARD'
 			return conn.sendMessage(from, { contacts: { displayName: name, contacts: [{ vcard }] }, mentions : mn ? mn : []},{ quoted: quoted })
 		}
+		const ftokoo = {
+			key: {
+			  fromMe: false,
+			  participant: `0@s.whatsapp.net`,
+			  ...(from ? { remoteJid: "16505434800@s.whatsapp.net" } : {}),
+			},
+			message: {
+			  productMessage: {
+				product: {
+				  productImage: {
+					mimetype: "image/jpeg",
+					jpegThumbnail: fs.readFileSync(setting.pathimg), //Gambarnye
+				  },
+				  title: `${pushname}`, //Kasih namalu
+				  description: `${pushname}`,
+				  currencyCode: "USD",
+				  priceAmount1000: `${getBalance(sender, balance)}`,
+				  retailerId: "YogiPw",
+				  productImageCount: 1,
+				},
+				businessOwnerJid: `0@s.whatsapp.net`,
+			  },
+			},
+		  };
 		
 		const buttonsDefault = [
 			{ callButton: { displayText: `OWNER NUMBER`, phoneNumber: `+687 73.13.67` } },
-			{ urlButton: { displayText: `BOT GROUP`, url : `https://chat.whatsapp.com/FNvoKzB3VlY8MInlFJcecg` } },
+			{ urlButton: { displayText: `BOT GROUP`, url : `https://chat.whatsapp.com/LObEv5fMlW6Hjm34qc6p69` } },
 			{ quickReplyButton: { displayText: `Owner`, id: `${prefix}owner` } },
 			{ quickReplyButton: { displayText: `Info`, id: `${prefix}info` } },
 			{ quickReplyButton: { displayText: `Changelog`, id: `${prefix}changelog` } }
@@ -439,7 +463,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			case 'bot':
 			case '@421951902500':
 				const test = `${ucapanWaktu} ${pushname}`
-				const thumbtest = await getBuffer(`https://api.lolhuman.xyz/api/random/art?apikey=Rafly11`)
+				const thumbtest = fs.readFileSync(setting.pathimg)
 				conn.sendMessage(from, { caption: `${test}`, image: thumbtest, buttons: [{buttonId: `${prefix}help`, buttonText: { displayText: "MENU" }, type: 1 }], footer: setting.fake }, { quoted: msg })
 				break
 			// Main Menu
@@ -449,12 +473,11 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				var thumbhelp = fs.readFileSync(setting.pathimg)
 			    conn.sendMessage(from, { caption: teks, image: thumbhelp, templateButtons: buttonsDefault, footer: setting.fake, mentions: [sender] })
 				break
-			case prefix+'info':
+			case prefix+'info':{
 				const user = JSON.parse(fs.readFileSync('./database/user.json'))
 				const _user = user.length
 				var timestamp = speed();
                 var latensi = speed() - timestamp
-				var data = await getBuffer(`https://api.lolhuman.xyz/api/random/waifu?apikey=Rafly11`)
 				var info = `*SIMPLE BOT WHATSAPP*\n\n`
 				+`*Bot Name:* ${setting.botName}\n`
 				+`*Prefix:* ${prefix}\n`
@@ -469,7 +492,9 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				+`Kelewat gblk = block!!!\n`
 				+`--------------------------\n`
 				+`Create by @Rafly~\n01-12-2020`
-				await conn.sendMessage(from, {image: data, caption: info}, {quoted: msg})
+				const thumbinfo = fs.readFileSync(setting.pathgif)
+				await conn.sendMessage(from, {video: thumbinfo, gifPlayback: true, caption: info}, {quoted: msg})
+			}
 				break
 			case prefix+'changelog':
 				var cptn = `*CHANGLOG*\n\n`
@@ -545,6 +570,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
       })
       var buffer = await stc.toBuffer()
       conn.sendMessage(from, {sticker: buffer}, {quoted: msg})
+	  fs.unlinkSync("./media/"+sender+".jpg")
 	} else if (isVideo || isQuotedVideo) {
 	if (isQuotedVideo ? msg.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage.seconds > 15 : msg.message.videoMessage.seconds > 15) return textImg('too long duration, max 15 seconds')
     let file = await downloadAndSaveMediaMessage("video", "./media/"+sender+".mp4")
@@ -560,6 +586,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
     })
     const stikk = await sticker.toBuffer() 
     conn.sendMessage(from, {sticker: stikk}, {quoted: msg})
+	fs.unlinkSync("./media/"+sender+".mp4")
 	   } else {
 		   reply(`Kirim gambar/video dengan caption ${prefix}sticker`)
 	   }
@@ -583,7 +610,8 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		  })
 		  var buffer = await stc.toBuffer()
 		  conn.sendMessage(from, {sticker: buffer}, {quoted: msg})
-			} else {
+		fs.unlinkSync("./media/"+sender+".webp")
+		} else {
 				reply(`Tag sticker dengan caption ${prefix}take`)
 			}
 			break
@@ -609,6 +637,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			var media = await downloadAndSaveMediaMessage('image',"./media/"+sender+".jpg")
 			var res = await upload(media)
 			reply(res)
+			fs.unlinkSync("./media/"+sender+".jpg")
 		}
 			break
 
@@ -835,6 +864,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 
 			//Animanga
 			case prefix+'storyanime': case prefix+'animestory':
+				if (!isGroup) return reply(mess.OnlyGrup)
 				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 				var data = await fetchJson(`https://api.lolhuman.xyz/api/storynime?apikey=Rafly11`)
 				var vid = await getBuffer(data.result)
@@ -843,6 +873,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				break
 
 			case prefix+'waifu':
+				if (!isGroup) return reply(mess.OnlyGrup)
 				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 				var data = await getBuffer(`https://api.lolhuman.xyz/api/random/waifu?apikey=Rafly11`)
 				await conn.sendMessage(from, {image: data, 
@@ -853,6 +884,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 					limitAdd(sender, limit)
 				break
 			case prefix+'loli':
+				if (!isGroup) return reply(mess.OnlyGrup)
 				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 				var data = await getBuffer(`https://bot25-api.herokuapp.com/randomimg/loli`)
 				await conn.sendMessage(from, {image: data, 
@@ -863,6 +895,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 					limitAdd(sender, limit)
 				break
 			case prefix+'neko':
+				if (!isGroup) return reply(mess.OnlyGrup)
 				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 				var data = await getBuffer(`https://api.lolhuman.xyz/api/random/neko?apikey=Rafly11`)
 				await conn.sendMessage(from, {image: data, 
@@ -872,6 +905,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 					{quoted: msg})
 				break
 			case prefix+'cosplay':
+				if (!isGroup) return reply(mess.OnlyGrup)
 				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 				var data = await getBuffer(`https://bot25-api.herokuapp.com/randomimg/cosplay`)
 				await conn.sendMessage(from, {image: data, 
@@ -882,6 +916,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 					limitAdd(sender, limit)
 				break
 			case prefix+'elf':
+				if (!isGroup) return reply(mess.OnlyGrup)
 				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 				var data = await getBuffer(`https://api.lolhuman.xyz/api/random/elf?apikey=Rafly11`)
 				await conn.sendMessage(from, {image: data, 
@@ -892,6 +927,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 					limitAdd(sender, limit)
 				break
 			case prefix+'megumin':
+				if (!isGroup) return reply(mess.OnlyGrup)
 				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 				var data = await getBuffer(`https://api.lolhuman.xyz/api/random/megumin?apikey=Rafly11`)
 				await conn.sendMessage(from, {image: data, 
@@ -902,6 +938,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 					limitAdd(sender, limit)
 				break
 			case prefix+'sagiri':
+				if (!isGroup) return reply(mess.OnlyGrup)
 				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 				var data = await getBuffer(`https://api.lolhuman.xyz/api/random/sagiri?apikey=Rafly11`)
 				await conn.sendMessage(from, {image: data, 
@@ -912,6 +949,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 					limitAdd(sender, limit)
 				break
 			case prefix+'elaina':
+				if (!isGroup) return reply(mess.OnlyGrup)
 				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 				var data = await getBuffer(`https://api.lolhuman.xyz/api/random/elaina?apikey=Rafly11`)
 				await conn.sendMessage(from, {image: data, 
@@ -922,6 +960,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 					limitAdd(sender, limit)
 				break
 			case prefix+'shinobu':
+				if (!isGroup) return reply(mess.OnlyGrup)
 				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 				var data = await getBuffer(`https://api.lolhuman.xyz/api/random/shinobu?apikey=Rafly11`)
 				await conn.sendMessage(from, {image: data, 
@@ -935,6 +974,20 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			
 			
 			// Owner Menu
+			case prefix+'setmenupic':
+				if (isImage || isQuotedImage) {
+					var stream = await downloadContentFromMessage(msg.message.imageMessage || msg.message.extendedTextMessage?.contextInfo.quotedMessage.imageMessage, 'image')
+					var media = await downloadAndSaveMediaMessage('image',"./media/menupic.jpeg")
+				}
+				reply('*Done*')
+				break
+			case prefix+'setmenugif':
+				if (isVideo || isQuotedVideo) {
+					var stream = await downloadContentFromMessage(msg.message.videoMessage || msg.message.extendedTextMessage?.contextInfo.quotedMessage.videoMessage, 'video')
+					var media = await downloadAndSaveMediaMessage('video',"./media/menugif.mp4")
+				}
+				reply('*Done*')
+				break
 			case prefix+'leave':
 			    if (!isOwner) return reply(mess.OnlyOwner)
 				if (!isGroup) return reply(mess.OnlyGrup)
@@ -1131,6 +1184,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                 }
                 break
 			case prefix+'tebakgambar':
+				if (!isGroup) return reply(mess.OnlyGrup)
 		        if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
 			    if (isPlayGame(from, tebakgambar)) return conn.reply(from, `Masih ada game yang belum diselesaikan`, tebakgambar[getGamePosi(from, tebakgambar)].msg)
 				kotz.tebakgambar().then( data => {
@@ -1146,6 +1200,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				})
 			    break
 			case prefix+'tebakkimia': case prefix+'tebakimia':
+				if (!isGroup) return reply(mess.OnlyGrup)
 				if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
 			    if (isPlayGame(from, tebakkimia)) return conn.reply(from, `Masih ada game yang belum diselesaikan`, tebakkimia[getGamePosi(from, tebakkimia)].msg)
 				var data = await fetchJson(`https://docs-jojo.herokuapp.com/api/tebak-unsur-kimia`)
@@ -1159,6 +1214,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				})
 				break
 			case prefix+'susunkata':
+				if (!isGroup) return reply(mess.OnlyGrup)
 				if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
 			    if (isPlayGame(from, susunkata)) return conn.reply(from, `Masih ada game yang belum diselesaikan`, susunkata[getGamePosi(from, susunkata)].msg)
 				var data = await fetchJson(`https://api.lolhuman.xyz/api/tebak/susunkata?apikey=Rafly11`)
@@ -1172,6 +1228,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				})
 				break
 			case prefix+'tebakchara': case prefix+'tebakcharacter':
+				if (!isGroup) return reply(mess.OnlyGrup)
 		        if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
 			    if (isPlayGame(from, tebakchara)) return conn.reply(from, `Masih ada game yang belum diselesaikan`, tebakchara[getGamePosi(from, tebakchara)].msg)
 				var data = await fetchJson(`https://api.lolhuman.xyz/api/tebakchara?apikey=Rafly11`)
@@ -1367,24 +1424,27 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
             case prefix+'me':
                 if (_prem.getPremiumExpired(sender, premium) == "PERMANENT") return reply(`PERMANENT`)
                 let cekvip = ms(_prem.getPremiumExpired(sender, premium) - Date.now())
-				let premiumnya = `*Expire :* ${cekvip.days} day(s) ${cekvip.hours} hour(s) ${cekvip.minutes} minute(s)`
+				let premiumnya = `${cekvip.days} day(s) ${cekvip.hours} hour(s) ${cekvip.minutes} minute(s)`
 				let header = `❒ *「 Profile User 」* ❒\n`
-				let type = `❒ *Type* : ${isOwner ? 'Owner' : isPremium ? 'Premium' : 'Free'}`
-				var xp = `❒ *Xp:* ${getLevelingXp(sender)}`
-				var level = `❒ *Level:* ${getLevelingLevel(sender)}`
-				var roleny = `❒ *Role:* ${role}`
-				let limith = `❒ *Limit :* ${isOwner ? '∞' : isPremium ? 'Unlimited' : getLimit(sender, limitCount, limit)}`
-                let limitg = `❒ *Game Limit :* ${isOwner ? '∞' : cekGLimit(sender, gcount, glimit)}`
-				let expired = `❒ *Expired :* ${isOwner ? '∞' : isPremium ? premiumnya : '-'}`
-				try {
-					var pp = await conn.profilePictureUrl(sender, 'image')
-				  } catch {
-					var pp = 'https://i0.wp.com/www.gambarunik.id/wp-content/uploads/2019/06/Top-Gambar-Foto-Profil-Kosong-Lucu-Tergokil-.jpg'
-				  }
-				const ppnye = await getBuffer(pp)
-				var profile = `${header}\n${type}\n${xp}\n${level}\n${roleny}\n${expired}\n${limitg}\n${limith}\n`
-				conn.sendMessage(from, {image: ppnye, caption: profile}, {quoted:msg})
-                break
+				let type = `${isOwner ? 'Owner' : isPremium ? 'Premium' : 'Free'}`
+				let xp = `${getLevelingXp(sender)}`
+				let level = `${getLevelingLevel(sender)}`
+				let requiredXp = 5000 * (Math.pow(2, level) - 1)
+				let roleny = `${role}`
+				let limith = `${isOwner ? '∞' : isPremium ? 'Unlimited' : getLimit(sender, limitCount, limit)}`
+                let limitg = `${isOwner ? '∞' : cekGLimit(sender, gcount, glimit)}`
+				let expired = `${isOwner ? '∞' : isPremium ? premiumnya : '-'}`
+				const cptnp = `${header}\n\n`
+				+`❒ *Name:* ${pushname}\n`
+				+`❒ *Type:* ${type}\n`
+				+`❒ *Expired:* ${expired}\n\n`
+				+`❒ *Limit:* ${limith}\n`
+				+`❒ *Glimit:* ${limitg}\n`
+				+`❒ *Level:* ${level}\n`
+				+`❒ *Xp:* ${xp}/${requiredXp}\n`
+				+`❒ *Role:* ${roleny}\n`
+				await conn.sendMessage(from, {text: cptnp}, {quoted: ftokoo})
+				break
 			
 
 			default:
