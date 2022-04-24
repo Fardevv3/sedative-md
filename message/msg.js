@@ -336,6 +336,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                 addLevelingXp(sender, amountXp)
                 if (requiredXp <= getLevelingXp(sender)) {
                     addLevelingLevel(sender, 1)
+					addBalance(sender, 500, balance)
                     await reply(levelup(pushname, sender, getLevelingXp,  getLevel, getLevelingLevel))
                 }
             } catch (err) {
@@ -525,6 +526,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				+`${prefix}storyanime\n\n`
 				+`*[21-04-2022]*\n`
 				+`ytmp3/ytmp4, play fixed\n`
+				+`added role system\n`
 				+`${tebakchara}\n`
 				reply(cptn)
 				break
@@ -859,7 +861,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				} else {
 				if(hasil.download_url.includes(".pdf"))
 					var zppdf = await getBuffer(hasil.download_url)
-					await conn.sendMessage(from, {document: zppdf, fileName: `${hasil.name_file}.pdf`, mimetype: "pdf"}, {quoted: msg})
+					await conn.sendMessage(from, {document: zppdf, fileName: `${hasil.name_file}.pdf`, mimetype: "document/pdf"}, {quoted: msg})
 				}
 				limitAdd(sender, limit)
 				break
@@ -978,6 +980,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			
 			// Owner Menu
 			case prefix+'setmenupic':
+				if (!isOwner) return reply(mess.OnlyOwner)
 				if (isImage || isQuotedImage) {
 					var stream = await downloadContentFromMessage(msg.message.imageMessage || msg.message.extendedTextMessage?.contextInfo.quotedMessage.imageMessage, 'image')
 					var media = await downloadAndSaveMediaMessage('image',"./media/menupic.jpeg")
@@ -985,6 +988,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				reply('*Done*')
 				break
 			case prefix+'setmenugif':
+				if (!isOwner) return reply(mess.OnlyOwner)
 				if (isVideo || isQuotedVideo) {
 					var stream = await downloadContentFromMessage(msg.message.videoMessage || msg.message.extendedTextMessage?.contextInfo.quotedMessage.videoMessage, 'video')
 					var media = await downloadAndSaveMediaMessage('video',"./media/menugif.mp4")
