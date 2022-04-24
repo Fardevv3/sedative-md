@@ -300,14 +300,6 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			},
 		  };
 		
-		const buttonsDefault = [
-			{ callButton: { displayText: `OWNER NUMBER`, phoneNumber: `+687 73.13.67` } },
-			{ urlButton: { displayText: `BOT GROUP`, url : `https://chat.whatsapp.com/LObEv5fMlW6Hjm34qc6p69` } },
-			{ quickReplyButton: { displayText: `Owner`, id: `${prefix}owner` } },
-			{ quickReplyButton: { displayText: `Info`, id: `${prefix}info` } },
-			{ quickReplyButton: { displayText: `Changelog`, id: `${prefix}changelog` } }
-		]
-        
 		const isImage = (type == 'imageMessage')
 		const isVideo = (type == 'videoMessage')
 		const isSticker = (type == 'stickerMessage')
@@ -462,13 +454,24 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			case 'test':
 			case 'bot':
 			case '@421951902500':
-				const test = `${ucapanWaktu} ${pushname}`
-				const thumbtest = fs.readFileSync(setting.pathimg)
-				conn.sendMessage(from, { caption: `${test}`, image: thumbtest, buttons: [{buttonId: `${prefix}help`, buttonText: { displayText: "MENU" }, type: 1 }], footer: setting.fake }, { quoted: msg })
+				var buttonsDefault = [
+					{ urlButton: { displayText: `BOT GROUP`, url : `https://chat.whatsapp.com/LObEv5fMlW6Hjm34qc6p69` } },
+					{ quickReplyButton: { displayText: `MENU`, id: `${prefix}help` } }
+					]
+				var test = `*${ucapanWaktu}* *${pushname}*`
+				const thumbtest = fs.readFileSync(setting.pathgif)
+				conn.sendMessage(from, { caption: test, video: thumbtest, gifPlayback: true, templateButtons: buttonsDefault, footer: setting.fake, mentions: [sender] })
 				break
 			// Main Menu
 			case prefix+'menu':
 			case prefix+'help':
+				var buttonsDefault = [
+					{ callButton: { displayText: `OWNER NUMBER`, phoneNumber: `+687 73.13.67` } },
+					{ urlButton: { displayText: `BOT GROUP`, url : `https://chat.whatsapp.com/LObEv5fMlW6Hjm34qc6p69` } },
+					{ quickReplyButton: { displayText: `Owner`, id: `${prefix}owner` } },
+					{ quickReplyButton: { displayText: `Info`, id: `${prefix}info` } },
+					{ quickReplyButton: { displayText: `Changelog`, id: `${prefix}changelog` } }
+				]
 			    var teks = allmenu(pushname, prefix)
 				var thumbhelp = fs.readFileSync(setting.pathimg)
 			    conn.sendMessage(from, { caption: teks, image: thumbhelp, templateButtons: buttonsDefault, footer: setting.fake, mentions: [sender] })
@@ -637,8 +640,8 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			var media = await downloadAndSaveMediaMessage('image',"./media/"+sender+".jpg")
 			var res = await upload(media)
 			reply(res)
-			fs.unlinkSync("./media/"+sender+".jpg")
 		}
+		fs.unlinkSync("./media/"+sender+".jpg")
 			break
 
 	        // Downloader Menu
@@ -1425,7 +1428,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                 if (_prem.getPremiumExpired(sender, premium) == "PERMANENT") return reply(`PERMANENT`)
                 let cekvip = ms(_prem.getPremiumExpired(sender, premium) - Date.now())
 				let premiumnya = `${cekvip.days} day(s) ${cekvip.hours} hour(s) ${cekvip.minutes} minute(s)`
-				let header = `❒ *「 Profile User 」* ❒\n`
+				let header = `❒ *「 Profile User 」* ❒`
 				let type = `${isOwner ? 'Owner' : isPremium ? 'Premium' : 'Free'}`
 				let xp = `${getLevelingXp(sender)}`
 				let level = `${getLevelingLevel(sender)}`
@@ -1435,15 +1438,21 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                 let limitg = `${isOwner ? '∞' : cekGLimit(sender, gcount, glimit)}`
 				let expired = `${isOwner ? '∞' : isPremium ? premiumnya : '-'}`
 				const cptnp = `${header}\n\n`
-				+`❒ *Name:* ${pushname}\n`
-				+`❒ *Type:* ${type}\n`
-				+`❒ *Expired:* ${expired}\n\n`
-				+`❒ *Limit:* ${limith}\n`
-				+`❒ *Glimit:* ${limitg}\n`
-				+`❒ *Level:* ${level}\n`
-				+`❒ *Xp:* ${xp}/${requiredXp}\n`
-				+`❒ *Role:* ${roleny}\n`
-				await conn.sendMessage(from, {text: cptnp}, {quoted: ftokoo})
+				+`🔖 *Name:* ${pushname}\n`
+				+`📡 *Type:* ${type}\n`
+				+`⏳ *Expired:* ${expired}\n\n`
+				+`🗝️ *Limit:* ${limith}\n`
+				+`🔑 *Glimit:* ${limitg}\n`
+				+`📍 *Level:* ${level}\n`
+				+`🔎 *Xp:* ${xp}/${requiredXp}\n`
+				+`🔮 *Role:* ${roleny}\n`
+				try {
+					var pp_user = await conn.profilePictureUrl(sender, 'image')
+				  } catch {
+					var pp_user = 'https://telegra.ph/file/697858c5140630f089f6e.jpg'
+				  }
+				let pp = await getBuffer(pp_user)
+				await conn.sendMessage(from, {image: pp ,caption: cptnp}, {quoted: ftokoo})
 				break
 			
 
