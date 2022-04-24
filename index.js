@@ -117,7 +117,7 @@ const connectToWhatsApp = async () => {
                 try {
                   var pp_user = await conn.profilePictureUrl(i, 'image')
                 } catch {
-                  var pp_user = 'https://i0.wp.com/www.gambarunik.id/wp-content/uploads/2019/06/Top-Gambar-Foto-Profil-Kosong-Lucu-Tergokil-.jpg'
+                  var pp_user = 'https://telegra.ph/file/697858c5140630f089f6e.jpg'
                 }
                 if (data.action == "add") {
                   conn.sendMessage(data.id, { image: { url: pp_user }, caption: `Welcome @${i.split("@")[0]}`, mentions: [i] })
