@@ -64,6 +64,7 @@ exports.allmenu = (pushname, prefix) => {
 ┣➥ ${prefix}facebook
 ┣➥ ${prefix}pinterestvid
 ┣➥ ${prefix}zippyshare
+┣➥ ${prefix}mediafire
 ┗──────────────────⊱
 
 ┏━━━⊱ ⸨ *SEARCH* ⸩
@@ -89,6 +90,7 @@ exports.allmenu = (pushname, prefix) => {
 
 ┏━━━⊱ ⸨ *GAME* ⸩
 ┣──────────────────⊱
+┣➥ ${prefix}claim
 ┣➥ ${prefix}tictactoe
 ┣➥ ${prefix}delttt
 ┣➥ ${prefix}tebakgambar

@@ -44,6 +44,7 @@ let balance = JSON.parse(fs.readFileSync('./database/balance.json'));
 let limit = JSON.parse(fs.readFileSync('./database/limit.json'));
 let glimit = JSON.parse(fs.readFileSync('./database/glimit.json'));
 let _level = JSON.parse(fs.readFileSync('./database/level.json'));
+let block = JSON.parse(fs.readFileSync('./database/block.json'));
 
 //LEVELING
 const getLevelingXp = (sender) => {
@@ -158,7 +159,8 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		const isGroupAdmins = groupAdmins.includes(sender)
 		const isUser = pendaftar.includes(sender)
 		const isPremium = isOwner ? true : _prem.checkPremiumUser(sender, premium)
-                const isWelcome = isGroup ? welcome.includes(from) ? true : false : false
+        const isWelcome = isGroup ? welcome.includes(from) ? true : false : false
+		const isBlocked = block.includes(sender, block)
 
 		const gcounti = setting.gcount
 		const gcount = isPremium ? gcounti.prem : gcounti.user
@@ -313,6 +315,18 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		// Auto Read & Presence Online
 		conn.sendReadReceipt(from, sender, [msg.key.id])
 		conn.sendPresenceUpdate('available', from)
+
+		// Auto block
+		conn.ws.on("CB:call", async function (node) {
+			if(node.content[0].tag === "terminate") {
+			conn.sendMessage(node.attrs.from, {text: `Kamu Telah Melanggar Rules Maka Kamu Akan Terkena *Blokir*`}).then(anu => {
+			console.log(color('[AUTO BLOCK USER!!!!]','red'), color(node.attrs.from, 'yellow'), color('SUCCES BLOCKED'))
+			conn.updateBlockStatus(node.attrs.from, "block")
+			block.push(node.attrs.from)
+			fs.writeFileSync('./database/block.json', JSON.stringify(block))
+			})
+		}
+	})
 		
 		// Auto Registrasi
 		if (chats && !isUser && !fromMe) {
@@ -449,6 +463,8 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			console.log('->[\x1b[1;32mCMD\x1b[1;37m]', color(moment(msg.messageTimestamp *1000).format('DD/MM/YYYY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(groupName))
 		}
 
+		if (fromMe) return
+		if (isBlocked) return
 		switch(command) {
 			
 			case prefix:
@@ -456,7 +472,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			case 'bot':
 			case '@421951902500':
 				var buttonsDefault = [
-					{ urlButton: { displayText: `BOT GROUP`, url : `https://chat.whatsapp.com/LObEv5fMlW6Hjm34qc6p69` } },
+					{ callButton: { displayText: `OWNER NUMBER`, phoneNumber: `+687 73.13.67` } },
 					{ quickReplyButton: { displayText: `MENU`, id: `${prefix}help` } }
 					]
 				var test = `*${ucapanWaktu}* *${pushname}*`
@@ -474,8 +490,8 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 					{ quickReplyButton: { displayText: `Changelog`, id: `${prefix}changelog` } }
 				]
 			    var teks = allmenu(pushname, prefix)
-				var thumbhelp = fs.readFileSync(setting.pathimg)
-			    conn.sendMessage(from, { caption: teks, image: thumbhelp, templateButtons: buttonsDefault, footer: setting.fake, mentions: [sender] })
+				var thumbhelp = fs.readFileSync(setting.pathgif)
+			    conn.sendMessage(from, { caption: teks, video: thumbhelp, gifPlayback: true, templateButtons: buttonsDefault, footer: setting.fake, mentions: [sender] })
 				break
 			case prefix+'info':{
 				const user = JSON.parse(fs.readFileSync('./database/user.json'))
@@ -496,8 +512,8 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				+`Kelewat gblk = block!!!\n`
 				+`--------------------------\n`
 				+`Create by @Rafly~\n01-12-2020`
-				const thumbinfo = fs.readFileSync(setting.pathgif)
-				await conn.sendMessage(from, {video: thumbinfo, gifPlayback: true, caption: info}, {quoted: msg})
+				const thumbinfo = fs.readFileSync(setting.pathimg)
+				await conn.sendMessage(from, {image: thumbinfo, caption: info}, {quoted: msg})
 			}
 				break
 			case prefix+'changelog':
@@ -527,7 +543,11 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				+`*[21-04-2022]*\n`
 				+`ytmp3/ytmp4, play fixed\n`
 				+`added role system\n`
-				+`${tebakchara}\n`
+				+`${prefix}tebakchara\n\n`
+				+`*[25-04-2022]*\n`
+				+`Added Auto Block\n`
+				+`${prefix}mediafire\n`
+				+`${prefix}claim (setiap jam 15.00WIB)\n`
 				reply(cptn)
 				break
 			case prefix+'runtime':
@@ -865,7 +885,43 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				}
 				limitAdd(sender, limit)
 				break
-
+			case prefix+'mediafire':
+				if (!isGroup) return reply(mess.OnlyGrup)
+				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+				if (args.length < 2) return reply(`Kirim perintah ${command} link`)
+				if (!args[1].includes('mediafire')) return reply(mess.error.Iv)
+				var data = await fetchJson(`https://api.lolhuman.xyz/api/mediafire?apikey=Rafly11&url=${q}`)
+				var hasil = data.result
+				var cptn = `*MEDIAFIRE DOWNLOADER*\n\n`
+						  +`*FileName:* ${hasil.filename}\n`
+						  +`*FileType:* ${hasil.filetype}\n`
+						  +`*Size:* ${hasil.filesize}\n\n`
+						  +`*UPLOADING MEDIA...*`
+				reply(cptn)
+				if (hasil.link.includes(".mp4")){
+					var mvid = await getBuffer(hasil.link)
+					await conn.sendMessage(from, {document: mvid, fileName: `${hasil.filename}.mp4`, mimetype: "video/mp4"}, {quoted: msg})
+				} else {
+				if(hasil.link.includes(".pdf")){
+					var mpdf = await getBuffer(hasil.link)
+					await conn.sendMessage(from, {document: mpdf, fileName: `${hasil.filename}.pdf`, mimetype: "document/pdf"}, {quoted: msg})
+				} else {
+				if(hasil.link.includes(".apk")){
+					var mapk = await getBuffer(hasil.link)
+					await conn.sendMessage(from, {document: mapk, fileName: `${hasil.filename}.apk`, mimetype: "document/apk"}, {quoted: msg})
+				} else {
+				if(hasil.link.includes(".zip")){
+					var mzip = await getBuffer(hasil.link)
+					await conn.sendMessage(from, {document: mzip, fileName: `${hasil.filename}.zip`, mimetype: "document/zip"}, {quoted: msg})
+				}
+			}
+		}
+	}
+				limitAdd(sender, limit)
+				break
+		
+				
+				
 
 			//Animanga
 			case prefix+'storyanime': case prefix+'animestory':
@@ -1009,13 +1065,13 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				var data = await conn.groupAcceptInvite(url)
 				reply(jsonformat(data))
 				break
-                        case prefix+'bc': case prefix+'broadcast':
+             case prefix+'bc': case prefix+'broadcast':
 			    if (!isOwner) return reply(mess.OnlyOwner)
-		            if (args.length < 2) return reply(`Masukkan isi pesannya`)
-                            var data = await store.chats.all()
-                            for (let i of data) {
-                               conn.sendMessage(i.id, { text: `${q}\n\n_*BROADCAST MESSAGE*_` })
-                               await sleep(1000)
+		         if (args.length < 2) return reply(`Masukkan isi pesannya`)
+                var data = await store.chats.all()
+                      for (let i of data) {
+                      conn.sendMessage(i.id, { text: `${q}\n\n❮ *NOTICE MY SENPAI*❮ *NOTICE MY SENPAI* ❯` })
+                      await sleep(1000)
                             }
                             break
 			case prefix+'setpp': case prefix+'setppbot':
@@ -1058,6 +1114,24 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                     reply('Sukses!')
                 }
                 break
+			case prefix+'addblock':
+				if (!isOwner) return reply(mess.OnlyOwner)
+				const addblock = `${q + '@s.whatsapp.net'}`
+				block.push(addblock)
+				fs.writeFileSync("./database/block.json", JSON.stringify(block))
+				await sleep(1000)
+				conn.updateBlockStatus(addblock, "block")
+				reply('Done')
+				break
+			case prefix+'delblock':
+				if (!isOwner) return reply(mess.OnlyOwner)
+				const delblock = `${q + '@s.whatsapp.net'}`
+				block.splice(delblock, 1)
+				fs.writeFileSync("./database/block.json", JSON.stringify(block))
+				await sleep(1000)
+				conn.updateBlockStatus(delblock, "unblock")
+				reply('Done')
+				break
 			case prefix +'react':
 				if (!isOwner) return
 				const reactionMessage = {
@@ -1249,6 +1323,18 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 					gameAdd(sender, glimit)
 				  })
 			    break
+			case prefix+'claim':
+				if(moment.tz('Asia/Jakarta').format('HH:mm')==`15:00`){
+				var cb = randomNomor(300,500)
+				var cxp = randomNomor(300000, 500000)
+				addBalance(sender, cb, balance)
+				addLevelingXp(sender, cxp)
+				reply(`Sukses Claim *$${cb}* balance & $ *${cxp}* Xp`)
+				} else {
+				reply('*Hanya Dapat Melakukan Claim Pada Jam 15:00 WIB*')
+				}
+				break
+
 
 			// Group Menu
 			case prefix+'linkgrup': case prefix+'link': case prefix+'linkgc':
@@ -1412,7 +1498,6 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
             }
                 break
 			case prefix+'limit': case prefix+'balance':
-			case prefix+'ceklimit': case prefix+'cekbalance':
 			    if (mentioned.length !== 0){
 					var Ystatus = ownerNumber.includes(mentioned[0])
 					var isPrim = Ystatus ? true : _prem.checkPremiumUser(mentioned[0], premium)
