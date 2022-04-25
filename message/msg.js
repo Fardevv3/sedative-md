@@ -27,6 +27,8 @@ const speed = require("performance-now");
 const request = require("request");
 const ms = require("parse-ms");
 const { Sticker, createSticker, StickerTypes } = require('wa-sticker-formatter');
+const { replaceWith } = require("cheerio/lib/api/manipulation");
+const { REPL_MODE_SLOPPY } = require("repl");
 
 
 // DB Game
@@ -257,6 +259,9 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		}
 		const reply = (teks) => {
 			return conn.sendMessage(from, { text: teks}, { quoted: msg })
+		}
+		const adReply = async(teks, judul, isi, quo) => {
+			conn.sendMessage(from, {text: teks, contextInfo:{"externalAdReply": {title: judul, body: isi, mediaType: 3, "thumbnail": fs.readFileSync('./media/menupic.jpeg')}}}, {sendEphemeral: true, quoted: quo })
 		}
 		const textImg = (teks) => {
 			return conn.sendMessage(from, { text: teks, jpegThumbnail: fs.readFileSync(setting.pathimg) }, { quoted: msg })
@@ -672,7 +677,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			    if (args.length < 2) return reply(`Kirim perintah ${command} link`)
 			    if (!isUrl(args[1])) return reply(mess.error.Iv)
 			    if (!args[1].includes('tiktok')) return reply(mess.error.Iv)
-			    reply(mess.wait)
+			    await adReply(mess.wait, setting.fake, setting.botName, msg)
 			    xfar.Tiktok(args[1]).then( data => {
 			      conn.sendMessage(from, {
 				   video: { url: data.medias[0].url },
@@ -689,7 +694,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			    if (args.length < 2) return reply(`Kirim perintah ${command} link`)
 			    if (!isUrl(args[1])) return reply(mess.error.Iv)
 			    if (!args[1].includes('tiktok')) return reply(mess.error.Iv)
-			    reply(mess.wait)
+			    await adReply(mess.wait, setting.fake, setting.botName, msg)
 			    data = await fetchJson(`https://api.lolhuman.xyz/api/tiktok?apikey=Rafly11&url=${q}`)
 				var vid = await getBuffer(data.result.link)
 				await conn.sendMessage(from, {video : vid}, {quoted: msg})
@@ -700,7 +705,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			    if (args.length < 2) return reply(`Kirim perintah ${command} link`)
 			    if (!isUrl(args[1])) return reply(mess.error.Iv)
 			    if (!args[1].includes('tiktok')) return reply(mess.error.Iv)
-			    reply(mess.wait)
+			    await adReply(mess.wait, setting.fake, setting.botName, msg)
 			    var data = await getBuffer(`https://api.lolhuman.xyz/api/tiktokmusic?apikey=Rafly11&url=${q}`)
 				await conn.sendMessage(from, {audio: data}, {quoted: msg})
 		        break
@@ -762,6 +767,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			    if (!isUrl(args[1])) return reply(mess.error.Iv)
 			    if (!args[1].includes('youtu.be') && !args[1].includes('youtube.com')) return reply(mess.error.Iv)
 			    var data = await fetchJson(`https://api.lolhuman.xyz/api/ytvideo?apikey=Rafly11&url=${q}`)
+				await adReply(mess.wait, setting.fake, setting.botName, msg)
 				var hasil = data.result
 				var cptn = `*YOUTUBE VIDEO DOWNLOADER*\n\n`
 				+`*Title:* ${hasil.title}\n`
@@ -777,6 +783,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			    if (!isUrl(args[1])) return reply(mess.error.Iv)
 			    if (!args[1].includes('youtu.be') && !args[1].includes('youtube.com')) return reply(mess.error.Iv)
 			    data = await fetchJson(`https://api.lolhuman.xyz/api/ytaudio?apikey=Rafly11&url=${q}`)
+				await adReply(mess.wait, setting.fake, setting.botName, msg)
 				var hasil = data.result
 				var thumb = await getBuffer(hasil.thumbnail)
 				var cptn = `*YOUTUBE AUDIO DOWNLOADER*\n\n`
@@ -801,7 +808,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                 if (arrey.length == 0) return reply(`Reply hasil dari *${prefix}ytsearch* dengan perintah *${command}* urutan`)
                 if (isNaN(args[1])) return reply(`Hanya support angka! pilih angka 1 sampai 10\nContoh : ${command} 2`)
                 if (args[1] > arrey.length) return reply(`Urutan Hasil *${prefix}ytsearch* Hanya Sampai *${arrey.length}*`)
-			    reply(mess.wait)
+			    await adReply(mess.wait, setting.fake, setting.botName, msg)
 				var data = await fetchJson(`https://bot25-api.herokuapp.com/downloader/youtube?link=https://youtube.com/watch?v=${arrey[args[1] -1]}`)
 				var cptn = `*YOUTUBE VIDEO DOWNLOADER*\n\n`
 				+`*Title:* ${data.title}\n`
@@ -821,7 +828,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                 if (arrey.length == 0) return reply(`Reply hasil dari *${prefix}ytsearch* dengan perintah *${command}* urutan`)
                 if (isNaN(args[1])) return reply(`Hanya support angka! pilih angka 1 sampai 10\nContoh : ${command} 2`)
                 if (args[1] > arrey.length) return reply(`Urutan Hasil *${prefix}ytsearch* Hanya Sampai *${arrey.length}*`)
-			    reply(mess.wait)
+			    await adReply(mess.wait, setting.fake, setting.botName, msg)
 			    data = await fetchJson(`https://bot25-api.herokuapp.com/downloader/youtube?link=https://youtube.com/watch?v=${arrey[args[1] -1]}`)
 				var thumb = await getBuffer(data.thumb)
 				var cptn = `*YOUTUBE AUDIO DOWNLOADER*\n\n`
@@ -838,7 +845,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				if (args.length < 2) return reply(`Kirim perintah ${command} link`)
 			    if (!isUrl(args[1])) return reply(mess.error.Iv)
 			    if (!args[1].includes('instagram.com')) return reply(mess.error.Iv)
-			    reply(mess.wait)
+			    await adReply(mess.wait, setting.fake, setting.botName, msg)
 			    hxz.igdl(q)
 	.then(async(result) => {
 		for(let i of result.medias){
@@ -857,7 +864,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			    if (args.length < 2) return reply(`Kirim perintah ${command} link`)
 			    if (!isUrl(args[1])) return reply(mess.error.Iv)
-			    reply(mess.wait)
+			    await adReply(mess.wait, setting.fake, setting.botName, msg)
 			    xfar.Facebook(args[1]).then( data => {
 			      conn.sendMessage(from, { video: { url: data.medias[0].url }, caption: data.title }, { quoted: msg })
 			      limitAdd(sender, limit)
@@ -1149,7 +1156,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			case prefix+'lirik': case 'liriklagu':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 				if (args.length < 2) return reply(`Kirim perintah ${command} judul lagu`)
-				reply(mess.wait)
+				await adReply(mess.wait, setting.fake, setting.botName, msg)
 			    ra.Musikmatch(q).then(async(data) => {
 				  var teks = `*${data.result.judul} - ${data.result.penyanyi}*\n\n${data.result.lirik}`
 				  conn.sendMessage(from, { image: { url: data.result.thumb }, caption: teks }, { quoted: msg })
@@ -1159,7 +1166,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			case prefix+'grupwa': case prefix+'searchgrup':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 				if (args.length < 2) return reply(`Kirim perintah ${command} nama grup`)
-				reply(mess.wait)
+				await adReply(mess.wait, setting.fake, setting.botName, msg)
 			    hxz.linkwa(q).then(async(data) => {
 				  if (data.length == 0) return reply(`Grup ${q} tidak ditemukan`)
 				  var teks = `*Hasil Pencarian Dari ${q}*\n\n`
@@ -1173,7 +1180,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			case prefix+'pinterest':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 				if (args.length < 2) return reply(`Kirim perintah ${command} query atau ${command} query --jumlah\nContoh :\n${command} cecan atau ${command} cecan --10`)
-				reply(mess.wait)
+				await adReply(mess.wait, setting.fake, setting.botName, msg)
 			    var jumlah;
 			    if (q.includes('--')) jumlah = q.split('--')[1]
 			    pinterest(q.replace('--'+jumlah, '')).then(async(data) => {
@@ -1196,7 +1203,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			case prefix+'yts': case prefix+'ytsearch':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			    if (args.length < 2) return reply(`Kirim perintah ${command} query`)
-				reply(mess.wait)
+				await adReply(mess.wait, setting.fake, setting.botName, msg)
 			    yts(q).then( data => {
 				  let yt = data.videos
 				  var jumlah = 15
@@ -1329,12 +1336,11 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				var cxp = randomNomor(300000, 500000)
 				addBalance(sender, cb, balance)
 				addLevelingXp(sender, cxp)
-				reply(`Sukses Claim *$${cb}* balance & $ *${cxp}* Xp`)
+				reply(`Sukses Claim *$${cb}* balance & *${cxp}* Xp`)
 				} else {
 				reply('*Hanya Dapat Melakukan Claim Pada Jam 15:00 WIB*')
 				}
 				break
-
 
 			// Group Menu
 			case prefix+'linkgrup': case prefix+'link': case prefix+'linkgc':
