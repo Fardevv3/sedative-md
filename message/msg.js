@@ -323,7 +323,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			console.log(color('[AUTO BLOCK USER!!!!]','red'), color(node.attrs.from, 'yellow'), color('SUCCES BLOCKED'))
 			conn.updateBlockStatus(node.attrs.from, "block")
 			block.push(node.attrs.from)
-			fs.writeFileSync('./database/block.json', JSON.stringify(block))
+			fs.writeFileSync('./database/block.json', JSON.stringify(block, null, 2))
 			})
 		}
 	})
@@ -1118,7 +1118,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				if (!isOwner) return reply(mess.OnlyOwner)
 				const addblock = `${q + '@s.whatsapp.net'}`
 				block.push(addblock)
-				fs.writeFileSync("./database/block.json", JSON.stringify(block))
+				fs.writeFileSync("./database/block.json", JSON.stringify(block, null, 2))
 				await sleep(1000)
 				conn.updateBlockStatus(addblock, "block")
 				reply('Done')
