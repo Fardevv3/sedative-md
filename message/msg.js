@@ -256,7 +256,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
  		    }
 		}
 		const reply = (teks) => {
-			return conn.sendMessage(from, { text: teks, jpegThumbnail: fs.readFileSync(setting.pathimg) }, { quoted: msg })
+			return conn.sendMessage(from, { text: teks}, { quoted: msg })
 		}
 		const textImg = (teks) => {
 			return conn.sendMessage(from, { text: teks, jpegThumbnail: fs.readFileSync(setting.pathimg) }, { quoted: msg })
@@ -365,17 +365,17 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			role = 'Warrior'
 		} else if (levelRole <= 5) {
 			role = 'Knight'
-		} else if (levelRole <= 9) {
+		} else if (levelRole <= 7) {
 			role = 'General'
-		} else if (levelRole <= 13) {
+		} else if (levelRole <= 9) {
 			role = 'Guardian'
-		} else if (levelRole <= 17) {
+		} else if (levelRole <= 11) {
 			role = 'Monster Tamer'
-		} else if (levelRole <= 25) {
+		} else if (levelRole <= 13) {
 			role = 'Dragon Slayer'
-		} else if (levelRole <= 32) {
+		} else if (levelRole <= 15) {
 			role = 'Demon Lord'
-		} else if (levelRole <= 50) {
+		} else if (levelRole <= 20) {
 			role = 'Fallen Angel'
 		}
 
@@ -1497,23 +1497,13 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                 reply(monospace(`Pembeliaan game limit sebanyak ${args[1]} berhasil\n\nSisa Balance : $${getBalance(sender, balance)}\nSisa Game Limit : ${cekGLimit(sender, gcount, glimit)}/${gcount}`))
             }
                 break
-			case prefix+'limit': case prefix+'balance':
-			    if (mentioned.length !== 0){
-					var Ystatus = ownerNumber.includes(mentioned[0])
-					var isPrim = Ystatus ? true : _prem.checkPremiumUser(mentioned[0], premium)
-				    var ggcount = isPrim ? gcounti.prem : gcounti.user
-                    var limitMen = `${getLimit(mentioned[0], limitCount, limit)}`
-                    textImg(`Limit : ${_prem.checkPremiumUser(mentioned[0], premium) ? 'Unlimited' : limitMen}/${limitCount}\nLimit Game : ${cekGLimit(mentioned[0], ggcount, glimit)}/${ggcount}\nBalance : $${getBalance(mentioned[0], balance)}\n\nKamu dapat membeli limit dengan ${prefix}buylimit dan ${prefix}buyglimit untuk membeli game limit`)
-                } else {
-                    var limitPrib = `${getLimit(sender, limitCount, limit)}/${limitCount}`
-                    textImg(`Limit : ${isPremium ? 'Unlimited' : limitPrib}\nLimit Game : ${cekGLimit(sender, gcount, glimit)}/${gcount}\nBalance : $${getBalance(sender, balance)}\n\nKamu dapat membeli limit dengan ${prefix}buylimit dan ${prefix}buyglimit untuk membeli game limit`)
-                }
-				break
 
 			//PROFILE
 
 			case prefix+'profile':
             case prefix+'me':
+			case prefix+'limit':
+			case prefix+'balance':
                 if (_prem.getPremiumExpired(sender, premium) == "PERMANENT") return reply(`PERMANENT`)
                 let cekvip = ms(_prem.getPremiumExpired(sender, premium) - Date.now())
 				let premiumnya = `${cekvip.days} day(s) ${cekvip.hours} hour(s) ${cekvip.minutes} minute(s)`
@@ -1524,7 +1514,8 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				let requiredXp = 5000 * (Math.pow(2, level) - 1)
 				let roleny = `${role}`
 				let limith = `${isOwner ? '∞' : isPremium ? 'Unlimited' : getLimit(sender, limitCount, limit)}`
-                let limitg = `${isOwner ? '∞' : cekGLimit(sender, gcount, glimit)}`
+                let limitg = `${cekGLimit(sender, gcount, glimit)}`
+				let balanceny = `$${getBalance(sender, balance)}`
 				let expired = `${isOwner ? '∞' : isPremium ? premiumnya : '-'}`
 				const cptnp = `${header}\n\n`
 				+`🔖 *Name:* ${pushname}\n`
@@ -1532,6 +1523,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				+`⏳ *Expired:* ${expired}\n\n`
 				+`🗝️ *Limit:* ${limith}\n`
 				+`🔑 *Glimit:* ${limitg}\n`
+				+`💵 *Balance:* ${balanceny}\n\n`
 				+`📍 *Level:* ${level}\n`
 				+`🔎 *Xp:* ${xp}/${requiredXp}\n`
 				+`🔮 *Role:* ${roleny}\n`

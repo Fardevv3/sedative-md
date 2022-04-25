@@ -101,8 +101,6 @@ exports.allmenu = (pushname, prefix) => {
 ┣➥ ${prefix}buylimit
 ┣➥ ${prefix}buyglimit
 ┣➥ ${prefix}transfer
-┣➥ ${prefix}limit
-┣➥ ${prefix}balance
 ┣➥ ${prefix}toplevel
 ┣➥ ${prefix}topbalance
 ┗──────────────────⊱
