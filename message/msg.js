@@ -37,6 +37,8 @@ let tebakgambar = []
 let tebakkimia = []
 let susunkata = []
 let tebakchara = []
+let siapaaku = []
+let asahotak = []
 
 // Database
 let pendaftar = JSON.parse(fs.readFileSync('./database/user.json'))
@@ -324,11 +326,12 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		// Auto block
 		conn.ws.on("CB:call", async function (node) {
 			if(node.content[0].tag === "terminate") {
-			conn.sendMessage(node.attrs.from, {text: `Kamu Telah Melanggar Rules Maka Kamu Akan Terkena *Blokir*`}).then(anu => {
-			console.log(color('[AUTO BLOCK USER!!!!]','red'), color(node.attrs.from, 'yellow'), color('SUCCES BLOCKED'))
+			conn.sendMessage(node.attrs.from, {text: `Kamu Telah Melanggar Rules Maka Kamu Akan Terkena *Blokir*`, jpegThumbnail: fs.readFileSync('./media/menupic.jpeg')}).then(anu => {
 			conn.updateBlockStatus(node.attrs.from, "block")
+			sleep(5000)
 			block.push(node.attrs.from)
 			fs.writeFileSync('./database/block.json', JSON.stringify(block, null, 2))
+			console.log(color('[AUTO BLOCK USER!!!!]','red'), color(node.attrs.from, 'yellow'), color('SUCCES BLOCKED'))
 			})
 		}
 	})
@@ -355,7 +358,6 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                 addLevelingXp(sender, amountXp)
                 if (requiredXp <= getLevelingXp(sender)) {
                     addLevelingLevel(sender, 1)
-					addBalance(sender, 500, balance)
                     await reply(levelup(pushname, sender, getLevelingXp,  getLevel, getLevelingLevel))
                 }
             } catch (err) {
@@ -393,6 +395,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		  if (chats.toLowerCase() == getJawabanGame(from, tebakgambar)) {
 		    var htgm = randomNomor(200, 300)
 			addBalance(sender, htgm, balance)
+			addLevelingXp(sender, htgm)
 		    reply(`*Selamat Jawaban Kamu Benar 🎉*\n\nJawaban : ${getJawabanGame(from, tebakgambar)}\nHadiah : ${htgm} balance\n\nIngin bermain lagi? ketik *${prefix}tebakgambar*`)
 		    tebakgambar.splice(getGamePosi(from, tebakgambar), 1)
 		  }
@@ -402,6 +405,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		  if (chats.toLowerCase() == getJawabanGame(from, tebakkimia)) {
 		    var htgm = randomNomor(200, 300)
 			addBalance(sender, htgm, balance)
+			addLevelingXp(sender, htgm)
 		    reply(`*Selamat Jawaban Kamu Benar 🎉*\n\nJawaban : ${getJawabanGame(from, tebakkimia)}\nHadiah : ${htgm} balance\n\nIngin bermain lagi? ketik *${prefix}tebakkimia*`)
 		    tebakkimia.splice(getGamePosi(from, tebakkimia), 1)
 		  }
@@ -411,6 +415,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		  if (chats.toLowerCase() == getJawabanGame(from, susunkata)) {
 		    var htgm = randomNomor(200, 300)
 			addBalance(sender, htgm, balance)
+			addLevelingXp(sender, htgm)
 		    reply(`*Selamat Jawaban Kamu Benar 🎉*\n\nJawaban : ${getJawabanGame(from, susunkata)}\nHadiah : ${htgm} balance\n\nIngin bermain lagi? ketik *${prefix}susunkata*`)
 		    susunkata.splice(getGamePosi(from, susunkata), 1)
 		  }
@@ -420,8 +425,29 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		  if (chats.toLowerCase() == getJawabanGame(from, tebakchara)) {
 		    var htgm = randomNomor(200, 300)
 			addBalance(sender, htgm, balance)
+			addLevelingXp(sender, htgm)
 		    reply(`*Selamat Jawaban Kamu Benar 🎉*\n\nJawaban : ${getJawabanGame(from, tebakchara)}\nHadiah : ${htgm} balance\n\nIngin bermain lagi? ketik *${prefix}tebakchara*`)
 		    tebakchara.splice(getGamePosi(from, tebakchara), 1)
+		  }
+		}
+		cekWaktuGame(conn, siapaaku)
+		if (isPlayGame(from, siapaaku) && isUser) {
+		  if (chats.toLowerCase() == getJawabanGame(from, siapaaku)) {
+		    var htgm = randomNomor(200, 300)
+			addBalance(sender, htgm, balance)
+			addLevelingXp(sender, htgm)
+		    reply(`*Selamat Jawaban Kamu Benar 🎉*\n\nJawaban : ${getJawabanGame(from, siapaaku)}\nHadiah : ${htgm} balance\n\nIngin bermain lagi? ketik *${prefix}siapaaku*`)
+		    siapaaku.splice(getGamePosi(from, siapaaku), 1)
+		  }
+		}
+		cekWaktuGame(conn, asahotak)
+		if (isPlayGame(from, asahotak) && isUser) {
+		  if (chats.toLowerCase() == getJawabanGame(from, asahotak)) {
+		    var htgm = randomNomor(200, 300)
+			addBalance(sender, htgm, balance)
+			addLevelingXp(sender, htgm)
+		    reply(`*Selamat Jawaban Kamu Benar 🎉*\n\nJawaban : ${getJawabanGame(from, asahotak)}\nHadiah : ${htgm} balance\n\nIngin bermain lagi? ketik *${prefix}asahotak*`)
+		    asahotak.splice(getGamePosi(from, asahotak), 1)
 		  }
 		}
 
@@ -553,7 +579,9 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				+`Added Auto Block\n`
 				+`${prefix}mediafire\n`
 				+`${prefix}claim (setiap jam 15.00WIB)\n`
-				reply(cptn)
+				+`${prefix}siapaaku\n`
+				+`${prefix}asahotak\n`
+				await adReply(cptn, setting.fake, setting.botName, msg)
 				break
 			case prefix+'runtime':
 			    reply(runtime(process.uptime()))
@@ -675,7 +703,6 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			case prefix+'tiktok':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			    if (args.length < 2) return reply(`Kirim perintah ${command} link`)
-			    if (!isUrl(args[1])) return reply(mess.error.Iv)
 			    if (!args[1].includes('tiktok')) return reply(mess.error.Iv)
 			    await adReply(mess.wait, setting.fake, setting.botName, msg)
 			    xfar.Tiktok(args[1]).then( data => {
@@ -881,7 +908,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				+`*Title:* ${hasil.name_file}\n`
 				+`*Size:* ${hasil.size}\n\n`
 				+`*UPLOADING MEDIA...*`
-				reply(cptn)
+				await adReply(cptn, setting.fake, setting.botName, msg)
 				if (hasil.download_url.includes(".mp4")){
 					var zpvid = await getBuffer(hasil.download_url)
 					await conn.sendMessage(from, {document: zpvid, fileName: `${hasil.name_file}.mp4`, mimetype: "video/mp4"}, {quoted: msg})
@@ -1077,7 +1104,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		         if (args.length < 2) return reply(`Masukkan isi pesannya`)
                 var data = await store.chats.all()
                       for (let i of data) {
-                      conn.sendMessage(i.id, { text: `${q}\n\n❮ *NOTICE MY SENPAI*❮ *NOTICE MY SENPAI* ❯` })
+                      conn.sendMessage(i.id, { text: `${q}\n\n❮ *NOTICE MY SENPAI* ❯` })
                       await sleep(1000)
                             }
                             break
@@ -1133,7 +1160,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			case prefix+'delblock':
 				if (!isOwner) return reply(mess.OnlyOwner)
 				const delblock = `${q + '@s.whatsapp.net'}`
-				block.splice(delblock, 1)
+				block.splice(delblock, block, 1)
 				fs.writeFileSync("./database/block.json", JSON.stringify(block))
 				await sleep(1000)
 				conn.updateBlockStatus(delblock, "unblock")
@@ -1330,6 +1357,36 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 					gameAdd(sender, glimit)
 				  })
 			    break
+			case prefix+'siapaaku':
+				if (!isGroup) return reply(mess.OnlyGrup)
+		        if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
+			    if (isPlayGame(from, siapaaku)) return conn.reply(from, `Masih ada game yang belum diselesaikan`, siapaaku[getGamePosi(from, siapaaku)].msg)
+				var data = await fetchJson(`https://api.lolhuman.xyz/api/tebak/siapaaku?apikey=Rafly11`)
+				jawaban = data.result.answer.split('answer ').join('')
+				  var teks = `*SIAPAKAH AKU?*\n\n${data.result.question}\n`+monospace(`Petunjuk : ${data.result.answer.replace(/[b|c|d|f|g|h|j|k|l|m|n|p|q|r|s|t|v|w|x|y|z]/gi, '_')}\nWaktu : ${gamewaktu}s`)
+				  conn.sendMessage(from, { text: teks }, { quoted: msg })
+				  .then( res => {
+					var jawab = jawaban.toLowerCase()
+					addPlayGame(from, 'Siapakah Aku', jawab, gamewaktu, res, siapaaku)
+					gameAdd(sender, glimit)
+				  })
+			    break
+			case prefix+'asahotak':
+				if (!isGroup) return reply(mess.OnlyGrup)
+		        if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
+			    if (isPlayGame(from, asahotak)) return conn.reply(from, `Masih ada game yang belum diselesaikan`, asahotak[getGamePosi(from, asahotak)].msg)
+				var data = await fetchJson(`https://api.lolhuman.xyz/api/tebak/asahotak?apikey=Rafly11`)
+				jawaban = data.result.jawaban.split('jawaban ').join('')
+				  var teks = `*ASAH OTAK*\n\n${data.result.pertanyaan}\n`+monospace(`Petunjuk : ${data.result.jawaban.replace(/[b|c|d|f|g|h|j|k|l|m|n|p|q|r|s|t|v|w|x|y|z]/gi, '_')}\nWaktu : ${gamewaktu}s`)
+				  conn.sendMessage(from, { text: teks }, { quoted: msg })
+				  .then( res => {
+					var jawab = jawaban.toLowerCase()
+					addPlayGame(from, 'Asah Otak', jawab, gamewaktu, res, asahotak)
+					gameAdd(sender, glimit)
+				  })
+			    break
+			
+
 			case prefix+'claim':
 				if(moment.tz('Asia/Jakarta').format('HH:mm')==`15:00`){
 				var cb = randomNomor(300,500)

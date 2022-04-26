@@ -97,6 +97,8 @@ exports.allmenu = (pushname, prefix) => {
 ┣➥ ${prefix}tebakkimia
 ┣➥ ${prefix}susunkata
 ┣➥ ${prefix}tebakchara
+┣➥ ${prefix}siapaaku
+┣➥ ${prefix}asahotak
 ┣──────────────────⊱
 ┣➥ ${prefix}buylimit
 ┣➥ ${prefix}buyglimit
