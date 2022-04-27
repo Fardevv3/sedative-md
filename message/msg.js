@@ -544,8 +544,10 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				+`Kelewat gblk = block!!!\n`
 				+`--------------------------\n`
 				+`Create by ${setting.ownerName}\nSince 01-12-2020`
-				const thumbinfo = fs.readFileSync(setting.pathimg)
-				await conn.sendMessage(from, {image: thumbinfo, caption: info}, {quoted: msg})
+				var buttonsDefault = [
+					{ callButton: { displayText: `OWNER NUMBER`, phoneNumber: `+687 73.13.67` } }
+				]
+				conn.sendMessage(from, { caption: info, location: { jpegThumbnail: fs.readFileSync(setting.pathimg) }, templateButtons: buttonsDefault, footer: setting.fake, mentions: [sender] })
 			}
 				break
 			case prefix+'changelog':
