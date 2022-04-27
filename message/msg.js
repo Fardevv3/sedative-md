@@ -605,8 +605,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 	} else if (isVideo || isQuotedVideo) {
 	if (isQuotedVideo ? msg.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage.seconds > 15 : msg.message.videoMessage.seconds > 15) return textImg('too long duration, max 15 seconds')
     let file = await downloadAndSaveMediaMessage("video", "./media/"+sender+".mp4")
-    let ahsuhfkj = await convert("./media/"+sender+".mp4")
-    let sticker = new Sticker(fs.readFileSync(ahsuhfkj), {
+    let sticker = new Sticker(fs.readFileSync(file), {
         pack: `Sticker Request by\n${pushname}`, // The pack name
         author: `ユ\nウ\nキ\n\nY\nu\nu\nk\ni`, // The author name
         type: StickerTypes.FULL, // The sticker type
