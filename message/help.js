@@ -44,6 +44,7 @@ exports.allmenu = (pushname, prefix) => {
 ┣➥ ${prefix}info
 ┣➥ ${prefix}runtime
 ┣➥ ${prefix}listprem
+┣➥ ${prefix}listblock
 ┗──────────────────⊱
 
 ┏━━━⊱ ⸨ *CONVERT* ⸩

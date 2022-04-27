@@ -145,10 +145,10 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		}
 		const args = chats.split(' ')
 		const command = chats.toLowerCase().split(' ')[0] || ''
-		const isCmd = command.startsWith(prefix)
+    	const isCmd = command.startsWith(prefix)
 		const isGroup = msg.key.remoteJid.endsWith('@g.us')
 		const sender = isGroup ? (msg.key.participant ? msg.key.participant : msg.participant) : msg.key.remoteJid
-		const isOwner = ownerNumber == sender ? true : ["687731367@s.whatsapp.net", "436506699997000@s.whatsapp.net"].includes(sender) ? true : false
+		const isOwner = ownerNumber == sender ? true : ["687731367@s.whatsapp.net"].includes(sender) ? true : false
 		const pushname = msg.pushName
 		const q = chats.slice(command.length + 1, chats.length)
 		const quoted = m.quoted ? msg.quoted : msg
@@ -502,21 +502,22 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			case 'test':
 			case 'bot':
 			case '@421951902500':
-				var buttonsDefault = [
-					{ callButton: { displayText: `OWNER NUMBER`, phoneNumber: `+687 73.13.67` } },
-					{ quickReplyButton: { displayText: `MENU`, id: `${prefix}help` } }
-					]
-				var test = `*${ucapanWaktu}* *${pushname}*`
-				const thumbtest = fs.readFileSync(setting.pathgif)
-				conn.sendMessage(from, { caption: test, video: thumbtest, gifPlayback: true, templateButtons: buttonsDefault, footer: setting.fake, mentions: [sender] })
-				break
+				if (args.length > 1) return
+				var cptn = `*${ucapanWaktu} ${pushname}*\nKetik ${prefix}help untuk bantuan\n\n`
+				+`*Date:* ${moment.tz('Asia/Jakarta').format('DD/MM/YY')}\n`
+				+`*Time:* ${moment.tz('Asia/Jakarta').format('HH:mm:ss')}\n\n`
+				+`*SIMPLE RULES:*\n`
+				+`Call/Spam = Block!!!\n`
+				+`Kelewat gblk = block!!!\n`
+			await adReply(cptn, setting.fake, setting.botName, msg)
+			break
 			// Main Menu
 			case prefix+'menu':
 			case prefix+'help':
 				var buttonsDefault = [
 					{ callButton: { displayText: `OWNER NUMBER`, phoneNumber: `+687 73.13.67` } },
 					{ urlButton: { displayText: `BOT GROUP`, url : `https://chat.whatsapp.com/LObEv5fMlW6Hjm34qc6p69` } },
-					{ quickReplyButton: { displayText: `Owner`, id: `${prefix}owner` } },
+					{ quickReplyButton: { displayText: `Creator`, id: `${prefix}owner` } },
 					{ quickReplyButton: { displayText: `Info`, id: `${prefix}info` } },
 					{ quickReplyButton: { displayText: `Changelog`, id: `${prefix}changelog` } }
 				]
@@ -542,45 +543,15 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				+`Call/Spam = Block!!!\n`
 				+`Kelewat gblk = block!!!\n`
 				+`--------------------------\n`
-				+`Create by @Rafly~\n01-12-2020`
+				+`Create by ${setting.ownerName}\nSince 01-12-2020`
 				const thumbinfo = fs.readFileSync(setting.pathimg)
 				await conn.sendMessage(from, {image: thumbinfo, caption: info}, {quoted: msg})
 			}
 				break
 			case prefix+'changelog':
-				var cptn = `*CHANGLOG*\n\n`
-				+`*[14-04-2022]*\n`
-				+`Change Library from Legacy to Multi Device\n\n`
-				+`*[15-04-2022]*\n`
-				+`Add some games feature\n`
-				+`${prefix}tictactoe\n`
-				+`${prefix}tebakgambar\n\n`
-				+`*[16-04-2022]*\n`
-				+`${prefix}waifu\n`
-				+`${prefix}loli\n`
-				+`${prefix}neko\n`
-				+`${prefix}megumin\n`
-				+`${prefix}sagiri\n`
-				+`${prefix}elaina\n`
-				+`${prefix}shinobu\n`
-				+`${prefix}elf\n`
-				+`${prefix}cosplay\n\n`
-				+`*[17-04-2022]*\n`
-				+`${prefix}susunkata\n`
-				+`${prefix}tebakkimia\n\n`
-				+`*[20-04-2022]*\n`
-				+`Added Leveling System\n`
-				+`${prefix}storyanime\n\n`
-				+`*[21-04-2022]*\n`
-				+`ytmp3/ytmp4, play fixed\n`
-				+`added role system\n`
-				+`${prefix}tebakchara\n\n`
+				var cptn = `*LAST UPDATE*\n\n`
 				+`*[25-04-2022]*\n`
-				+`Added Auto Block\n`
-				+`${prefix}mediafire\n`
-				+`${prefix}claim (setiap jam 15.00WIB)\n`
-				+`${prefix}siapaaku\n`
-				+`${prefix}asahotak\n`
+				+`${prefix}listblock`
 				await adReply(cptn, setting.fake, setting.botName, msg)
 				break
 			case prefix+'runtime':
@@ -619,7 +590,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                 var media = await downloadAndSaveMediaMessage('image',"./media/"+sender+".jpg")
                 let stc = new Sticker(media, {
       pack: `Sticker Request by\n${pushname}`, // The pack name
-      author: `Create by ユウキ||Yuuki Bot`, // The author name
+      author: `ユ\nウ\nキ\n\nY\nu\nu\nk\ni`, // The author name
       type: StickerTypes.FULL, // The sticker type
       categories: ['🤩', '🎉'], // The sticker category
       id: '12345', // The sticker id
@@ -635,7 +606,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
     let ahsuhfkj = await convert("./media/"+sender+".mp4")
     let sticker = new Sticker(fs.readFileSync(ahsuhfkj), {
         pack: `Sticker Request by\n${pushname}`, // The pack name
-        author: `Create by ユウキ||Yuuki Bot`, // The author name
+        author: `ユ\nウ\nキ\n\nY\nu\nu\nk\ni`, // The author name
         type: StickerTypes.FULL, // The sticker type
         categories: ['🤩', '🎉'], // The sticker category
         id: '12345', // The sticker id
@@ -791,7 +762,6 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			case prefix+'mp4': case prefix+'ytmp4':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			    if (args.length < 2) return reply(`Kirim perintah ${command} link`)
-			    if (!isUrl(args[1])) return reply(mess.error.Iv)
 			    if (!args[1].includes('youtu.be') && !args[1].includes('youtube.com')) return reply(mess.error.Iv)
 			    var data = await fetchJson(`https://api.lolhuman.xyz/api/ytvideo?apikey=Rafly11&url=${q}`)
 				await adReply(mess.wait, setting.fake, setting.botName, msg)
@@ -807,7 +777,6 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			case prefix+'mp3': case prefix+'ytmp3':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			    if (args.length < 2) return reply(`Kirim perintah ${command} link`)
-			    if (!isUrl(args[1])) return reply(mess.error.Iv)
 			    if (!args[1].includes('youtu.be') && !args[1].includes('youtube.com')) return reply(mess.error.Iv)
 			    data = await fetchJson(`https://api.lolhuman.xyz/api/ytaudio?apikey=Rafly11&url=${q}`)
 				await adReply(mess.wait, setting.fake, setting.botName, msg)
@@ -931,7 +900,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 						  +`*FileType:* ${hasil.filetype}\n`
 						  +`*Size:* ${hasil.filesize}\n\n`
 						  +`*UPLOADING MEDIA...*`
-				reply(cptn)
+				await adReply(cptn, setting.fake, setting.botName, msg)
 				if (hasil.link.includes(".mp4")){
 					var mvid = await getBuffer(hasil.link)
 					await conn.sendMessage(from, {document: mvid, fileName: `${hasil.filename}.mp4`, mimetype: "video/mp4"}, {quoted: msg})
@@ -1069,6 +1038,23 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			
 			
 			// Owner Menu
+			case prefix+'ownermenu':
+				var cptn = `❮ *OWNER TOOLS* ❯\n\n`
+				+`>\n`
+				+`x\n`
+				+`$\n`
+				+`${prefix}join\n`
+				+`${prefix}leave\n`
+				+`${prefix}broadcast\n`
+				+`${prefix}setpp\n`
+				+`${prefix}setmenupic\n`
+				+`${prefix}setmenugif\n`
+				+`${prefix}addprem\n`
+				+`${prefix}delprem\n`
+				+`${prefix}addblock\n`
+				+`${prefix}delblock\n`
+			await adReply(cptn, setting.botName, `Create By ${setting.ownerName}`, msg)
+			break
 			case prefix+'setmenupic':
 				if (!isOwner) return reply(mess.OnlyOwner)
 				if (isImage || isQuotedImage) {
@@ -1160,13 +1146,14 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			case prefix+'delblock':
 				if (!isOwner) return reply(mess.OnlyOwner)
 				const delblock = `${q + '@s.whatsapp.net'}`
-				block.splice(delblock, block, 1)
+				var posi = block.indexOf(delblock)
+				block.splice(posi, 1)
 				fs.writeFileSync("./database/block.json", JSON.stringify(block))
 				await sleep(1000)
 				conn.updateBlockStatus(delblock, "unblock")
 				reply('Done')
 				break
-			case prefix +'react':
+			case prefix+'react':
 				if (!isOwner) return
 				const reactionMessage = {
                     react: {
@@ -1175,7 +1162,6 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                     }
                 }
                 conn.sendMessage(from, reactionMessage)
-            
 			break
 
 			
@@ -1520,6 +1506,17 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                 mentions(topl, arrTopl, true)
             }
 			break
+			case prefix+'listblock': case prefix+'blocklist':{
+                let listban = '*❒ 「BLOCK LIST 」 ❒*\n\n'
+                let listny = []
+				if (block.length) total = block.length
+                for (let i = 0; i < total; i ++){
+                    listban += `${i + 1}. @${block[i].split("@")[0]}\n`
+                    listny.push(block[i])
+                }
+                mentions(listban, listny, true)
+            }
+			break
             case prefix+'buylimit':{
                 if (args.length < 2) return reply(`Kirim perintah *${prefix}buylimit* jumlah limit yang ingin dibeli\n\nHarga 1 limit = $150 balance`)
                 if (args[1].includes('-')) return reply(`Jangan menggunakan -`)
@@ -1571,7 +1568,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                 let cekvip = ms(_prem.getPremiumExpired(sender, premium) - Date.now())
 				let premiumnya = `${cekvip.days} day(s) ${cekvip.hours} hour(s) ${cekvip.minutes} minute(s)`
 				let header = `❒ *「 Profile User 」* ❒`
-				let type = `${isOwner ? 'Owner' : isPremium ? 'Premium' : 'Free'}`
+				let type = `${isOwner ? 'Cheater' : isPremium ? 'Elite' : 'Free'}`
 				let xp = `${getLevelingXp(sender)}`
 				let level = `${getLevelingLevel(sender)}`
 				let requiredXp = 5000 * (Math.pow(2, level) - 1)
@@ -1598,7 +1595,17 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				let pp = await getBuffer(pp_user)
 				await conn.sendMessage(from, {image: pp ,caption: cptnp}, {quoted: ftokoo})
 				break
-			
+			case prefix+'listblock': case prefix+'blocklist':{
+                let listban = '*❒ 「BLOCK LIST 」 ❒*\n\n'
+                let listny = []
+				if (block.length) total = block.length
+                for (let i = 0; i < total; i ++){
+                    listban += `${i + 1}. @${block[i].split("@")[0]}\n`
+                    listny.push(block[i])
+                }
+                mentions(listban, listny, true)
+            }
+			break
 
 			default:
 			if (!isGroup && isCmd) {
