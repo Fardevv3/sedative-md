@@ -550,7 +550,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				break
 			case prefix+'changelog':
 				var cptn = `*LAST UPDATE*\n\n`
-				+`*[25-04-2022]*\n`
+				+`*[27-04-2022]*\n`
 				+`${prefix}listblock`
 				await adReply(cptn, setting.fake, setting.botName, msg)
 				break
@@ -1039,6 +1039,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			
 			// Owner Menu
 			case prefix+'ownermenu':
+			if (!isOwner) return
 				var cptn = `❮ *OWNER TOOLS* ❯\n\n`
 				+`>\n`
 				+`x\n`
@@ -1507,7 +1508,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
             }
 			break
 			case prefix+'listblock': case prefix+'blocklist':{
-                let listban = '*❒ 「BLOCK LIST 」 ❒*\n\n'
+                let listban = '*❒ 「 BLACK LIST 」 ❒*\n\n'
                 let listny = []
 				if (block.length) total = block.length
                 for (let i = 0; i < total; i ++){
