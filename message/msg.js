@@ -263,7 +263,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			return conn.sendMessage(from, { text: teks}, { quoted: msg })
 		}
 		const adReply = async(teks, judul, isi, quo) => {
-			conn.sendMessage(from, {text: teks, contextInfo:{"externalAdReply": {title: judul, body: isi, mediaType: 3, "thumbnail": fs.readFileSync('./media/menupic.jpeg')}}}, {sendEphemeral: true, quoted: quo })
+			conn.sendMessage(from, {text: teks, contextInfo:{"externalAdReply": {title: judul, body: isi, mediaType: 4, "thumbnail": fs.readFileSync('./media/menupic.jpeg')}}}, {sendEphemeral: true, quoted: quo })
 		}
 		const textImg = (teks) => {
 			return conn.sendMessage(from, { text: teks, jpegThumbnail: fs.readFileSync(setting.pathimg) }, { quoted: msg })
@@ -1155,15 +1155,16 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				conn.updateBlockStatus(delblock, "unblock")
 				reply('Done')
 				break
-			case prefix+'react':
-				if (!isOwner) return
+			case 'react':
+			case 'bang':
+			case 'banh':
 				const reactionMessage = {
-                    react: {
-                        text: args[2],
-                        key: { remoteJid: from, fromMe: true, id: quoted.id }
-                    }
-                }
-                conn.sendMessage(from, reactionMessage)
+					react: {
+						text: `${args[1]}`,
+						key: msg.quoted ? msg.quoted.key : msg.key,
+					},
+				};
+				await conn.sendMessage(msg.from, reactionMessage)
 			break
 
 			
