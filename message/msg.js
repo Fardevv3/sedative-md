@@ -49,6 +49,7 @@ let limit = JSON.parse(fs.readFileSync('./database/limit.json'));
 let glimit = JSON.parse(fs.readFileSync('./database/glimit.json'));
 let _level = JSON.parse(fs.readFileSync('./database/level.json'));
 let block = JSON.parse(fs.readFileSync('./database/block.json'));
+let game = JSON.parse(fs.readFileSync('./database/game.json'));
 
 //LEVELING
 const getLevelingXp = (sender) => {
@@ -165,6 +166,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		const isPremium = isOwner ? true : _prem.checkPremiumUser(sender, premium)
         const isWelcome = isGroup ? welcome.includes(from) ? true : false : false
 		const isBlocked = block.includes(sender, block)
+		const isGameOn = isGroup ? game.includes(from) ? true : false : false
 
 		const gcounti = setting.gcount
 		const gcount = isPremium ? gcounti.prem : gcounti.user
@@ -1251,6 +1253,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			    break
 			// Game Menu
 			case prefix+'tictactoe': case prefix+'ttt': case prefix+'ttc':
+				if (!isGameOn) return reply(`Fitur game belum diaktifkan pada grup ini\n${prefix}game enable untuk mengaktifkan\n${prefix}game disable untuk menonaktifkan`)
                 if (!isGroup)return reply(mess.OnlyGrup)
 			    if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
                 if (isTicTacToe(from, tictactoe)) return reply(`Masih ada game yg blum selesai`)
@@ -1295,7 +1298,8 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                    reply(`Anda tidak bisa menghapus sesi tictactoe, karena bukan pemain!`)
                 }
                 break
-			/*case prefix+'tebakgambar':
+			case prefix+'tebakgambar':
+				if (!isGameOn) return reply(`Fitur game belum diaktifkan pada grup ini\n${prefix}game enable untuk mengaktifkan\n${prefix}game disable untuk menonaktifkan`)
 				if (!isGroup) return reply(mess.OnlyGrup)
 		        if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
 			    if (isPlayGame(from, tebakgambar)) return conn.reply(from, `Masih ada game yang belum diselesaikan`, tebakgambar[getGamePosi(from, tebakgambar)].msg)
@@ -1312,6 +1316,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				})
 			    break
 			case prefix+'tebakkimia': case prefix+'tebakimia':
+				if (!isGameOn) return reply(`Fitur game belum diaktifkan pada grup ini\n${prefix}game enable untuk mengaktifkan\n${prefix}game disable untuk menonaktifkan`)
 				if (!isGroup) return reply(mess.OnlyGrup)
 				if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
 			    if (isPlayGame(from, tebakkimia)) return conn.reply(from, `Masih ada game yang belum diselesaikan`, tebakkimia[getGamePosi(from, tebakkimia)].msg)
@@ -1326,6 +1331,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				})
 				break
 			case prefix+'susunkata':
+				if (!isGameOn) return reply(`Fitur game belum diaktifkan pada grup ini\n${prefix}game enable untuk mengaktifkan\n${prefix}game disable untuk menonaktifkan`)
 				if (!isGroup) return reply(mess.OnlyGrup)
 				if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
 			    if (isPlayGame(from, susunkata)) return conn.reply(from, `Masih ada game yang belum diselesaikan`, susunkata[getGamePosi(from, susunkata)].msg)
@@ -1340,6 +1346,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				})
 				break
 			case prefix+'tebakchara': case prefix+'tebakcharacter':
+				if (!isGameOn) return reply(`Fitur game belum diaktifkan pada grup ini\n${prefix}game enable untuk mengaktifkan\n${prefix}game disable untuk menonaktifkan`)
 				if (!isGroup) return reply(mess.OnlyGrup)
 		        if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
 			    if (isPlayGame(from, tebakchara)) return conn.reply(from, `Masih ada game yang belum diselesaikan`, tebakchara[getGamePosi(from, tebakchara)].msg)
@@ -1355,6 +1362,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				  })
 			    break
 			case prefix+'siapaaku':
+				if (!isGameOn) return reply(`Fitur game belum diaktifkan pada grup ini\n${prefix}game enable untuk mengaktifkan\n${prefix}game disable untuk menonaktifkan`)
 				if (!isGroup) return reply(mess.OnlyGrup)
 		        if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
 			    if (isPlayGame(from, siapaaku)) return conn.reply(from, `Masih ada game yang belum diselesaikan`, siapaaku[getGamePosi(from, siapaaku)].msg)
@@ -1369,6 +1377,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				  })
 			    break
 			case prefix+'asahotak':
+				if (!isGameOn) return reply(`Fitur game belum diaktifkan pada grup ini\n${prefix}game enable untuk mengaktifkan\n${prefix}game disable untuk menonaktifkan`)
 				if (!isGroup) return reply(mess.OnlyGrup)
 		        if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
 			    if (isPlayGame(from, asahotak)) return conn.reply(from, `Masih ada game yang belum diselesaikan`, asahotak[getGamePosi(from, asahotak)].msg)
@@ -1381,17 +1390,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 					addPlayGame(from, 'Asah Otak', jawab, gamewaktu, res, asahotak)
 					gameAdd(sender, glimit)
 				  })
-			    break*/
-			case prefix+'tebakgambar':
-			case prefix+'tebakkimia':
-			case prefix+'susunkata':
-			case prefix+'tebakchara':
-			case prefix+'siapaaku':
-			case prefix+'asahotak':
-				var kontol = `*MT*\nSemua fitur game kecuali tictactoe dinonaktifkan sementara`
-				await reply(kontol)
-				break
-			
+			    break
 
 			case prefix+'claim':
 				if(moment.tz('Asia/Jakarta').format('HH:mm')==`15:00`){
@@ -1494,6 +1493,25 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 					  welcome.splice(posi, 1)
 					  fs.writeFileSync('./database/welcome.json', JSON.stringify(welcome, null, 2))
 					  reply(`Sukses menonaktifkan welcome di grup ini`)
+					} else {
+					  reply(`Pilih enable atau disable`)
+					}
+					break
+				case prefix+'game':
+					if (!isGroup) return reply(mess.OnlyGrup)
+					if (!isGroupAdmins && !isOwner) return reply(mess.GrupAdmin)
+					if (args.length < 2) return reply(`Pilih enable atau disable`)
+					if (args[1].toLowerCase() === "enable") {
+					  if (isGameOn) return reply(`Fitur game sudah aktif`)
+					  game.push(from)
+					  fs.writeFileSync('./database/game.json', JSON.stringify(game, null, 2))
+					  reply(`Sukses mengaktifkan game di grup ini`)
+					} else if (args[1].toLowerCase() === "disable") {
+					  if (!isGameOn) return reply(`Fitur game sudah nonaktif`)
+					  var posi = game.indexOf(from)
+					  game.splice(posi, 1)
+					  fs.writeFileSync('./database/game.json', JSON.stringify(game, null, 2))
+					  reply(`Sukses menonaktifkan game di grup ini`)
 					} else {
 					  reply(`Pilih enable atau disable`)
 					}
@@ -1613,7 +1631,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 					var pp_user = 'https://telegra.ph/file/697858c5140630f089f6e.jpg'
 				  }
 				let pp = await getBuffer(pp_user)
-				await conn.sendMessage(from, {image: pp ,caption: cptnp}, {quoted: ftokoo})
+				await conn.sendMessage(from, {image: pp ,caption: cptnp}, {quoted: msg})
 				break
 			case prefix+'listblock': case prefix+'blocklist':{
                 let listban = '*❒ 「BLOCK LIST 」 ❒*\n\n'
