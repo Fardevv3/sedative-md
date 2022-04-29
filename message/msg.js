@@ -263,7 +263,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			return conn.sendMessage(from, { text: teks}, { quoted: msg })
 		}
 		const adReply = async(teks, judul, isi, quo) => {
-			conn.sendMessage(from, {text: teks, contextInfo:{"externalAdReply": {title: judul, body: isi, mediaType: 4, "thumbnail": fs.readFileSync('./media/menupic.jpeg')}}}, {sendEphemeral: true, quoted: quo })
+			conn.sendMessage(from, {text: teks, contextInfo:{"externalAdReply": {title: judul, body: isi, mediaType: 3, "thumbnail": fs.readFileSync('./media/menupic.jpeg')}}}, {quoted: quo })
 		}
 		const textImg = (teks) => {
 			return conn.sendMessage(from, { text: teks, jpegThumbnail: fs.readFileSync(setting.pathimg) }, { quoted: msg })
@@ -301,7 +301,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				  description: `${pushname}`,
 				  currencyCode: "USD",
 				  priceAmount1000: `${getBalance(sender, balance)}`,
-				  retailerId: "YogiPw",
+				  retailerId: "Rafly",
 				  productImageCount: 1,
 				},
 				businessOwnerJid: `0@s.whatsapp.net`,
@@ -329,8 +329,6 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			conn.sendMessage(node.attrs.from, {text: `Kamu Telah Melanggar Rules Maka Kamu Akan Terkena *Blokir*`, jpegThumbnail: fs.readFileSync('./media/menupic.jpeg')}).then(anu => {
 			conn.updateBlockStatus(node.attrs.from, "block")
 			sleep(5000)
-			block.push(node.attrs.from)
-			fs.writeFileSync('./database/block.json', JSON.stringify(block, null, 2))
 			console.log(color('[AUTO BLOCK USER!!!!]','red'), color(node.attrs.from, 'yellow'), color('SUCCES BLOCKED'))
 			})
 		}
@@ -545,7 +543,8 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				+`--------------------------\n`
 				+`Create by ${setting.ownerName}\nSince 01-12-2020`
 				var buttonsDefault = [
-					{ callButton: { displayText: `OWNER NUMBER`, phoneNumber: `+687 73.13.67` } }
+					{ callButton: { displayText: `OWNER NUMBER`, phoneNumber: `+687 73.13.67` } },
+					{ quickReplyButton: { displayText: `BLOCK LIST`, id: `${prefix}blocklist` } }
 				]
 				conn.sendMessage(from, { caption: info, location: { jpegThumbnail: fs.readFileSync(setting.pathimg) }, templateButtons: buttonsDefault, footer: setting.fake, mentions: [sender] })
 			}
@@ -868,6 +867,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				}).catch(() => reply(mess.error.api))
 			    break
 			case prefix+'zippyshare': case prefix+'zippy': case prefix+'zp':
+				try {
 				if (!isGroup) return reply(mess.OnlyGrup)
 				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 				if (args.length < 2) return reply(`Kirim perintah ${command} link`)
@@ -888,8 +888,12 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 					await conn.sendMessage(from, {document: zppdf, fileName: `${hasil.name_file}.pdf`, mimetype: "document/pdf"}, {quoted: msg})
 				}
 				limitAdd(sender, limit)
+			} catch(err) {
+				reply(mess.error.api)
+			}
 				break
 			case prefix+'mediafire':
+				try {
 				if (!isGroup) return reply(mess.OnlyGrup)
 				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 				if (args.length < 2) return reply(`Kirim perintah ${command} link`)
@@ -922,6 +926,9 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		}
 	}
 				limitAdd(sender, limit)
+} catch(err) {
+	reply(mess.error.api)
+}
 				break
 		
 				
@@ -1158,6 +1165,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			case 'react':
 			case 'bang':
 			case 'banh':
+				if (!isOwner) return
 				const reactionMessage = {
 					react: {
 						text: `${args[1]}`,
@@ -1287,7 +1295,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                    reply(`Anda tidak bisa menghapus sesi tictactoe, karena bukan pemain!`)
                 }
                 break
-			case prefix+'tebakgambar':
+			/*case prefix+'tebakgambar':
 				if (!isGroup) return reply(mess.OnlyGrup)
 		        if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
 			    if (isPlayGame(from, tebakgambar)) return conn.reply(from, `Masih ada game yang belum diselesaikan`, tebakgambar[getGamePosi(from, tebakgambar)].msg)
@@ -1373,7 +1381,16 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 					addPlayGame(from, 'Asah Otak', jawab, gamewaktu, res, asahotak)
 					gameAdd(sender, glimit)
 				  })
-			    break
+			    break*/
+			case prefix+'tebakgambar':
+			case prefix+'tebakkimia':
+			case prefix+'susunkata':
+			case prefix+'tebakchara':
+			case prefix+'siapaaku':
+			case prefix+'asahotak':
+				var kontol = `*MT*\nSemua fitur game kecuali tictactoe dinonaktifkan sementara`
+				await reply(kontol)
+				break
 			
 
 			case prefix+'claim':
