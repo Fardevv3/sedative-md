@@ -494,6 +494,17 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			console.log('->[\x1b[1;32mCMD\x1b[1;37m]', color(moment(msg.messageTimestamp *1000).format('DD/MM/YYYY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(groupName))
 		}
 
+		if (!isGroup && !isCmd &&chats && !fromMe) {
+			console.log(color('->[PRIVATE CHAT]', 'cyan'), color(moment(msg.messageTimestamp *1000).format('DD/MM/YYYY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(groupName))
+		}
+		if (isGroup && !isCmd && chats && !fromMe) {
+			console.log(color('->[GROUP CHAT]', 'blue'), color(moment(msg.messageTimestamp *1000).format('DD/MM/YYYY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(groupName))
+		}
+		if (isGroup && isCmd && isBlocked && !fromMe) {
+			reply('*ANDA TELAH DIBLOKIR KARENA MELANGGAR ATURAN BOT*')
+			console.log(color('->[CMD FROM BLOKED USER]', 'red'))
+		}
+
 		if (fromMe) return
 		if (isBlocked) return
 		switch(command) {
@@ -566,7 +577,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			    break
 			case prefix+'owner':
 			    for (let x of ownerNumber) {
-			      sendContact(from, x.split('@s.whatsapp.net')[0], 'Owner', msg)
+			      sendContact(from, x.split('@s.whatsapp.net')[0], 'Creator', msg)
 			    }
 			    break
             case prefix+'listprem':
@@ -656,7 +667,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                 exec(`ffmpeg -i ${media} ${ran}`, (err) => {
                     fs.unlinkSync(media)
                     let buffer = fs.readFileSync(ran)
-                    conn.sendMessage(from, { image: buffer }, { quoted: msg })
+                    conn.sendMessage(from, { image: buffer, JpegThumbnail: fs.readFileSync(setting.pathimg) }, { quoted: msg })
                     fs.unlinkSync(ran)
                 })
 				limitAdd(sender, limit)
