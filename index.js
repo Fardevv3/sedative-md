@@ -17,7 +17,7 @@ const chalk = require('chalk')
 const logg = require('pino')
 const clui = require('clui')
 const { Spinner } = clui
-const { serialize } = require("./lib/myfunc");
+const { serialize, getBuffer } = require("./lib/myfunc");
 const { color, mylog, infolog } = require("./lib/color");
 const time = moment(new Date()).format('HH:mm:ss DD/MM/YYYY')
 let setting = JSON.parse(fs.readFileSync('./config.json'));
@@ -78,9 +78,11 @@ const connectToWhatsApp = async () => {
         store.bind(conn.ev)
 	
 	/* Auto Update */
+	require('./index')
 	require('./message/help')
 	require('./lib/myfunc')
 	require('./message/msg')
+	nocache('./index', module => console.log(chalk.greenBright('[ WHATSAPP BOT ]  ') + time + chalk.cyanBright(` "${module}" Telah diupdate!`)))
 	nocache('./message/help', module => console.log(chalk.greenBright('[ WHATSAPP BOT ]  ') + time + chalk.cyanBright(` "${module}" Telah diupdate!`)))
 	nocache('./lib/myfunc', module => console.log(chalk.greenBright('[ WHATSAPP BOT ]  ') + time + chalk.cyanBright(` "${module}" Telah diupdate!`)))
 	nocache('./message/msg', module => console.log(chalk.greenBright('[ WHATSAPP BOT ]  ') + time + chalk.cyanBright(` "${module}" Telah diupdate!`)))
@@ -111,6 +113,7 @@ const connectToWhatsApp = async () => {
 	
         conn.ev.on('group-participants.update', async (data) => {
           const isWelcome = welcome.includes(data.id) ? true : false
+		 
           if (isWelcome) {
             try {
               for (let i of data.participants) {
@@ -119,9 +122,21 @@ const connectToWhatsApp = async () => {
                 } catch {
                   var pp_user = 'https://telegra.ph/file/697858c5140630f089f6e.jpg'
                 }
-                if (data.action == "add") {
-                  conn.sendMessage(data.id, { image: { url: pp_user }, caption: `Welcome @${i.split("@")[0]}`, mentions: [i] })
-                } else if (data.action == "remove") {
+				const mdata = await conn.groupMetadata(data.id)
+				const gcname = mdata.subject
+				const gcmem = mdata.participants.length
+				if (data.action == "add") {
+					/*const buff = (
+						`http://hadi-api.herokuapp.com/api/card/welcome?nama=${i.pushName}&descriminator=${
+						  gcmem
+						}&memcount=${gcmem}&gcname=${encodeURI(
+						  gcname
+						)}&pp=${pp_user}&bg=https://telegra.ph/file/7d3dcba41fe0eb221741b.jpg
+					   `)*/
+                  conn.sendMessage(data.id, { image: {url: pp_user}, caption: `Welcome @${i.split("@")[0]}`, mentions: [i] })
+					
+
+				 } else if (data.action == "remove") {
                   conn.sendMessage(data.id, { image: { url: pp_user }, caption: `Sayonara @${i.split("@")[0]}`, mentions: [i] })
                 }
               }
