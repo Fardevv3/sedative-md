@@ -124,15 +124,15 @@ const connectToWhatsApp = async () => {
 
 				if (data.action == "add") {
 				var buff = await getBuffer(`
-				https://api.lolhuman.xyz/api/base/welcome?apikey=Rafly11&img1=${pp_user}&img2=${ppgc}&background=${bg}&username=New%20Member&member=${gcmem}&groupname=${encodeURI(gcname)}
+				https://api.lolhuman.xyz/api/base/welcome?apikey=Rafly11&img1=${pp_user}&img2=${ppgc}&background=${bg}&username=NewMember&member=${gcmem}&groupname=${encodeURI(gcname)}
 				`)
-                  conn.sendMessage(data.id, { image: buff, caption: `Welcome @${i.split("@")[0]}`, mentions: [i] })
+                  conn.sendMessage(data.id, { image: buff, caption: `Welcome @${i.split("@")[0]}\nJangan lupa baca desk grup yak`, mentions: [i] })
 					
 				 } else if (data.action == "remove") {
 				var buff = await getBuffer(`
-				https://api.lolhuman.xyz/api/base/leave?apikey=Rafly11&img1=${pp_user}&img2=${ppgc}&background=${bg}&username=Member%20Leave&member=${gcmem}&groupname=${gcname}
+				https://api.lolhuman.xyz/api/base/leave?apikey=Rafly11&img1=${pp_user}&img2=${ppgc}&background=${bg}&username=MemberLeft&member=${gcmem}&groupname=${gcname}
 				`)
-                  conn.sendMessage(data.id, { image: buff, caption: `Sayonara @${i.split("@")[0]}`, mentions: [i] })
+                  conn.sendMessage(data.id, { image: buff, caption: `Sayonara @${i.split("@")[0]}\nSemoga tenang di alam sana`, mentions: [i] })
                 }
               }
             } catch (e) {
