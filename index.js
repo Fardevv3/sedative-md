@@ -78,11 +78,9 @@ const connectToWhatsApp = async () => {
         store.bind(conn.ev)
 	
 	/* Auto Update */
-	require('./index')
 	require('./message/help')
 	require('./lib/myfunc')
 	require('./message/msg')
-	nocache('./index', module => console.log(chalk.greenBright('[ WHATSAPP BOT ]  ') + time + chalk.cyanBright(` "${module}" Telah diupdate!`)))
 	nocache('./message/help', module => console.log(chalk.greenBright('[ WHATSAPP BOT ]  ') + time + chalk.cyanBright(` "${module}" Telah diupdate!`)))
 	nocache('./lib/myfunc', module => console.log(chalk.greenBright('[ WHATSAPP BOT ]  ') + time + chalk.cyanBright(` "${module}" Telah diupdate!`)))
 	nocache('./message/msg', module => console.log(chalk.greenBright('[ WHATSAPP BOT ]  ') + time + chalk.cyanBright(` "${module}" Telah diupdate!`)))
@@ -122,20 +120,19 @@ const connectToWhatsApp = async () => {
                 } catch {
                   var pp_user = 'https://telegra.ph/file/697858c5140630f089f6e.jpg'
                 }
+				const ppgc = await conn.profilePictureUrl(data.id, 'image')
 				const mdata = await conn.groupMetadata(data.id)
 				const gcname = mdata.subject
 				const gcmem = mdata.participants.length
-				if (data.action == "add") {
-					/*const buff = (
-						`http://hadi-api.herokuapp.com/api/card/welcome?nama=${i.pushName}&descriminator=${
-						  gcmem
-						}&memcount=${gcmem}&gcname=${encodeURI(
-						  gcname
-						)}&pp=${pp_user}&bg=https://telegra.ph/file/7d3dcba41fe0eb221741b.jpg
-					   `)*/
-                  conn.sendMessage(data.id, { image: {url: pp_user}, caption: `Welcome @${i.split("@")[0]}`, mentions: [i] })
-					
+				const username = `${i.split("@")[0]}`
+				const bg = `https://telegra.ph/file/7f1a25e8c5869f1a215e9.jpg`
 
+				if (data.action == "add") {
+				const buff = await getBuffer(`
+				https://api.lolhuman.xyz/api/base/welcome?apikey=Rafly11&img1=${pp_user}&img2=${ppgc}&background=${bg}&username=${username}&member=${gcmem}&groupname=${encodeURI(gcname)}
+				`)
+                  conn.sendMessage(data.id, { image: buff, caption: `Welcome @${i.split("@")[0]}`, mentions: [i] })
+					
 				 } else if (data.action == "remove") {
                   conn.sendMessage(data.id, { image: { url: pp_user }, caption: `Sayonara @${i.split("@")[0]}`, mentions: [i] })
                 }
