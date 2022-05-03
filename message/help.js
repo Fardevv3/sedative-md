@@ -118,7 +118,6 @@ exports.allmenu = (pushname, prefix) => {
 ┣➥ ${prefix}group
 ┣➥ ${prefix}revoke
 ┣➥ ${prefix}hidetag
-┣➥ ${prefix}welcome
 ┣➥ ${prefix}game
 ┗──────────────────⊱`
 +`\n\n`

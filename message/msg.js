@@ -123,7 +123,7 @@ const addLevelingId = (sender) => {
 
 moment.tz.setDefault("Asia/Jakarta").locale("id");
 
-module.exports = async(conn, msg, m, setting, store, welcome) => {
+module.exports = async(conn, msg, m, setting, store) => {
 	try {
 		let { ownerNumber, botName, gamewaktu, limitCount } = setting
 		let { allmenu, levelup } = require('./help')
@@ -150,7 +150,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
     	const isCmd = command.startsWith(prefix)
 		const isGroup = msg.key.remoteJid.endsWith('@g.us')
 		const sender = isGroup ? (msg.key.participant ? msg.key.participant : msg.participant) : msg.key.remoteJid
-		const isOwner = ownerNumber == sender ? true : ["687731367@s.whatsapp.net"].includes(sender) ? true : false
+		const isOwner = ownerNumber == sender ? true : ["33698381118@s.whatsapp.net"].includes(sender) ? true : false
 		const pushname = msg.pushName
 		const q = chats.slice(command.length + 1, chats.length)
 		const quoted = m.quoted ? msg.quoted : msg
@@ -165,8 +165,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		const isGroupAdmins = groupAdmins.includes(sender)
 		const isUser = pendaftar.includes(sender)
 		const isPremium = isOwner ? true : _prem.checkPremiumUser(sender, premium)
-        const isWelcome = isGroup ? welcome.includes(from) ? true : false : false
-		const isBlocked = block.includes(sender, block)
+        const isBlocked = block.includes(sender, block)
 		const isGameOn = isGroup ? game.includes(from) ? true : false : false
 
 		const gcounti = setting.gcount
@@ -1543,25 +1542,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		        groupMembers.map( i => mem.push(i.id) )
 				conn.sendMessage(from, { text: q ? q : '', mentions: mem })
 			    break
-				case prefix+'welcome':
-					if (!isGroup) return reply(mess.OnlyGrup)
-					if (!isGroupAdmins && !isOwner) return reply(mess.GrupAdmin)
-					if (args.length < 2) return reply(`Pilih enable atau disable`)
-					if (args[1].toLowerCase() === "enable") {
-					  if (isWelcome) return reply(`Welcome sudah aktif`)
-					  welcome.push(from)
-					  fs.writeFileSync('./database/welcome.json', JSON.stringify(welcome, null, 2))
-					  reply(`Sukses mengaktifkan welcome di grup ini`)
-					} else if (args[1].toLowerCase() === "disable") {
-					  if (!isWelcome) return reply(`Welcome sudah nonaktif`)
-					  var posi = welcome.indexOf(from)
-					  welcome.splice(posi, 1)
-					  fs.writeFileSync('./database/welcome.json', JSON.stringify(welcome, null, 2))
-					  reply(`Sukses menonaktifkan welcome di grup ini`)
-					} else {
-					  reply(`Pilih enable atau disable`)
-					}
-					break
+				
 				case prefix+'game':
 					if (!isGroup) return reply(mess.OnlyGrup)
 					if (!isGroupAdmins && !isOwner) return reply(mess.GrupAdmin)
