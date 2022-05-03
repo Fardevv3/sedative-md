@@ -50,6 +50,7 @@ let glimit = JSON.parse(fs.readFileSync('./database/glimit.json'));
 let _level = JSON.parse(fs.readFileSync('./database/level.json'));
 let block = JSON.parse(fs.readFileSync('./database/block.json'));
 let game = JSON.parse(fs.readFileSync('./database/game.json'));
+let afk = JSON.parse(fs.readFileSync('./database/afk.json'));
 
 //LEVELING
 const getLevelingXp = (sender) => {
@@ -335,6 +336,22 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			})
 		}
 	})
+
+		// AFK
+		for (let x of mentionUser) {
+			if (afk.hasOwnProperty(x.split('@')[0])) {
+				ini_txt = "*[ AFK USER ]*\n\n_the user is currently afk_\n"
+				if (afk[x.split('@')[0]] != "") {
+					ini_txt += "_reason_ : " + afk[x.split('@')[0]]
+				}
+				reply(ini_txt)
+			}
+		}
+		if (afk.hasOwnProperty(sender.split('@')[0])) {
+			reply("Welcome back")
+			delete afk[sender.split('@')[0]]
+			fs.writeFileSync("./database/afk.json", JSON.stringify(afk))
+		}
 		
 		// Auto Registrasi
 		if (chats && !isUser && !fromMe) {
@@ -1416,6 +1433,45 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 				break
 
 			// Group Menu
+			case prefix+'afk':
+				if (!isGroup) return
+				const alasan = `${q}`
+				afk[sender.split('@')[0]] = alasan.toLowerCase()
+                    fs.writeFileSync("./database/afk.json", JSON.stringify(afk))
+                    const afkny = `*[ AFK USER ]*\n\n*${pushname}* afk now!\n`
+                    +`reason : ${alasan}`
+                    const fakeafk = (teks) => {
+                      conn.sendMessage(from, {text: teks}, {
+                        quoted: {
+                          key: {
+                            fromMe: false,
+                            participant: `0@s.whatsapp.net`,
+                            ...(from ? { remoteJid: "6289523258649-1604595598@g.us" } : {}),
+                          },
+                          message: {
+                            imageMessage: {
+                              url: "https://mmg.whatsapp.net/d/f/At0x7ZdIvuicfjlf9oWS6A3AR9XPh0P-hZIVPLsI70nM.enc",
+                              mimetype: "image/jpeg",
+                              caption: `${pushname} Afk Now!!!`,
+                              fileSha256: "+Ia+Dwib70Y1CWRMAP9QLJKjIJt54fKycOfB2OEZbTU=",
+                              fileLength: "28777",
+                              height: 1080,
+                              width: 1079,
+                              mediaKey: "vXmRR7ZUeDWjXy5iQk17TrowBzuwRya0errAFnXxbGc=",
+                              fileEncSha256: "sR9D2RS5JSifw49HeBADguI23fWDz1aZu4faWG/CyRY=",
+                              directPath:
+                                "/v/t62.7118-24/21427642_840952686474581_572788076332761430_n.enc?oh=3f57c1ba2fcab95f2c0bb475d72720ba&oe=602F3D69",
+                              mediaKeyTimestamp: "1610993486",
+                              jpegThumbnail: fs.readFileSync(setting.pathimg),
+                              scansSidecar:
+                                "1W0XhfaAcDwc7xh1R8lca6Qg/1bB4naFCSngM2LKO2NoP5RI7K+zLw==",
+                            },
+                          },
+                        },
+                      });
+                    };
+                    fakeafk(afkny)
+                    break
 			case prefix+'linkgrup': case prefix+'link': case prefix+'linkgc':
 			    if (!isGroup) return reply(mess.OnlyGrup)
 				if (!isBotGroupAdmins) return reply(mess.BotAdmin)

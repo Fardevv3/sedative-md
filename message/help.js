@@ -110,6 +110,7 @@ exports.allmenu = (pushname, prefix) => {
 
 ┏━━━⊱ ⸨ *GROUP TOOLS* ⸩
 ┣──────────────────⊱
+┣➥ ${prefix}afk
 ┣➥ ${prefix}linkgroup
 ┣➥ ${prefix}setppgroup
 ┣➥ ${prefix}setnamegc
