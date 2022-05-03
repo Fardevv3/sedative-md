@@ -112,9 +112,9 @@ const connectToWhatsApp = async () => {
             try {
               for (let i of data.participants) {
                 try {
-                  var pp_user = await conn.profilePictureUrl(i, 'image')
+                  var ppuser = await conn.profilePictureUrl(i, 'image')
                 } catch {
-                  var pp_user = 'https://telegra.ph/file/697858c5140630f089f6e.jpg'
+                  var ppuser = 'https://telegra.ph/file/697858c5140630f089f6e.jpg'
                 }
 				const ppgc = await conn.profilePictureUrl(data.id, 'image')
 				const mdata = await conn.groupMetadata(data.id)
@@ -123,16 +123,16 @@ const connectToWhatsApp = async () => {
 				const bg = `https://telegra.ph/file/7f1a25e8c5869f1a215e9.jpg`
 
 				if (data.action == "add") {
-				var buff = await getBuffer(`
-				https://api.lolhuman.xyz/api/base/welcome?apikey=Rafly11&img1=${pp_user}&img2=${ppgc}&background=${bg}&username=NewMember&member=${gcmem}&groupname=${encodeURI(gcname)}
-				`)
-                  conn.sendMessage(data.id, { image: buff, caption: `Welcome @${i.split("@")[0]}\nJangan lupa baca desk grup yak`, mentions: [i] })
+					var buff = await getBuffer(`
+					https://api.lolhuman.xyz/api/base/welcome?apikey=Rafly11&img1=${ppuser}&img2=${ppgc}&background=${bg}&username=MemberLeft&member=${gcmem}&groupname=Group%20Chat
+					`)
+                await  conn.sendMessage(data.id, { image: buff, caption: `Hello @${i.split("@")[0]}\nWelcome to Group ${gcname}\nJangan lupa baca desk grup yak`, mentions: [i] })
 					
 				 } else if (data.action == "remove") {
 				var buff = await getBuffer(`
-				https://api.lolhuman.xyz/api/base/leave?apikey=Rafly11&img1=${pp_user}&img2=${ppgc}&background=${bg}&username=MemberLeft&member=${gcmem}&groupname=${gcname}
+				https://api.lolhuman.xyz/api/base/leave?apikey=Rafly11&img1=${ppuser}&img2=${ppgc}&background=${bg}&username=MemberLeft&member=${gcmem}&groupname=Group%20Chat
 				`)
-                  conn.sendMessage(data.id, { image: buff, caption: `Sayonara @${i.split("@")[0]}\nSemoga tenang di alam sana`, mentions: [i] })
+                  conn.sendMessage(data.id, { image: buff, caption: `Sayonara @${i.split("@")[0]}\nSemoga tenang di alam sana\nLatom`, mentions: [i] })
                 }
               }
             } catch (e) {
