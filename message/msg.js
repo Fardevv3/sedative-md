@@ -340,7 +340,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 		for (let x of mentionUser) {
 			if (afk.hasOwnProperty(x.split('@')[0])) {
 				const ini_txt = "*[ AFK USER ]*\n\n_the user is currently afk_\n"
-				+`_reason_ :  ${afk[x.split('@')[0]]}`
+				+`_reason_ : ${afk[x.split('@')[0]]}`
 				reply(ini_txt)
 			}
 		}
@@ -516,7 +516,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 		}
 		if (isGroup && isCmd && isBlocked && !fromMe) {
 			reply('*ANDA TELAH DIBLOKIR KARENA MELANGGAR ATURAN BOT*')
-			console.log(color('->[CMD FROM BLOKED USER]', 'red'))
+			console.log(color('->[CMD FROM BLOKED USER]', 'red'), color(sender, 'yellow'))
 		}
 
 		if (fromMe) return
