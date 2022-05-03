@@ -340,10 +340,8 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		// AFK
 		for (let x of mentionUser) {
 			if (afk.hasOwnProperty(x.split('@')[0])) {
-				ini_txt = "*[ AFK USER ]*\n\n_the user is currently afk_\n"
-				if (afk[x.split('@')[0]] != "") {
-					ini_txt += "_reason_ : " + afk[x.split('@')[0]]
-				}
+				const ini_txt = "*[ AFK USER ]*\n\n_the user is currently afk_\n"
+				+`_reason_ :  ${afk[x.split('@')[0]]}`
 				reply(ini_txt)
 			}
 		}
