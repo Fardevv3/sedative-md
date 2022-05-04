@@ -330,8 +330,6 @@ module.exports = async(conn, msg, m, setting, store) => {
 			if(node.content[0].tag === "terminate") {
 			conn.sendMessage(node.attrs.from, {text: `Kamu Telah Melanggar Rules Maka Kamu Akan Terkena *Blokir*`, jpegThumbnail: fs.readFileSync('./media/menupic.jpeg')}).then(anu => {
 			conn.updateBlockStatus(node.attrs.from, "block")
-			sleep(5000)
-			console.log(color('[AUTO BLOCK USER!!!!]','red'), color(node.attrs.from, 'yellow'), color('SUCCES BLOCKED'))
 			})
 		}
 	})
@@ -591,7 +589,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 			    break
 			case prefix+'owner':
 			    for (let x of ownerNumber) {
-			      sendContact(from, x.split('@s.whatsapp.net')[0], 'Creator', msg)
+			      sendContact(from, x.split('@s.whatsapp.net')[0], 'Rafly¹¹~', msg)
 			    }
 			    break
             case prefix+'listprem':
@@ -1656,7 +1654,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 				let xp = `${getLevelingXp(sender)}`
 				let level = `${getLevelingLevel(sender)}`
 				let requiredXp = 5000 * (Math.pow(2, level) - 1)
-				let roleny = `${role}`
+				let roleny = `${isOwner ? 'Fallen Angel' : role}`
 				let limith = `${isOwner ? '∞' : isPremium ? 'Unlimited' : getLimit(sender, limitCount, limit)}`
                 let limitg = `${cekGLimit(sender, gcount, glimit)}`
 				let balanceny = `$${getBalance(sender, balance)}`
