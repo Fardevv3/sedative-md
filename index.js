@@ -19,6 +19,7 @@ const clui = require('clui')
 const { Spinner } = clui
 const { serialize, getBuffer } = require("./lib/myfunc");
 const { color, mylog, infolog } = require("./lib/color");
+const { encode } = require("punycode");
 const time = moment(new Date()).format('HH:mm:ss DD/MM/YYYY')
 let setting = JSON.parse(fs.readFileSync('./config.json'));
 let session = `./${setting.sessionName}.json`
@@ -120,12 +121,13 @@ const connectToWhatsApp = async () => {
 				const mdata = await conn.groupMetadata(data.id)
 				const gcname = mdata.subject
 				const gcmem = mdata.participants.length
-				const bg = `https://telegra.ph/file/7f1a25e8c5869f1a215e9.jpg`
+				const bg = `https://telegra.ph/file/11f2e752e749f5412b52f.jpg`
 
 				if (data.action == "add") {
+					/*var buff = await getBuffer(`https://hardianto.xyz/api/welcome3?profile=${ppuser}&name=${i.split("@")[0]}&bg=https://telegra.ph/file/11f2e752e749f5412b52f.jpg&namegb=${encodeURI(mdata.subject)}&member=${mdata.participants.length}`)*/
 					var buff = await getBuffer(`
-					https://api.lolhuman.xyz/api/base/welcome?apikey=Rafly11&img1=${ppuser}&img2=${ppgc}&background=${bg}&username=MemberLeft&member=${gcmem}&groupname=Group%20Chat
-					`)
+				https://api.lolhuman.xyz/api/base/welcome?apikey=Rafly11&img1=${ppuser}&img2=${ppgc}&background=${bg}&username=NewMember&member=${gcmem}&groupname=Group%20Chat
+				`)
                 await  conn.sendMessage(data.id, { image: buff, caption: `Hello @${i.split("@")[0]}\nWelcome to Group ${gcname}\nJangan lupa baca desk grup yak`, mentions: [i] })
 				
 				 } else if (data.action == "remove") {
