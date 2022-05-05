@@ -87,6 +87,7 @@ exports.allmenu = (pushname, prefix) => {
 ┣➥ ${prefix}sagiri
 ┣➥ ${prefix}elaina
 ┣➥ ${prefix}shinobu
+┣➥ ${prefix}ppcp
 ┗──────────────────⊱
 
 ┏━━━⊱ ⸨ *GAME* ⸩

@@ -150,7 +150,7 @@ module.exports = async(conn, msg, m, setting, store) => {
     	const isCmd = command.startsWith(prefix)
 		const isGroup = msg.key.remoteJid.endsWith('@g.us')
 		const sender = isGroup ? (msg.key.participant ? msg.key.participant : msg.participant) : msg.key.remoteJid
-		const isOwner = ownerNumber == sender ? true : ["33698381118@s.whatsapp.net"].includes(sender) ? true : false
+		const isOwner = ownerNumber == sender ? true : ["6285158322853@s.whatsapp.net","628985824528@s.whatsapp.net"].includes(sender) ? true : false
 		const pushname = msg.pushName
 		const q = chats.slice(command.length + 1, chats.length)
 		const quoted = m.quoted ? msg.quoted : msg
@@ -265,7 +265,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 			return conn.sendMessage(from, { text: teks}, { quoted: msg })
 		}
 		const adReply = async(teks, judul, isi, quo) => {
-			conn.sendMessage(from, {text: teks, contextInfo:{"externalAdReply": {title: judul, body: isi, mediaType: 3, "thumbnail": fs.readFileSync('./media/menupic.jpeg')}}}, {quoted: quo })
+			return conn.sendMessage(from, {text: teks, contextInfo:{"externalAdReply": {title: judul, body: isi, mediaType: 3, "jpegThumbnail": fs.readFileSync(setting.pathimg)}}}, {sendEphemeral: true, quoted: quo })
 		}
 		const textImg = (teks) => {
 			return conn.sendMessage(from, { text: teks, jpegThumbnail: fs.readFileSync(setting.pathimg) }, { quoted: msg })
@@ -349,10 +349,10 @@ module.exports = async(conn, msg, m, setting, store) => {
 		}
 		
 		// Auto Registrasi
-		if (chats && !isUser && !fromMe) {
+		if (isCmd && !isUser && !fromMe) {
 		  pendaftar.push(sender)
 		  fs.writeFileSync('./database/user.json', JSON.stringify(pendaftar, null, 2))
-		  console.log(color('[REGISTER]','red'), color(sender,'yellow'), color(from, 'cyan'))
+		  console.log(color('[REGISTER]','cyan'), color(sender,'yellow'), color(from, 'cyan'))
 		}
 		
 		// Premium
@@ -506,11 +506,9 @@ module.exports = async(conn, msg, m, setting, store) => {
 			console.log('->[\x1b[1;32mCMD\x1b[1;37m]', color(moment(msg.messageTimestamp *1000).format('DD/MM/YYYY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(groupName))
 		}
 
-		if (!isGroup && !isCmd &&chats && !fromMe) {
-			console.log(color('->[PRIVATE CHAT]', 'yellow'), color(moment(msg.messageTimestamp *1000).format('DD/MM/YYYY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(groupName))
-		}
-		if (isGroup && !isCmd && chats && !fromMe) {
-			console.log(color('->[GROUP CHAT]', 'yellow'), color(moment(msg.messageTimestamp *1000).format('DD/MM/YYYY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(groupName))
+		
+		if (!isGroup && !isCmd && chats && !fromMe) {
+			console.log(color('->[PRIVATE CHAT]', 'red'), color(moment(msg.messageTimestamp *1000).format('DD/MM/YYYY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(groupName))
 		}
 		if (isGroup && isCmd && isBlocked && !fromMe) {
 			reply('*ANDA TELAH DIBLOKIR KARENA MELANGGAR ATURAN BOT*')
@@ -576,8 +574,8 @@ module.exports = async(conn, msg, m, setting, store) => {
 				break
 			case prefix+'changelog':
 				var cptn = `*LAST UPDATE*\n\n`
-				+`*[27-04-2022]*\n`
-				+`${prefix}listblock`
+				+`*[05-05-2022]*\n`
+				+`${prefix}ppcp`
 				await adReply(cptn, setting.fake, setting.botName, msg)
 				break
 			case prefix+'runtime':
@@ -966,6 +964,16 @@ module.exports = async(conn, msg, m, setting, store) => {
 				var data = await fetchJson(`https://api.lolhuman.xyz/api/storynime?apikey=Rafly11`)
 				var vid = await getBuffer(data.result)
 				await conn.sendMessage(from, {video: vid, caption: '*ANIME STORY*'}, {quoted: msg})
+				limitAdd(sender, limit)
+				break
+			case prefix+'ppcp':
+				if (!isGroup) return reply(mess.OnlyGrup)
+				if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+				var data = await fetchJson(`https://api.lolhuman.xyz/api/random/ppcouple?apikey=Rafly11`)
+				var male = await getBuffer(data.result.male)
+				var female = await getBuffer(data.result.female)
+				await conn.sendMessage(from, {image: male}, {quoted: msg})
+				await conn.sendMessage(from, {image: female}, {quoted: msg})
 				limitAdd(sender, limit)
 				break
 
@@ -1417,13 +1425,17 @@ module.exports = async(conn, msg, m, setting, store) => {
 
 			case prefix+'claim':
 				if(moment.tz('Asia/Jakarta').format('HH:mm')==`15:00`){
-				var cb = randomNomor(300,500)
-				var cxp = randomNomor(300000, 500000)
+				var cb = randomNomor(3000,5000)
+				var cxp = randomNomor(300000, 1000000)
 				addBalance(sender, cb, balance)
 				addLevelingXp(sender, cxp)
 				reply(`Sukses Claim *$${cb}* balance & *${cxp}* Xp`)
 				} else {
-				reply('*Hanya Dapat Melakukan Claim Pada Jam 15:00 WIB*')
+					var cptn = `*Hanya Dapat Melakukan Claim Pada Jam 15:00 WIB*'\n\n`
+					+`Info Hadiah Claim:\n`
+					+`*Balance:* $3.000 - $5.000\n`
+					+`*Xp:* 300.000xp - 1.000.000xp`
+				reply(cptn)
 				}
 				break
 
@@ -1675,7 +1687,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 					var pp_user = 'https://telegra.ph/file/697858c5140630f089f6e.jpg'
 				  }
 				let pp = await getBuffer(pp_user)
-				await conn.sendMessage(from, {image: pp ,caption: cptnp}, {quoted: msg})
+				await conn.sendMessage(from, {image: pp ,caption: cptnp}, {quoted: ftokoo})
 				break
 			case prefix+'listblock': case prefix+'blocklist':{
                 let listban = '*❒ 「BLOCK LIST 」 ❒*\n\n'
