@@ -73,6 +73,7 @@ exports.allmenu = (pushname, prefix) => {
 ┣➥ ${prefix}lirik
 ┣➥ ${prefix}ytsearch
 ┣➥ ${prefix}pinterest
+┣➥ ${prefix}sauce
 ┗──────────────────⊱
 
 ┏━━━⊱ ⸨ *ANIMANGA* ⸩

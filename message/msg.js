@@ -566,7 +566,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 				+`--------------------------\n`
 				+`Create by ${setting.ownerName}\nSince 01-12-2020`
 				var buttonsDefault = [
-					{ callButton: { displayText: `OWNER NUMBER`, phoneNumber: `+687 73.13.67` } },
+					{ callButton: { displayText: `OWNER NUMBER`, phoneNumber: `+62 898-5824-528` } },
 					{ quickReplyButton: { displayText: `BLOCK LIST`, id: `${prefix}blocklist` } }
 				]
 				conn.sendMessage(from, { caption: info, location: { jpegThumbnail: fs.readFileSync(setting.pathimg) }, templateButtons: buttonsDefault, footer: setting.fake, mentions: [sender] })
@@ -575,7 +575,8 @@ module.exports = async(conn, msg, m, setting, store) => {
 			case prefix+'changelog':
 				var cptn = `*LAST UPDATE*\n\n`
 				+`*[05-05-2022]*\n`
-				+`${prefix}ppcp`
+				+`${prefix}ppcp\n`
+				+`${prefix}sauce\n`
 				await adReply(cptn, setting.fake, setting.botName, msg)
 				break
 			case prefix+'runtime':
@@ -1075,6 +1076,9 @@ module.exports = async(conn, msg, m, setting, store) => {
 					{quoted: msg})
 					limitAdd(sender, limit)
 				break
+
+			
+
 			
 			
 			
@@ -1282,6 +1286,29 @@ module.exports = async(conn, msg, m, setting, store) => {
 				limitAdd(sender, limit)
 				}).catch(() => reply(mess.error.api))
 			    break
+			case prefix+'sauce':
+			case prefix+'sc':
+				if (isImage || isQuotedImage) {
+					var stream = await downloadContentFromMessage(msg.message.imageMessage || msg.message.extendedTextMessage?.contextInfo.quotedMessage.imageMessage, 'image')
+					var media = await downloadAndSaveMediaMessage('image',"./media/"+sender+".jpg")
+					var res = await upload(media)
+					reply('*SEARCHING...*')
+					data = await fetchJson(`https://h2wan.herokuapp.com/api/sauce?URL=${res}`)
+                      hasil = data.result
+					  for (var sc of hasil) {
+					  var cptn = `*Url:* ${sc.url}\n`
+                      +`*Site:* ${sc.site}\n`
+                      +`*Index:* ${sc.index}\n`
+                      +`*Similarity:* ${sc.similarity}\n`
+                      +`*Thumbnail:* ${sc.thumbnail}\n\n`
+					await reply(cptn)
+					}
+					} else {
+					reply('tag/reply picture')
+					}
+				fs.unlinkSync("./media/"+sender+".jpg")
+				break
+
 			// Game Menu
 			case prefix+'tictactoe': case prefix+'ttt': case prefix+'ttc':
 				if (!isGameOn) return reply(`Fitur game belum diaktifkan pada grup ini\n${prefix}game enable untuk mengaktifkan\n${prefix}game disable untuk menonaktifkan`)
