@@ -536,7 +536,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 			case prefix+'menu':
 			case prefix+'help':
 				var buttonsDefault = [
-					{ callButton: { displayText: `OWNER NUMBER`, phoneNumber: `+687 73.13.67` } },
+					{ callButton: { displayText: `OWNER NUMBER`, phoneNumber: `+31 6 22313470` } },
 					{ urlButton: { displayText: `BOT GROUP`, url : `https://chat.whatsapp.com/LObEv5fMlW6Hjm34qc6p69` } },
 					{ quickReplyButton: { displayText: `Creator`, id: `${prefix}owner` } },
 					{ quickReplyButton: { displayText: `Info`, id: `${prefix}info` } },
@@ -566,7 +566,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 				+`--------------------------\n`
 				+`Create by ${setting.ownerName}\nSince 01-12-2020`
 				var buttonsDefault = [
-					{ callButton: { displayText: `OWNER NUMBER`, phoneNumber: `+62 898-5824-528` } },
+					{ callButton: { displayText: `OWNER NUMBER`, phoneNumber: `+31 6 22313470` } },
 					{ quickReplyButton: { displayText: `BLOCK LIST`, id: `${prefix}blocklist` } }
 				]
 				conn.sendMessage(from, { caption: info, location: { jpegThumbnail: fs.readFileSync(setting.pathimg) }, templateButtons: buttonsDefault, footer: setting.fake, mentions: [sender] })
@@ -574,9 +574,8 @@ module.exports = async(conn, msg, m, setting, store) => {
 				break
 			case prefix+'changelog':
 				var cptn = `*LAST UPDATE*\n\n`
-				+`*[05-05-2022]*\n`
-				+`${prefix}ppcp\n`
-				+`${prefix}sauce\n`
+				+`*[08-05-2022]*\n`
+				+`${prefix}mining\n`
 				await adReply(cptn, setting.fake, setting.botName, msg)
 				break
 			case prefix+'runtime':
@@ -1206,7 +1205,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 				const reactionMessage = {
 					react: {
 						text: `${args[1]}`,
-						key: msg.quoted ? msg.quoted.key : msg.key,
+						key: msg.quoted ? msg.quoted.id : msg.id,
 					},
 				};
 				await conn.sendMessage(msg.from, reactionMessage)
@@ -1450,6 +1449,16 @@ module.exports = async(conn, msg, m, setting, store) => {
 				  })
 			    break
 
+			/*case prefix+'daily':
+				var cooldown = 86400000
+				if (new Date - pendaftar.lastclaim < cooldown) return reply(`Anda dapat mengambil daily setiap 24jam`)
+				var cb = randomNomor(300,500)
+				var cxp = randomNomor(3000, 5000)
+				addBalance(sender, cb, balance)
+				addLevelingXp(sender, cxp)
+				reply(`Sukses Claim *$${cb}* balance & *${cxp}* Xp`)
+				pendaftar.lastclaim = new Date * 1
+				break*/
 			case prefix+'claim':
 				if(moment.tz('Asia/Jakarta').format('HH:mm')==`15:00`){
 				var cb = randomNomor(3000,5000)
@@ -1465,6 +1474,20 @@ module.exports = async(conn, msg, m, setting, store) => {
 				reply(cptn)
 				}
 				break
+			case prefix+'mining':
+				if (!isGameOn) return reply('Fitur game belum diaktifkan pada group ini')
+				if (!isGroup) return reply(mess.OnlyGrup)
+				if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
+				var cb = randomNomor(10,250)
+				var cxp = randomNomor(100, 1000)
+				addBalance(sender, cb, balance)
+				addLevelingXp(sender, cxp)
+				reply('```Mining....``` ⛏️')
+				await sleep(5000)
+				reply(`Sukses mining $${cb} & ${cxp}Xp`)
+				gameAdd(sender, glimit)
+				break
+			
 
 			// Group Menu
 			case prefix+'afk':
@@ -1581,8 +1604,8 @@ module.exports = async(conn, msg, m, setting, store) => {
 			    break
 				
 				case prefix+'game':
-					if (!isGroup) return reply(mess.OnlyGrup)
 					if (!isGroupAdmins && !isOwner) return reply(mess.GrupAdmin)
+					if (!isGroup) return reply(mess.OnlyGrup)
 					if (args.length < 2) return reply(`Pilih enable atau disable`)
 					if (args[1].toLowerCase() === "enable") {
 					  if (isGameOn) return reply(`Fitur game sudah aktif`)
@@ -1627,17 +1650,7 @@ module.exports = async(conn, msg, m, setting, store) => {
                 mentions(topl, arrTopl, true)
             }
 			break
-			case prefix+'listblock': case prefix+'blocklist':{
-                let listban = '*❒ 「 BLACK LIST 」 ❒*\n\n'
-                let listny = []
-				if (block.length) total = block.length
-                for (let i = 0; i < total; i ++){
-                    listban += `${i + 1}. @${block[i].split("@")[0]}\n`
-                    listny.push(block[i])
-                }
-                mentions(listban, listny, true)
-            }
-			break
+			
             case prefix+'buylimit':{
                 if (args.length < 2) return reply(`Kirim perintah *${prefix}buylimit* jumlah limit yang ingin dibeli\n\nHarga 1 limit = $150 balance`)
                 if (args[1].includes('-')) return reply(`Jangan menggunakan -`)
@@ -1717,7 +1730,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 				await conn.sendMessage(from, {image: pp ,caption: cptnp}, {quoted: ftokoo})
 				break
 			case prefix+'listblock': case prefix+'blocklist':{
-                let listban = '*❒ 「BLOCK LIST 」 ❒*\n\n'
+                let listban = '*❒ 「 BLACK LIST 」 ❒*\n\n'
                 let listny = []
 				if (block.length) total = block.length
                 for (let i = 0; i < total; i ++){
@@ -1728,6 +1741,8 @@ module.exports = async(conn, msg, m, setting, store) => {
             }
 			break
 
+			
+			
 			default:
 			if (!isGroup && isCmd) {
 				reply(`*CMD Not Found* ಠ_ಠ`)
