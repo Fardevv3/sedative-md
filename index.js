@@ -128,7 +128,7 @@ const connectToWhatsApp = async () => {
 					var buff = await getBuffer(`
 				https://api.lolhuman.xyz/api/base/welcome?apikey=Rafly11&img1=${ppuser}&img2=${ppgc}&background=${bg}&username=NewMember&member=${gcmem}&groupname=${encodeURIComponent(gcname)}
 				`)
-                await  conn.sendMessage(data.id, { image: buff, caption: `Hello @${i.split("@")[0]}\nWelcome to Group ${gcname}\nJangan lupa baca desk grup yak\n\n${mdata.desc}`, mentions: [i] })
+                await  conn.sendMessage(data.id, { image: buff, caption: `${mdata.desc}\n\n@${i.split("@")[0]}`, mentions: [i] })
 				
 				 } else if (data.action == "remove") {
 				var buff = await getBuffer(`
