@@ -121,14 +121,14 @@ const connectToWhatsApp = async () => {
 				const mdata = await conn.groupMetadata(data.id)
 				const gcname = mdata.subject
 				const gcmem = mdata.participants.length
-				const bg = `https://telegra.ph/file/11f2e752e749f5412b52f.jpg`
+				const bg = `https://telegra.ph/file/95d9a8daa4d4d3243e337.jpg`
 
 				if (data.action == "add") {
 					/*var buff = await getBuffer(`https://hardianto.xyz/api/welcome3?profile=${ppuser}&name=${i.split("@")[0]}&bg=https://telegra.ph/file/11f2e752e749f5412b52f.jpg&namegb=${encodeURI(mdata.subject)}&member=${mdata.participants.length}`)*/
 					var buff = await getBuffer(`
 				https://api.lolhuman.xyz/api/base/welcome?apikey=Rafly11&img1=${ppuser}&img2=${ppgc}&background=${bg}&username=NewMember&member=${gcmem}&groupname=${encodeURIComponent(gcname)}
 				`)
-                await  conn.sendMessage(data.id, { image: buff, caption: `Hello @${i.split("@")[0]}\nWelcome to Group ${gcname}\nJangan lupa baca desk grup yak`, mentions: [i] })
+                await  conn.sendMessage(data.id, { image: buff, caption: `Hello @${i.split("@")[0]}\nWelcome to Group ${gcname}\nJangan lupa baca desk grup yak\n\n${mdata.desc}`, mentions: [i] })
 				
 				 } else if (data.action == "remove") {
 				var buff = await getBuffer(`
