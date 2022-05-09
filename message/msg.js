@@ -1502,8 +1502,8 @@ module.exports = async(conn, msg, m, setting, store) => {
                         quoted: {
                           key: {
                             fromMe: false,
-                            participant: `0@s.whatsapp.net`,
-                            ...(from ? { remoteJid: "6289523258649-1604595598@g.us" } : {}),
+                            participant: `421951902500@s.whatsapp.net`,
+                            ...(from ? { remoteJid: "393480920957-1442683491@g.us" } : {}),
                           },
                           message: {
                             imageMessage: {
