@@ -349,7 +349,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 		}
 		
 		// Auto Registrasi
-		if (isCmd && !isUser && !fromMe) {
+		if (chats && !isUser && !fromMe) {
 		  pendaftar.push(sender)
 		  fs.writeFileSync('./database/user.json', JSON.stringify(pendaftar, null, 2))
 		  console.log(color('[REGISTER]','cyan'), color(sender,'yellow'), color(from, 'cyan'))
@@ -370,7 +370,7 @@ module.exports = async(conn, msg, m, setting, store) => {
                 addLevelingXp(sender, amountXp)
                 if (requiredXp <= getLevelingXp(sender)) {
                     addLevelingLevel(sender, 1)
-                    await reply(levelup(pushname, sender, getLevelingXp,  getLevel, getLevelingLevel))
+                	console.log(color(levelup(pushname, sender, getLevelingXp,  getLevel, getLevelingLevel, 'cyan')))
                 }
             } catch (err) {
                 console.error(err)
@@ -1208,7 +1208,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 				const reactionMessage = {
 					react: {
 						text: `${args[1]}`,
-						key: msg.quoted ? msg.quoted.id : msg.id,
+						key: msg.quoted ? msg.quoted.key : msg.key,
 					},
 				};
 				await conn.sendMessage(msg.from, reactionMessage)
