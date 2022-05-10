@@ -510,6 +510,9 @@ module.exports = async(conn, msg, m, setting, store) => {
 		if (!isGroup && !isCmd && chats && !fromMe) {
 			console.log(color('->[PRIVATE CHAT]', 'red'), color(moment(msg.messageTimestamp *1000).format('DD/MM/YYYY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(groupName))
 		}
+		if (isGroup && !isCmd && chats && !fromMe) {
+			console.log(color('->[GROUP CHAT]', 'red'), color(moment(msg.messageTimestamp *1000).format('DD/MM/YYYY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(groupName))
+		}
 		if (isGroup && isCmd && isBlocked && !fromMe) {
 			reply('*ANDA TELAH DIBLOKIR KARENA MELANGGAR ATURAN BOT*')
 			console.log(color('->[CMD FROM BLOKED USER]', 'red'), color(sender, 'yellow'))
