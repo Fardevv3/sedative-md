@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://telegra.ph/file/4c41f266f317b09c62030.jpg" width="100%" style="margin-left: auto;margin-right: auto;display: block;">
+<img src="https://telegra.ph/file/ebdcc09ab64f0e098e8b3.jpg" width="100%" style="margin-left: auto;margin-right: auto;display: block;">
 </p>
 <h1 align="center">SEDATIVE - MD</h1>
 <p align="center">
