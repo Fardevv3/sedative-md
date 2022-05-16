@@ -1463,12 +1463,15 @@ module.exports = async(conn, msg, m, setting, store) => {
 				pendaftar.lastclaim = new Date * 1
 				break*/
 			case prefix+'claim':
+				var cooldown = 60000
+				if (new Date - pendaftar.lastclaim < cooldown) return
 				if(moment.tz('Asia/Jakarta').format('HH:mm')==`15:00`){
 				var cb = randomNomor(3000,5000)
 				var cxp = randomNomor(300000, 1000000)
 				addBalance(sender, cb, balance)
 				addLevelingXp(sender, cxp)
 				reply(`Sukses Claim *$${cb}* balance & *${cxp}* Xp`)
+				pendaftar.lastclaim = new Date * 1
 				} else {
 					var cptn = `*Hanya Dapat Melakukan Claim Pada Jam 15:00 WIB*'\n\n`
 					+`Info Hadiah Claim:\n`
