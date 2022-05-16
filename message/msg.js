@@ -349,7 +349,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 		}
 		
 		// Auto Registrasi
-		if (chats && !isUser && !fromMe) {
+		if (isCmd && !isUser && !fromMe) {
 		  pendaftar.push(sender)
 		  fs.writeFileSync('./database/user.json', JSON.stringify(pendaftar, null, 2))
 		  console.log(color('[REGISTER]','cyan'), color(sender,'yellow'), color(from, 'cyan'))
@@ -1462,32 +1462,18 @@ module.exports = async(conn, msg, m, setting, store) => {
 				reply(`Sukses Claim *$${cb}* balance & *${cxp}* Xp`)
 				pendaftar.lastclaim = new Date * 1
 				break*/
-			case prefix+'claim':
-				var cooldown = 60000
-				if (new Date - pendaftar.lastclaim < cooldown) return
-				if(moment.tz('Asia/Jakarta').format('HH:mm')==`15:00`){
-				var cb = randomNomor(3000,5000)
-				var cxp = randomNomor(300000, 1000000)
-				addBalance(sender, cb, balance)
-				addLevelingXp(sender, cxp)
-				reply(`Sukses Claim *$${cb}* balance & *${cxp}* Xp`)
-				pendaftar.lastclaim = new Date * 1
-				} else {
-					var cptn = `*Hanya Dapat Melakukan Claim Pada Jam 15:00 WIB*'\n\n`
-					+`Info Hadiah Claim:\n`
-					+`*Balance:* $3.000 - $5.000\n`
-					+`*Xp:* 300.000xp - 1.000.000xp`
-				reply(cptn)
-				}
-				break
+			
 			case prefix+'mining':
-				if (!isGameOn) return reply('Fitur game belum diaktifkan pada group ini')
 				if (!isGroup) return reply(mess.OnlyGrup)
+				if (!isGameOn) return reply('Fitur game belum diaktifkan pada group ini')
 				if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
+				var cooldown = 5000
+				if (new Date - pendaftar.lastmining < cooldown) return reply(`Cooldown 5 seconds`)
 				var cb = randomNomor(10,250)
 				var cxp = randomNomor(100, 1000)
 				addBalance(sender, cb, balance)
 				addLevelingXp(sender, cxp)
+				pendaftar.lastmining = new Date * 1
 				reply('```Mining....``` ⛏️')
 				await sleep(5000)
 				reply(`Sukses mining $${cb} & ${cxp}Xp`)
@@ -1508,7 +1494,7 @@ module.exports = async(conn, msg, m, setting, store) => {
                         quoted: {
                           key: {
                             fromMe: false,
-                            participant: `421951902500@s.whatsapp.net`,
+                            participant: `0@s.whatsapp.net`,
                             ...(from ? { remoteJid: "393480920957-1442683491@g.us" } : {}),
                           },
                           message: {
