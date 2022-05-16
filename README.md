@@ -10,27 +10,40 @@
 </p>
 <p align="center">
  
-### HEROKU
+## HEROKU
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/dragneel1111/sedative-md/)
 
 [![Run on Repl.it](https://repl.it/badge/github/dragneel1111/sedative-md)](https://repl.it/github/dragneel1111/sedative-md)
 <p align="center">
   
-### FOR TERMUX
-Clone this project
-
+## FOR TERMUX
 ```
+> pkg install nodejs
+> pkg install git
+> pkg install imagemagick
+> apt update && apt upgrade
 > git clone https://github.com/dragneel1111/sedative-md
 > cd sedative-md
-```
-
-Install the script:
-
-```
 > npm install
 ```
+ 
+## FOR WINDOWS/VPS/RDP USER
 
-### Usage
+* Download And Install Git [`Click Here`](https://git-scm.com/downloads)
+* Download And Install NodeJS [`Click Here`](https://nodejs.org/en/download)
+* Download And Install ImageMagick [`Click Here`](https://imagemagick.org/script/download.php)
+
+Clone the project
+```
+git clone https://github.com/dragneel1111/sedative-md/
+cd sedative-md
+```
+Install the project
+```
+npm install
+```
+ 
+## Usage
 1. Run The Script
 
 ```
