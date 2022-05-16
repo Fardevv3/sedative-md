@@ -65,12 +65,12 @@ const status = new Spinner(chalk.cyan(` Booting WhatsApp Bot`))
 const starting = new Spinner(chalk.cyan(` Preparing After Connect`))
 const reconnect = new Spinner(chalk.redBright(` Reconnecting WhatsApp Bot`))
 
-const store = makeInMemoryStore({ logger: logg().child({ level: 'silent', stream: 'store' }) })
+const store = makeInMemoryStore({ logger: logg().child({ level: 'fatal', stream: 'store' }) })
 
 const connectToWhatsApp = async () => {
 	const conn = makeWASocket({
             printQRInTerminal: true,
-            logger: logg({ level: 'silent' }),
+            logger: logg({ level: 'fatal' }),
             auth: state,
             browser: ["SEDATIVE-MD BY RAFLY", "Safari", "3.0"]
         })
