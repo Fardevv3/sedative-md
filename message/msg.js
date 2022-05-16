@@ -1721,6 +1721,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 				let pp = await getBuffer(pp_user)
 				await conn.sendMessage(from, {image: pp ,caption: cptnp}, {quoted: ftokoo})
 				break
+
 			case prefix+'listblock': case prefix+'blocklist':{
                 let listban = '*❒ 「 BLACK LIST 」 ❒*\n\n'
                 let listny = []
@@ -1732,8 +1733,6 @@ module.exports = async(conn, msg, m, setting, store) => {
                 mentions(listban, listny, true)
             }
 			break
-
-			
 			
 			default:
 			if (!isGroup && isCmd) {
