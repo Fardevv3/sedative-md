@@ -43,6 +43,12 @@ Install the project
 npm install
 ```
  
+## Edit Config
+Edit `config.json` or create new file called `config.json` <br />
+ 
+Change ownerNumber [`here`](https://github.com/dragneel1111/sedative-md/config.json/) <br />
+Change ownerName [`here`](https://github.com/dragneel1111/sedative-md/config.json/) <br />
+ 
 ## Usage
 1. Run The Script
 
