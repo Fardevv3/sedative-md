@@ -701,28 +701,27 @@ module.exports = async(conn, msg, m, setting, store) => {
 			    if (args.length < 2) return reply(`Kirim perintah ${command} link`)
 			    if (!args[1].includes('tiktok')) return reply(mess.error.Iv)
 			    await reply(mess.wait, setting.fake, setting.botName, msg)
-			    xfar.Tiktok(args[1]).then( data => {
-			      conn.sendMessage(from, {
-				   video: { url: data.medias[0].url },
-				   caption: `${data.title}\n\nKamu bisa mengubahnya menjadi Vidio Tanpa Watermark atau Audio, pencet tombol dibawah untuk mengubahnya!`,
-				   buttons: [{buttonId: `${prefix}tiktoknowm ${args[1]}`, buttonText: { displayText: "Video No-Wm" }, type: 1 },
-					{buttonId: `${prefix}tiktokaudio ${args[1]}`, buttonText: { displayText: "Audio" }, type: 1 }],
+				data = await fetchJson(`https://api.lolhuman.xyz/api/tiktok?apikey=Rafly11&url=${q}`)
+				var vid = await getBuffer(data.result.link)
+			    var cptn = `
+			   *「 T I K T O K 」*
+                 ████████▀▀▀████
+                 ████████────▀██
+                 ████████──█▄──█
+                 ███▀▀▀██──█████
+                 █▀──▄▄██──█████
+                 █──█████──█████
+                 █▄──▀▀▀──▄█████
+                 ███▄▄▄▄▄███████
+				`
+				conn.sendMessage(from, {
+				   video: vid,
+				   caption: `${cptn}\n`,
+				   buttons: [{buttonId: `${prefix}tiktokaudio ${args[1]}`, buttonText: { displayText: "Audio" }, type: 1 }],
 				   footer: setting.fake
 			      }, { quoted: msg })
 				  limitAdd(sender, limit)
-			    }).catch(() => reply(mess.error.api))
-			    break
-			case prefix+'tiktoknowm':
-			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
-			    if (args.length < 2) return reply(`Kirim perintah ${command} link`)
-			    if (!isUrl(args[1])) return reply(mess.error.Iv)
-			    if (!args[1].includes('tiktok')) return reply(mess.error.Iv)
-			    await reply(mess.wait, setting.fake, setting.botName, msg)
-			    data = await fetchJson(`https://api.lolhuman.xyz/api/tiktok?apikey=Rafly11&url=${q}`)
-				var vid = await getBuffer(data.result.link)
-				await conn.sendMessage(from, {video : vid}, {quoted: msg})
-				limitAdd(sender, limit)
-			   break
+				  break
 			case prefix+'tiktokaudio':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			    if (args.length < 2) return reply(`Kirim perintah ${command} link`)

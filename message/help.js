@@ -93,7 +93,7 @@ exports.allmenu = (pushname, prefix) => {
 
 ┏━━━⊱ ⸨ *GAME* ⸩
 ┣──────────────────⊱
-┣➥ ${prefix}claim
+┣➥ ${prefix}mining
 ┣➥ ${prefix}tictactoe
 ┣➥ ${prefix}delttt
 ┣➥ ${prefix}tebakgambar
