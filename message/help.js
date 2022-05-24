@@ -31,7 +31,7 @@ exports.levelup = (pushname, sender, getLevelingXp,  getLevel, getLevelingLevel,
 `}
 
 exports.allmenu = (pushname, prefix) => {
-	return `*── 「 ${setting.botName} - Beta 」 ──*
+	return `*── 「 ${setting.botName} 」 ──*
 	
   _*${ucapanWaktu} ${pushname !== undefined ? pushname : 'Kak'}*_\n${readmore}
 `
