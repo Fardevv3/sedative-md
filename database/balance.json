@@ -1,19 +1,19 @@
 [
   {
     "id": "62895806428869@s.whatsapp.net",
-    "balance": 201830
+    "balance": 212126
   },
   {
     "id": "6282347929043@s.whatsapp.net",
-    "balance": 172337
+    "balance": 189437
   },
   {
     "id": "6282155545035@s.whatsapp.net",
-    "balance": 159729
+    "balance": 174779
   },
   {
     "id": "6289684266794@s.whatsapp.net",
-    "balance": 126637
+    "balance": 128848
   },
   {
     "id": "6282218186824@s.whatsapp.net",
@@ -21,7 +21,7 @@
   },
   {
     "id": "6285319362616@s.whatsapp.net",
-    "balance": 28153
+    "balance": 28198
   },
   {
     "id": "6282378144681@s.whatsapp.net",
@@ -29,23 +29,23 @@
   },
   {
     "id": "6281225759112@s.whatsapp.net",
-    "balance": 20929
+    "balance": 20968
+  },
+  {
+    "id": "31622313470@s.whatsapp.net",
+    "balance": 14173
   },
   {
     "id": "6282339486456@s.whatsapp.net",
     "balance": 13149
   },
   {
+    "id": "62895379657373@s.whatsapp.net",
+    "balance": 12121
+  },
+  {
     "id": "6288217970197@s.whatsapp.net",
     "balance": 12057
-  },
-  {
-    "id": "62895379657373@s.whatsapp.net",
-    "balance": 11838
-  },
-  {
-    "id": "31622313470@s.whatsapp.net",
-    "balance": 11375
   },
   {
     "id": "6281904869243@s.whatsapp.net",
@@ -56,16 +56,8 @@
     "balance": 8765
   },
   {
-    "id": "6288222330837@s.whatsapp.net",
-    "balance": 8061
-  },
-  {
     "id": "6287718077807@s.whatsapp.net",
     "balance": 7938
-  },
-  {
-    "id": "6281325957416@s.whatsapp.net",
-    "balance": 4661
   },
   {
     "id": "6287854007033@s.whatsapp.net",
@@ -92,6 +84,10 @@
     "balance": 5390
   },
   {
+    "id": "6283856027350@s.whatsapp.net",
+    "balance": 5118
+  },
+  {
     "id": "628985824528@s.whatsapp.net",
     "balance": 5071
   },
@@ -104,8 +100,16 @@
     "balance": 4771
   },
   {
+    "id": "6281325957416@s.whatsapp.net",
+    "balance": 4661
+  },
+  {
+    "id": "6288222330837@s.whatsapp.net",
+    "balance": 4638
+  },
+  {
     "id": "6285837179265@s.whatsapp.net",
-    "balance": 4182
+    "balance": 4421
   },
   {
     "id": "6285333857102@s.whatsapp.net",
@@ -124,24 +128,32 @@
     "balance": 3817
   },
   {
+    "id": "6282280557079@s.whatsapp.net",
+    "balance": 3624
+  },
+  {
     "id": "6287723897339@s.whatsapp.net",
     "balance": 3456
   },
   {
-    "id": "6282280557079@s.whatsapp.net",
-    "balance": 3282
+    "id": "6287824241448@s.whatsapp.net",
+    "balance": 3446
+  },
+  {
+    "id": "6281316259566@s.whatsapp.net",
+    "balance": 3372
   },
   {
     "id": "6282143861059@s.whatsapp.net",
-    "balance": 3198
+    "balance": 3211
   },
   {
     "id": "6281223867654@s.whatsapp.net",
-    "balance": 3131
+    "balance": 3176
   },
   {
     "id": "6283102255420@s.whatsapp.net",
-    "balance": 3087
+    "balance": 3170
   },
   {
     "id": "6281392290894@s.whatsapp.net",
@@ -149,7 +161,7 @@
   },
   {
     "id": "6281280342224@s.whatsapp.net",
-    "balance": 2818
+    "balance": 2830
   },
   {
     "id": "6285876035752@s.whatsapp.net",
@@ -161,7 +173,7 @@
   },
   {
     "id": "6281215524272@s.whatsapp.net",
-    "balance": 2489
+    "balance": 2491
   },
   {
     "id": "6283851056647@s.whatsapp.net",
@@ -185,15 +197,15 @@
   },
   {
     "id": "6289530359740@s.whatsapp.net",
-    "balance": 1809
+    "balance": 1812
+  },
+  {
+    "id": "6281326790230@s.whatsapp.net",
+    "balance": 1793
   },
   {
     "id": "6289530006330@s.whatsapp.net",
     "balance": 1787
-  },
-  {
-    "id": "6281326790230@s.whatsapp.net",
-    "balance": 1780
   },
   {
     "id": "6281218427772@s.whatsapp.net",
@@ -212,6 +224,14 @@
     "balance": 1587
   },
   {
+    "id": "6288226378442@s.whatsapp.net",
+    "balance": 1583
+  },
+  {
+    "id": "6285923254457@s.whatsapp.net",
+    "balance": 1575
+  },
+  {
     "id": "6289515642848@s.whatsapp.net",
     "balance": 1570
   },
@@ -224,6 +244,14 @@
     "balance": 1500
   },
   {
+    "id": "6285158322853@s.whatsapp.net",
+    "balance": 1487
+  },
+  {
+    "id": "6281556698440@s.whatsapp.net",
+    "balance": 1456
+  },
+  {
     "id": "6288239184155@s.whatsapp.net",
     "balance": 1446
   },
@@ -232,8 +260,16 @@
     "balance": 1443
   },
   {
-    "id": "6285158322853@s.whatsapp.net",
-    "balance": 1438
+    "id": "6281376919541@s.whatsapp.net",
+    "balance": 1402
+  },
+  {
+    "id": "6282350848172@s.whatsapp.net",
+    "balance": 1323
+  },
+  {
+    "id": "6281229659381@s.whatsapp.net",
+    "balance": 1314
   },
   {
     "id": "6285321861344@s.whatsapp.net",
@@ -253,11 +289,19 @@
   },
   {
     "id": "601123794878@s.whatsapp.net",
-    "balance": 1218
+    "balance": 1233
   },
   {
     "id": "6285703117178@s.whatsapp.net",
     "balance": 1179
+  },
+  {
+    "id": "6285708594699@s.whatsapp.net",
+    "balance": 1160
+  },
+  {
+    "id": "6281216023030@s.whatsapp.net",
+    "balance": 1144
   },
   {
     "id": "6282140959246@s.whatsapp.net",
@@ -277,7 +321,7 @@
   },
   {
     "id": "62895630033039@s.whatsapp.net",
-    "balance": 1030
+    "balance": 1063
   },
   {
     "id": "6283117436733@s.whatsapp.net",
@@ -296,6 +340,10 @@
     "balance": 1000
   },
   {
+    "id": "380944486343@s.whatsapp.net",
+    "balance": 956
+  },
+  {
     "id": "6288233551779@s.whatsapp.net",
     "balance": 952
   },
@@ -304,24 +352,24 @@
     "balance": 938
   },
   {
-    "id": "6281376919541@s.whatsapp.net",
-    "balance": 1385
-  },
-  {
     "id": "62882019014362@s.whatsapp.net",
-    "balance": 903
-  },
-  {
-    "id": "6281216023030@s.whatsapp.net",
-    "balance": 876
+    "balance": 921
   },
   {
     "id": "6283891963792@s.whatsapp.net",
     "balance": 851
   },
   {
+    "id": "6281239988365@s.whatsapp.net",
+    "balance": 848
+  },
+  {
     "id": "6281278239580@s.whatsapp.net",
     "balance": 841
+  },
+  {
+    "id": "6285780658417@s.whatsapp.net",
+    "balance": 832
   },
   {
     "id": "601153584959@s.whatsapp.net",
@@ -344,6 +392,10 @@
     "balance": 801
   },
   {
+    "id": "6282241211018@s.whatsapp.net",
+    "balance": 800
+  },
+  {
     "id": "6282173064242@s.whatsapp.net",
     "balance": 780
   },
@@ -356,10 +408,6 @@
     "balance": 769
   },
   {
-    "id": "6281239988365@s.whatsapp.net",
-    "balance": 765
-  },
-  {
     "id": "6281290562820@s.whatsapp.net",
     "balance": 764
   },
@@ -368,12 +416,8 @@
     "balance": 761
   },
   {
-    "id": "6285780658417@s.whatsapp.net",
-    "balance": 728
-  },
-  {
-    "id": "6285923254457@s.whatsapp.net",
-    "balance": 718
+    "id": "6282111657628@s.whatsapp.net",
+    "balance": 736
   },
   {
     "id": "6285895956543@s.whatsapp.net",
@@ -400,6 +444,10 @@
     "balance": 624
   },
   {
+    "id": "62895422669730@s.whatsapp.net",
+    "balance": 623
+  },
+  {
     "id": "6288276792190@s.whatsapp.net",
     "balance": 620
   },
@@ -416,20 +464,12 @@
     "balance": 598
   },
   {
-    "id": "6283856027350@s.whatsapp.net",
-    "balance": 590
-  },
-  {
     "id": "6285261977500@s.whatsapp.net",
     "balance": 589
   },
   {
     "id": "6283849935141@s.whatsapp.net",
     "balance": 589
-  },
-  {
-    "id": "6285708594699@s.whatsapp.net",
-    "balance": 583
   },
   {
     "id": "6285256497533@s.whatsapp.net",
@@ -608,10 +648,6 @@
     "balance": 500
   },
   {
-    "id": "380944486343@s.whatsapp.net",
-    "balance": 489
-  },
-  {
     "id": "62895634890273@s.whatsapp.net",
     "balance": 436
   },
@@ -648,16 +684,16 @@
     "balance": 309
   },
   {
-    "id": "6281556698440@s.whatsapp.net",
-    "balance": 295
+    "id": "6281218110223@s.whatsapp.net",
+    "balance": 291
+  },
+  {
+    "id": "62895632049348@s.whatsapp.net",
+    "balance": 287
   },
   {
     "id": "6282184310840@s.whatsapp.net",
     "balance": 277
-  },
-  {
-    "id": "6281218110223@s.whatsapp.net",
-    "balance": 271
   },
   {
     "id": "6285784658180@s.whatsapp.net",
@@ -666,6 +702,14 @@
   {
     "id": "6282196738707@s.whatsapp.net",
     "balance": 270
+  },
+  {
+    "id": "6285712594266@s.whatsapp.net",
+    "balance": 253
+  },
+  {
+    "id": "628972112121@s.whatsapp.net",
+    "balance": 249
   },
   {
     "id": "6285710715154@s.whatsapp.net",
@@ -678,6 +722,10 @@
   {
     "id": "6281271202560@s.whatsapp.net",
     "balance": 236
+  },
+  {
+    "id": "6285696921684@s.whatsapp.net",
+    "balance": 234
   },
   {
     "id": "6283843036547@s.whatsapp.net",
@@ -708,16 +756,16 @@
     "balance": 200
   },
   {
+    "id": "421940789842@s.whatsapp.net",
+    "balance": 192
+  },
+  {
     "id": "6283141280371@s.whatsapp.net",
     "balance": 187
   },
   {
     "id": "6287711953079@s.whatsapp.net",
     "balance": 185
-  },
-  {
-    "id": "628972112121@s.whatsapp.net",
-    "balance": 182
   },
   {
     "id": "6281396659854@s.whatsapp.net",
@@ -728,20 +776,28 @@
     "balance": 174
   },
   {
-    "id": "62895632049348@s.whatsapp.net",
-    "balance": 173
-  },
-  {
     "id": "6281213667514@s.whatsapp.net",
     "balance": 155
+  },
+  {
+    "id": "6285780275988@s.whatsapp.net",
+    "balance": 149
   },
   {
     "id": "6281217772037@s.whatsapp.net",
     "balance": 145
   },
   {
+    "id": "6281275038620@s.whatsapp.net",
+    "balance": 135
+  },
+  {
     "id": "6285290523662@s.whatsapp.net",
     "balance": 131
+  },
+  {
+    "id": "6281213856364@s.whatsapp.net",
+    "balance": 128
   },
   {
     "id": "6287877977674@s.whatsapp.net",
@@ -752,15 +808,11 @@
     "balance": 120
   },
   {
-    "id": "421940789842@s.whatsapp.net",
-    "balance": 106
+    "id": "6287773016876@s.whatsapp.net",
+    "balance": 113
   },
   {
     "id": "6281251609056@s.whatsapp.net",
-    "balance": 105
-  },
-  {
-    "id": "6281213856364@s.whatsapp.net",
     "balance": 105
   },
   {
@@ -776,10 +828,6 @@
     "balance": 96
   },
   {
-    "id": "6281275038620@s.whatsapp.net",
-    "balance": 95
-  },
-  {
     "id": "6285368710108@s.whatsapp.net",
     "balance": 88
   },
@@ -792,16 +840,8 @@
     "balance": 80
   },
   {
-    "id": "6282111657628@s.whatsapp.net",
-    "balance": 77
-  },
-  {
     "id": "6281277604426@s.whatsapp.net",
     "balance": 77
-  },
-  {
-    "id": "6285780275988@s.whatsapp.net",
-    "balance": 75
   },
   {
     "id": "6285694679969@s.whatsapp.net",
@@ -820,8 +860,12 @@
     "balance": 60
   },
   {
-    "id": "6281229659381@s.whatsapp.net",
-    "balance": 57
+    "id": "6283823097167@s.whatsapp.net",
+    "balance": 56
+  },
+  {
+    "id": "6282123896856@s.whatsapp.net",
+    "balance": 56
   },
   {
     "id": "6287791714493@s.whatsapp.net",
@@ -852,6 +896,10 @@
     "balance": 46
   },
   {
+    "id": "6289686006092@s.whatsapp.net",
+    "balance": 46
+  },
+  {
     "id": "62895334776151@s.whatsapp.net",
     "balance": 45
   },
@@ -866,6 +914,14 @@
   {
     "id": "447404381345@s.whatsapp.net",
     "balance": 43
+  },
+  {
+    "id": "6283842680018@s.whatsapp.net",
+    "balance": 43
+  },
+  {
+    "id": "6285254174178@s.whatsapp.net",
+    "balance": 41
   },
   {
     "id": "6287869142613@s.whatsapp.net",
@@ -916,6 +972,10 @@
     "balance": 30
   },
   {
+    "id": "6281266006315@s.whatsapp.net",
+    "balance": 29
+  },
+  {
     "id": "94776545010@s.whatsapp.net",
     "balance": 29
   },
@@ -936,8 +996,20 @@
     "balance": 27
   },
   {
+    "id": "6281332190354@s.whatsapp.net",
+    "balance": 26
+  },
+  {
+    "id": "212706611366@s.whatsapp.net",
+    "balance": 26
+  },
+  {
     "id": "6282296077208@s.whatsapp.net",
     "balance": 26
+  },
+  {
+    "id": "6281241734776@s.whatsapp.net",
+    "balance": 25
   },
   {
     "id": "6287882099822@s.whatsapp.net",
@@ -968,8 +1040,8 @@
     "balance": 23
   },
   {
-    "id": "6283842680018@s.whatsapp.net",
-    "balance": 22
+    "id": "6287839940415@s.whatsapp.net",
+    "balance": 21
   },
   {
     "id": "6288298800450@s.whatsapp.net",
@@ -1008,16 +1080,20 @@
     "balance": 20
   },
   {
-    "id": "6281332190354@s.whatsapp.net",
-    "balance": 20
-  },
-  {
     "id": "6285171200309@s.whatsapp.net",
     "balance": 19
   },
   {
     "id": "6289531321204@s.whatsapp.net",
     "balance": 19
+  },
+  {
+    "id": "6281617590987@s.whatsapp.net",
+    "balance": 18
+  },
+  {
+    "id": "6285157688238@s.whatsapp.net",
+    "balance": 18
   },
   {
     "id": "6289692672854@s.whatsapp.net",
@@ -1036,6 +1112,10 @@
     "balance": 18
   },
   {
+    "id": "6285361668826@s.whatsapp.net",
+    "balance": 17
+  },
+  {
     "id": "6285799791388@s.whatsapp.net",
     "balance": 17
   },
@@ -1048,7 +1128,7 @@
     "balance": 17
   },
   {
-    "id": "6285254174178@s.whatsapp.net",
+    "id": "6282260387323@s.whatsapp.net",
     "balance": 16
   },
   {
@@ -1056,7 +1136,7 @@
     "balance": 15
   },
   {
-    "id": "6287824241448@s.whatsapp.net",
+    "id": "6285213841632@s.whatsapp.net",
     "balance": 15
   },
   {
@@ -1108,8 +1188,8 @@
     "balance": 12
   },
   {
-    "id": "6285712594266@s.whatsapp.net",
-    "balance": 12
+    "id": "6289513922351@s.whatsapp.net",
+    "balance": 10
   },
   {
     "id": "6289695121020@s.whatsapp.net",
@@ -1140,16 +1220,8 @@
     "balance": 8
   },
   {
-    "id": "212706611366@s.whatsapp.net",
-    "balance": 8
-  },
-  {
     "id": "6288298269251@s.whatsapp.net",
     "balance": 7
-  },
-  {
-    "id": "6285157688238@s.whatsapp.net",
-    "balance": 6
   },
   {
     "id": "6288705413585@s.whatsapp.net",
@@ -1174,6 +1246,18 @@
   {
     "id": "421950454088@s.whatsapp.net",
     "balance": 5
+  },
+  {
+    "id": "6281915422180@s.whatsapp.net",
+    "balance": 4
+  },
+  {
+    "id": "6281217779427@s.whatsapp.net",
+    "balance": 3
+  },
+  {
+    "id": "6281391156332@s.whatsapp.net",
+    "balance": 3
   },
   {
     "id": "6285727946887@s.whatsapp.net",
