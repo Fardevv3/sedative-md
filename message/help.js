@@ -4,7 +4,25 @@ const fs = require("fs");
 moment.tz.setDefault("Asia/Jakarta").locale("id");
 
 let dt = moment(Date.now()).tz('Asia/Jakarta').locale('id').format('a')
-const ucapanWaktu = "Selamat "+dt.charAt(0).toUpperCase() + dt.slice(1)
+const time2 = moment().tz("Asia/Jakarta").format("HH:mm:ss");
+    if (time2 < "24:59:00") {
+      var ucapanWaktu = "Selamat malam kak";
+    }
+    if (time2 < "18:00:00") {
+      var ucapanWaktu = "Selamat sore kak";
+    }
+    if (time2 < "16:00:00") {
+      var ucapanWaktu = "Selamat siang kak";
+    }
+    if (time2 < "11:00:00") {
+      var ucapanWaktu = "Selamat pagi kak";
+    }
+	if (time2 < "05:00:00") {
+      var ucapanWaktu = "Subuh lord";
+    }
+	if (time2 < "03:00:00") {
+      var ucapanWaktu = "Gk tidur kak?";
+    }
 let setting = JSON.parse(fs.readFileSync('./config.json'))
 const { getLimit, getBalance, cekGLimit } = require("../lib/limit")
 
@@ -66,6 +84,14 @@ exports.allmenu = (pushname, prefix) => {
 ┣➥ ${prefix}pinterestvid
 ┣➥ ${prefix}zippyshare
 ┣➥ ${prefix}mediafire
+┗──────────────────⊱
+
+┏━━━⊱ ⸨ *MAKER* ⸩
+┣──────────────────⊱
+┣➥ ${prefix}cup
+┣➥ ${prefix}coffe
+┣➥ ${prefix}smooke
+┣➥ ${prefix}wolfmetal
 ┗──────────────────⊱
 
 ┏━━━⊱ ⸨ *SEARCH* ⸩

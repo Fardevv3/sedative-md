@@ -131,7 +131,6 @@ module.exports = async(conn, msg, m, setting, store) => {
 		if (msg.isBaileys) return
 		const jam = moment.tz('asia/jakarta').format('HH:mm:ss')
 		let dt = moment(Date.now()).tz('Asia/Jakarta').locale('id').format('a')
-		const ucapanWaktu = "Selamat "+dt.charAt(0).toUpperCase() + dt.slice(1)
 		const content = JSON.stringify(msg.message)
 		const from = msg.key.remoteJid
 		const chats = (type === 'conversation' && msg.message.conversation) ? msg.message.conversation : (type == 'imageMessage') && msg.message.imageMessage.caption ? msg.message.imageMessage.caption : (type == 'documentMessage') && msg.message.documentMessage.caption ? msg.message.documentMessage.caption : (type == 'videoMessage') && msg.message.videoMessage.caption ? msg.message.videoMessage.caption : (type == 'extendedTextMessage') && msg.message.extendedTextMessage.text ? msg.message.extendedTextMessage.text : (type == 'buttonsResponseMessage' && msg.message.buttonsResponseMessage.selectedButtonId) ? msg.message.buttonsResponseMessage.selectedButtonId : (type == 'templateButtonReplyMessage') && msg.message.templateButtonReplyMessage.selectedId ? msg.message.templateButtonReplyMessage.selectedId : ''
@@ -177,6 +176,26 @@ module.exports = async(conn, msg, m, setting, store) => {
                 mention != undefined ? mention.push(mentionByReply) : []
                 const mentionUser = mention != undefined ? mention.filter(n => n) : []
 		
+		const time2 = moment().tz("Asia/Jakarta").format("HH:mm:ss");
+    if (time2 < "24:59:00") {
+      var ucapanWaktu = "Selamat malam kak";
+    }
+    if (time2 < "18:00:00") {
+      var ucapanWaktu = "Selamat sore kak";
+    }
+    if (time2 < "16:00:00") {
+      var ucapanWaktu = "Selamat siang kak";
+    }
+    if (time2 < "11:00:00") {
+      var ucapanWaktu = "Selamat pagi kak";
+    }
+	if (time2 < "05:00:00") {
+      var ucapanWaktu = "Subuh lord";
+    }
+	if (time2 < "03:00:00") {
+      var ucapanWaktu = "Gk tidur kak?";
+    }
+
 		async function downloadAndSaveMediaMessage (type_file, path_file) {
 			if (type_file === 'image') {
 				var stream = await downloadContentFromMessage(msg.message.imageMessage || msg.message.extendedTextMessage?.contextInfo.quotedMessage.imageMessage, 'image')
@@ -532,7 +551,10 @@ module.exports = async(conn, msg, m, setting, store) => {
 				+`*SIMPLE RULES:*\n`
 				+`Call/Spam = Block!!!\n`
 				+`Kelewat gblk = block!!!\n`
-			await textImg(cptn, setting.fake, setting.botName, msg)
+				var buttonsDefault = [
+					{ Creator: { displayText: `CREATOR`, url : `https://api.whatsapp.com/send/?phone=31622313470&text=Hai%20Orang%20Ganteng%3Av&app_absent=0` } }
+				]
+				conn.sendMessage(from, { caption: cptn, image: fs.readFileSync(setting.pathimg), templateButtons: buttonsDefault, footer: setting.fake, mentions: [sender] })
 			break
 			// Main Menu
 			case prefix+'menu':
@@ -576,8 +598,12 @@ module.exports = async(conn, msg, m, setting, store) => {
 				break
 			case prefix+'changelog':
 				var cptn = `*LAST UPDATE*\n\n`
-				+`*[08-05-2022]*\n`
-				+`${prefix}mining\n`
+				+`*[25-05-2022]*\n`
+				
+				+`${prefix}cup\n`
+				+`${prefix}coffe\n`
+				+`${prefix}smooke\n`
+				+`${prefix}wolfmetal\n`
 				await reply(cptn, setting.fake, setting.botName, msg)
 				break
 			case prefix+'runtime':
@@ -694,6 +720,24 @@ module.exports = async(conn, msg, m, setting, store) => {
 		}
 		fs.unlinkSync("./media/"+sender+".jpg")
 			break
+
+			// Photo Oxy
+			case prefix+'cup':
+				var data = await getBuffer(`https://api.lolhuman.xyz/api/photooxy1/cup?apikey=Rafly11&text=${q}`)
+				await conn.sendMessage(from, {image: data}, {quoted: msg})
+				break
+			case prefix+'coffe':
+				var data = await getBuffer(`https://api.lolhuman.xyz/api/photooxy1/coffe?apikey=Rafly11&text=${q}`)
+				await conn.sendMessage(from, {image: data}, {quoted: msg})
+				break
+			case prefix+'wolfmetal':
+				var data = await getBuffer(`https://api.lolhuman.xyz/api/photooxy1/wolfmetal?apikey=Rafly11&text=${q}`)
+				await conn.sendMessage(from, {image: data}, {quoted: msg})
+				break
+			case prefix+'smooke':
+				var data = await getBuffer(`https://api.lolhuman.xyz/api/photooxy1/smoke?apikey=Rafly11&text=${q}`)
+				await conn.sendMessage(from, {image: data}, {quoted: msg})
+				break
 
 	        // Downloader Menu
 			case prefix+'tiktok':
