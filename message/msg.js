@@ -1,6 +1,8 @@
 "use strict";
 const {
-	downloadContentFromMessage
+	downloadContentFromMessage,
+	WAProto,
+	WAMetric
 } = require("@adiwajshing/baileys")
 const { color, bgcolor } = require('../lib/color')
 const { getBuffer, fetchJson, fetchText, getRandom, getGroupAdmins, runtime, sleep, makeid, convert } = require("../lib/myfunc");
@@ -27,8 +29,6 @@ const speed = require("performance-now");
 const request = require("request");
 const ms = require("parse-ms");
 const { Sticker, createSticker, StickerTypes } = require('wa-sticker-formatter');
-const { replaceWith } = require("cheerio/lib/api/manipulation");
-const { REPL_MODE_SLOPPY } = require("repl");
 
 
 // DB Game
@@ -283,8 +283,8 @@ module.exports = async(conn, msg, m, setting, store) => {
 		const reply = (teks) => {
 			return conn.sendMessage(from, { text: teks}, { quoted: msg })
 		}
-		const adReply = async(teks, judul, isi, quo) => {
-			return conn.sendMessage(from, {text: teks, contextInfo:{externaladReply: {title: judul, body: isi, mediaType: 3, "jpegThumbnail": fs.readFileSync(setting.pathimg)}}}, {sendEphemeral: true, quoted: quo })
+		const adReply = (teks, judul, isi, quo) => {
+			return conn.sendMessage(from, {text: teks, contextInfo:{externaladReply: {title: judul, body: isi, mediaType: 1, "jpegThumbnail": fs.readFileSync(setting.pathimg)}}}, { quoted: quo })
 		}
 		const textImg = (teks) => {
 			return conn.sendMessage(from, { text: teks, "thumbnail": fs.readFileSync(setting.pathimg) }, { quoted: msg })
