@@ -5,7 +5,7 @@ const {
 	initInMemoryKeyStore,
 	DisconnectReason,
 	AnyMessageContent,
-        makeInMemoryStore,
+    makeInMemoryStore,
 	useSingleFileAuthState,
 	delay
 } = require("@adiwajshing/baileys")
@@ -30,7 +30,7 @@ function title() {
 	console.log('------------------------------------------------')
 	lolcatjs.fromString(color(figlet.textSync('RAFLY', { horizontalLayout: 'full' })))
   	console.log('------------------------------------------------')
-	lolcatjs.fromString('[SERVER] Server Started!')
+	lolcatjs.fromString('[SERVER STARTED!!!]')
 	console.log('------------------------------------------------')
 }
 
@@ -125,16 +125,12 @@ const connectToWhatsApp = async () => {
 
 				if (data.action == "add") {
 					/*var buff = await getBuffer(`https://hardianto.xyz/api/welcome3?profile=${ppuser}&name=${i.split("@")[0]}&bg=https://telegra.ph/file/11f2e752e749f5412b52f.jpg&namegb=${encodeURI(mdata.subject)}&member=${mdata.participants.length}`)*/
-					var buff = await getBuffer(`
-				https://api.lolhuman.xyz/api/base/welcome?apikey=Rafly11&img1=${ppuser}&img2=${ppgc}&background=${bg}&username=NewMember&member=${gcmem}&groupname=${encodeURIComponent(gcname)}
-				`)
-                await  conn.sendMessage(data.id, { image: buff, caption: `${mdata.desc}\n\n@${i.split("@")[0]}`, mentions: [i] })
+                var buff = await getBuffer(ppuser)
+					await  conn.sendMessage(data.id, { image: buff, caption: `${mdata.desc}\n--------------------\n@${i.split("@")[0]}\n_${gcmem}th_ Members in ${gcname}`, mentions: [i] })
 				
 				 } else if (data.action == "remove") {
-				var buff = await getBuffer(`
-				https://api.lolhuman.xyz/api/base/leave?apikey=Rafly11&img1=${ppuser}&img2=${ppgc}&background=${bg}&username=MemberLeft&member=${gcmem}&groupname=${encodeURIComponent(gcname)}
-				`)
-                  conn.sendMessage(data.id, { image: buff, caption: `Sayonara @${i.split("@")[0]}\nSemoga tenang di alam sana\nLatom`, mentions: [i] })
+                var buff = await getBuffer(ppuser)
+					await conn.sendMessage(data.id, { image: buff, caption: `Sayonara @${i.split("@")[0]}\nSemoga tenang di alam sana\nLatom`, mentions: [i] })
                 }
               }
             } catch (e) {
