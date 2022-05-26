@@ -1,8 +1,7 @@
 "use strict";
 const {
 	downloadContentFromMessage,
-	WAProto,
-	WAMetric
+	WAProto
 } = require("@adiwajshing/baileys")
 const { color, bgcolor } = require('../lib/color')
 const { getBuffer, fetchJson, fetchText, getRandom, getGroupAdmins, runtime, sleep, makeid, convert } = require("../lib/myfunc");
@@ -952,7 +951,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 				} else {
 				if(hasil.download_url.includes(".pdf"))
 					var zppdf = await getBuffer(hasil.download_url)
-					await conn.sendMessage(from, {document: zppdf, fileName: `${hasil.name_file}.pdf`, mimetype: "document/pdf"}, {quoted: msg})
+					await conn.sendMessage(from, {document: zppdf, fileName: `${hasil.name_file}.pdf`, mimetype: "application/pdf", JpegThumbnail: fs.readFileSync(setting.pathimg)}, {quoted: msg})
 				}
 				limitAdd(sender, limit)
 			} catch(err) {
@@ -979,7 +978,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 				} else {
 				if(hasil.link.includes(".pdf")){
 					var mpdf = await getBuffer(hasil.link)
-					await conn.sendMessage(from, {document: mpdf, fileName: `${hasil.filename}.pdf`, mimetype: "document/pdf"}, {quoted: msg})
+					await conn.sendMessage(from, {document: mpdf, fileName: `${hasil.filename}.pdf`, mimetype: "application/pdf"}, {quoted: msg})
 				} else {
 				if(hasil.link.includes(".apk")){
 					var mapk = await getBuffer(hasil.link)
@@ -1497,13 +1496,10 @@ module.exports = async(conn, msg, m, setting, store) => {
 				if (!isGroup) return reply(mess.OnlyGrup)
 				if (!isGameOn) return reply('Fitur game belum diaktifkan pada group ini')
 				if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
-				var cooldown = 5000
-				if (new Date - pendaftar.lastmining < cooldown) return reply(`Cooldown 5 seconds`)
 				var cb = randomNomor(10,250)
 				var cxp = randomNomor(100, 1000)
 				addBalance(sender, cb, balance)
 				addLevelingXp(sender, cxp)
-				pendaftar.lastmining = new Date * 1
 				reply('```Mining....``` ⛏️')
 				await sleep(5000)
 				reply(`Sukses mining $${cb} & ${cxp}Xp`)
