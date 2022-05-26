@@ -72,17 +72,15 @@ const connectToWhatsApp = async () => {
             printQRInTerminal: true,
             logger: logg({ level: 'fatal' }),
             auth: state,
-            browser: ["SEDATIVE-MD BY RAFLY", "Safari", "3.0"]
+            browser: ["SEDATIVE-MD BY RAFLY", "Chrome", "3.0"]
         })
 	title()
         store.bind(conn.ev)
 	
 	/* Auto Update */
 	require('./message/help')
-	require('./lib/myfunc')
 	require('./message/msg')
 	nocache('./message/help', module => console.log(chalk.greenBright('[ WHATSAPP BOT ]  ') + time + chalk.cyanBright(` "${module}" Telah diupdate!`)))
-	nocache('./lib/myfunc', module => console.log(chalk.greenBright('[ WHATSAPP BOT ]  ') + time + chalk.cyanBright(` "${module}" Telah diupdate!`)))
 	nocache('./message/msg', module => console.log(chalk.greenBright('[ WHATSAPP BOT ]  ') + time + chalk.cyanBright(` "${module}" Telah diupdate!`)))
 	
 	conn.multi = true
