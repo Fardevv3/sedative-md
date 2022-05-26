@@ -63,9 +63,10 @@ Change ownerName [`here`](https://github.com/dragneel1111/sedative-md/config.jso
 ```
 
 after running it you need to scan the qr
-
-> Enjoyyy
-  
+```
+> Enjoyyy,
+Bot prefix is "$"
+ ```
 ## Contact Me
 * [`WhatsApp`](https://wa.me/31622313470?text=Hai%20orang%20ganteng:v)
  
