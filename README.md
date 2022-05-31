@@ -71,7 +71,7 @@ Bot prefix is "$"
 * [`WhatsApp`](https://wa.me/31622313470?text=Hai%20orang%20ganteng:v)
  
 ## Join To Whatsapp Group
-* [`WhatsApp Group`](https://chat.whatsapp.com/I6u5XfAubuI35zLVerYMEA)
+* [`WhatsApp Group`](https://chat.whatsapp.com/CJBb9fXMEfiK1JOb330FX1)
   
 ## ```Thanks to ✨```
 * [`Adiwajshing/baileys`](https://github.com/adiwajshing/baileys)
