@@ -124,7 +124,7 @@ const connectToWhatsApp = async () => {
 				if (data.action == "add") {
 					/*var buff = await getBuffer(`https://hardianto.xyz/api/welcome3?profile=${ppuser}&name=${i.split("@")[0]}&bg=https://telegra.ph/file/11f2e752e749f5412b52f.jpg&namegb=${encodeURI(mdata.subject)}&member=${mdata.participants.length}`)*/
                 var buff = await getBuffer(ppuser)
-					await  conn.sendMessage(data.id, { image: buff, caption: `${mdata.desc}\n--------------------\n@${i.split("@")[0]}\n_${gcmem}th_ Members in ${gcname}`, mentions: [i] })
+					await  conn.sendMessage(data.id, { image: buff, caption: `${mdata.desc}\n\n@${i.split("@")[0]}\n_${gcmem}th_ Members in ${gcname}`, mentions: [i] })
 				
 				 } else if (data.action == "remove") {
                 var buff = await getBuffer(ppuser)
