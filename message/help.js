@@ -3,7 +3,6 @@ const fs = require("fs");
 
 moment.tz.setDefault("Asia/Jakarta").locale("id");
 
-let dt = moment(Date.now()).tz('Asia/Jakarta').locale('id').format('a')
 const time2 = moment().tz("Asia/Jakarta").format("HH:mm:ss");
     if (time2 < "24:59:00") {
       var ucapanWaktu = "Selamat malam kak";
@@ -24,7 +23,6 @@ const time2 = moment().tz("Asia/Jakarta").format("HH:mm:ss");
       var ucapanWaktu = "Gk tidur kak?";
     }
 let setting = JSON.parse(fs.readFileSync('./config.json'))
-const { getLimit, getBalance, cekGLimit } = require("../lib/limit")
 
 const more = String.fromCharCode(8206)
 const readmore = more.repeat(4001)
@@ -105,6 +103,7 @@ exports.allmenu = (pushname, prefix) => {
 ┏━━━⊱ ⸨ *ANIMANGA* ⸩
 ┣──────────────────⊱
 ┣➥ ${prefix}animestory
+┣➥ ${prefix}genshin
 ┣➥ ${prefix}waifu
 ┣➥ ${prefix}loli
 ┣➥ ${prefix}neko
@@ -119,7 +118,6 @@ exports.allmenu = (pushname, prefix) => {
 
 ┏━━━⊱ ⸨ *GAME* ⸩
 ┣──────────────────⊱
-┣➥ ${prefix}mining
 ┣➥ ${prefix}tictactoe
 ┣➥ ${prefix}delttt
 ┣➥ ${prefix}tebakgambar
