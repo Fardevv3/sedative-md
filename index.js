@@ -27,11 +27,19 @@ const { state, saveState } = useSingleFileAuthState(session)
 
 function title() {
     console.clear()
-	console.log('------------------------------------------------')
-	lolcatjs.fromString(color(figlet.textSync('RAFLY', { horizontalLayout: 'full' })))
-  	console.log('------------------------------------------------')
+	console.log('----------------------------------------------------')
+	lolcatjs.fromString(color(figlet.textSync('Rafly', {
+		font: 'Bloody',
+		horizontalLayout: 'full',
+		verticalLayout: 'full',
+		whitespaceBreak: true
+	})));
+  	console.log('----------------------------------------------------')
 	lolcatjs.fromString('[SERVER STARTED!!!]')
-	console.log('------------------------------------------------')
+	console.log('----------------------------------------------------')
+	lolcatjs.fromString('SIMPLE WHATSAPP BOT WITH MULTI DEVICE')
+	lolcatjs.fromString('Create by Rafly¹¹')
+	console.log('----------------------------------------------------')
 }
 
 /**
@@ -65,14 +73,14 @@ const status = new Spinner(chalk.cyan(` Booting WhatsApp Bot`))
 const starting = new Spinner(chalk.cyan(` Preparing After Connect`))
 const reconnect = new Spinner(chalk.redBright(` Reconnecting WhatsApp Bot`))
 
-const store = makeInMemoryStore({ logger: logg().child({ level: 'fatal', stream: 'store' }) })
+const store = makeInMemoryStore({ logger: logg().child({ level: 'silent', stream: 'store' }) })
 
 const connectToWhatsApp = async () => {
 	const conn = makeWASocket({
             printQRInTerminal: true,
-            logger: logg({ level: 'fatal' }),
+            logger: logg({ level: 'silent' }),
             auth: state,
-            browser: ["SEDATIVE-MD BY RAFLY", "Chrome", "3.0"]
+            browser: ["BOT-MD BY RAFLY", "Safari", "3.0"]
         })
 	title()
         store.bind(conn.ev)
@@ -119,16 +127,31 @@ const connectToWhatsApp = async () => {
 				const mdata = await conn.groupMetadata(data.id)
 				const gcname = mdata.subject
 				const gcmem = mdata.participants.length
-				const bg = `https://telegra.ph/file/95d9a8daa4d4d3243e337.jpg`
+				const bg = `https://telegra.ph/file/334792947c7cde58b3078.jpg`
 
 				if (data.action == "add") {
-					/*var buff = await getBuffer(`https://hardianto.xyz/api/welcome3?profile=${ppuser}&name=${i.split("@")[0]}&bg=https://telegra.ph/file/11f2e752e749f5412b52f.jpg&namegb=${encodeURI(mdata.subject)}&member=${mdata.participants.length}`)*/
-                var buff = await getBuffer(ppuser)
-					await  conn.sendMessage(data.id, { image: buff, caption: `${mdata.desc}\n\n@${i.split("@")[0]}\n_${gcmem}th_ Members in ${gcname}`, mentions: [i] })
-				
+			    /*var buff = await getBuffer(`https://hardianto.xyz/api/welcome3?profile=${ppuser}&name=${i.split("@")[0]}&bg=https://telegra.ph/file/11f2e752e749f5412b52f.jpg&namegb=${encodeURI(mdata.subject)}&member=${mdata.participants.length}`)*/
+                /*var buff = await getBuffer(ppuser)*/
+				var buff = await getBuffer(`https://hadi-api.herokuapp.com/api/card/welcome?nama=${i.split("@")[0]}&descriminator=${gcmem}&memcount=${gcmem}&gcname=${encodeURI(gcname)}&pp=${ppuser}&bg=${bg}`)
+					await conn.sendMessage(data.id, {
+						image: buff, 
+						fileLength: 1000000000000,
+						caption: `${mdata.desc}\n\n_${gcmem}th_ Members in \n${gcname}`,
+						buttons : [{buttonId: `y`, buttonText: { displayText: "WELCOME" }, type: 1 }],
+						footer: `Welcome @${i.split("@")[0]}`,
+						mentions: [i]
+					})
+
 				 } else if (data.action == "remove") {
-                var buff = await getBuffer(ppuser)
-					await conn.sendMessage(data.id, { image: buff, caption: `Sayonara @${i.split("@")[0]}\nSemoga tenang di alam sana\nLatom`, mentions: [i] })
+					buff = await getBuffer(`https://hadi-api.herokuapp.com/api/card/goodbye?nama=${i.split("@")[0]}&descriminator=${gcmem}&memcount=${gcmem}&gcname=${encodeURI(gcname)}&pp=${ppuser}&bg=${bg}`);
+					await conn.sendMessage(data.id, {
+						image: buff,
+						fileLength: 1000000000000, 
+						caption: `Sayonara @${i.split("@")[0]}\n`,
+						mentions: [i],
+						buttons : [{buttonId: `y`, buttonText: { displayText: "LATOM" }, type: 1 }],
+						footer: 'Semoga tenang di alam sana'
+					})
                 }
               }
             } catch (e) {
