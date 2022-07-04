@@ -27,14 +27,6 @@ let setting = JSON.parse(fs.readFileSync('./config.json'))
 const more = String.fromCharCode(8206)
 const readmore = more.repeat(4001)
 
-function toCommas(x) {
-	x = x.toString()
-	var pattern = /(-?\d+)(\d{3})/;
-     while (pattern.test(x))
-	   x = x.replace(pattern, "$1,$2");
-	return x;
-}
-
 exports.levelup = (pushname, sender, getLevelingXp,  getLevel, getLevelingLevel, role) => {
 	return`
 ┏━━━⊱ ⸨ *LEVEL UP* ⸩
@@ -66,6 +58,7 @@ exports.allmenu = (pushname, prefix) => {
 ┏━━━⊱ ⸨ *CONVERT* ⸩
 ┣──────────────────⊱
 ┣➥ ${prefix}sticker
+┣➥ ${prefix}sticker-c
 ┣➥ ${prefix}take
 ┣➥ ${prefix}toimg
 ┣➥ ${prefix}tourl
@@ -78,7 +71,6 @@ exports.allmenu = (pushname, prefix) => {
 ┣➥ ${prefix}ytmp4
 ┣➥ ${prefix}tiktok
 ┣➥ ${prefix}instagram
-┣➥ ${prefix}facebook
 ┣➥ ${prefix}pinterestvid
 ┣➥ ${prefix}zippyshare
 ┣➥ ${prefix}mediafire
@@ -98,6 +90,17 @@ exports.allmenu = (pushname, prefix) => {
 ┣➥ ${prefix}ytsearch
 ┣➥ ${prefix}pinterest
 ┣➥ ${prefix}sauce
+┗──────────────────⊱
+
+┏━━━⊱ ⸨ *RANDOM STICKER* ⸩
+┣──────────────────⊱
+┣➥ ${prefix}gura
+┣➥ ${prefix}doge
+┣➥ ${prefix}patrick
+┣➥ ${prefix}slap
+┣➥ ${prefix}bonk 
+┣➥ ${prefix}dance
+┣➥ ${prefix}kiss
 ┗──────────────────⊱
 
 ┏━━━⊱ ⸨ *ANIMANGA* ⸩
@@ -120,6 +123,7 @@ exports.allmenu = (pushname, prefix) => {
 ┣──────────────────⊱
 ┣➥ ${prefix}tictactoe
 ┣➥ ${prefix}delttt
+┣➥ ${prefix}dadu
 ┣➥ ${prefix}tebakgambar
 ┣➥ ${prefix}tebakkimia
 ┣➥ ${prefix}susunkata
@@ -144,7 +148,6 @@ exports.allmenu = (pushname, prefix) => {
 ┣➥ ${prefix}group
 ┣➥ ${prefix}revoke
 ┣➥ ${prefix}hidetag
-┣➥ ${prefix}game
 ┗──────────────────⊱
 
 ┏━━━⊱ ⸨ *OTHER* ⸩
@@ -152,6 +155,10 @@ exports.allmenu = (pushname, prefix) => {
 ┣➥ ${prefix}addsay
 ┣➥ ${prefix}delsay
 ┣➥ ${prefix}say
+┣➥ ${prefix}quotesnime
+┣➥ ${prefix}puisi
+┣➥ ${prefix}faktaunik
+┣➥ ${prefix}katabijak
 ┗──────────────────⊱
 `
 +`\n\n`
