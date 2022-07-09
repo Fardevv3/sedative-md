@@ -8,9 +8,9 @@
   "pathaud": "./media/menuaud.mp3",
   "fake" : "𝚂𝙴𝙳𝙰𝚃𝙸𝚅𝙴 𝙰𝚁𝙴𝙰 | ボット",
   "gamewaktu": 60,
-  "limitCount": 30,
+  "limitCount": 20,
   "gcount": {
 	"prem": 50,
-	"user": 20
+	"user": 15
   }
 }

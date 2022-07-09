@@ -80,7 +80,7 @@ const connectToWhatsApp = async () => {
             printQRInTerminal: true,
             logger: logg({ level: 'silent' }),
             auth: state,
-            browser: ["BOT-MD BY RAFLY", "Safari", "3.0"]
+            browser: ["BOT-MD BY RAFLY", "Chrome", "3.0"]
         })
 	title()
         store.bind(conn.ev)
@@ -127,7 +127,7 @@ const connectToWhatsApp = async () => {
 				const mdata = await conn.groupMetadata(data.id)
 				const gcname = mdata.subject
 				const gcmem = mdata.participants.length
-				const bg = `https://telegra.ph/file/334792947c7cde58b3078.jpg`
+				const bg = `https://i.postimg.cc/rFkw8MpX/IMG-20210807-151325.jpg`
 
 				if (data.action == "add") {
 			    /*var buff = await getBuffer(`https://hardianto.xyz/api/welcome3?profile=${ppuser}&name=${i.split("@")[0]}&bg=https://telegra.ph/file/11f2e752e749f5412b52f.jpg&namegb=${encodeURI(mdata.subject)}&member=${mdata.participants.length}`)*/
