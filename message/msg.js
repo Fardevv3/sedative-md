@@ -7,6 +7,7 @@ const { getBuffer, fetchJson, fetchText, getRandom, getGroupAdmins, runtime, sle
 const { webp2mp4File, ffmpeg, upload } = require("../lib/convert")
 const { pinterest } = require("../lib/pinterest")
 const { isLimit, limitAdd, getLimit, giveLimit, addBalance, kurangBalance, getBalance, isGame, gameAdd, givegame, cekGLimit } = require("../lib/limit");
+const { getLevelingXp, getLevelingLevel, getLevelingId, addLevelingXp, addLevelingLevel, addLevelingId } = require("../lib/level");
 const { isTicTacToe, getPosTic } = require("../lib/tictactoe");
 const { addPlayGame, getJawabanGame, isPlayGame, cekWaktuGame, getGamePosi } = require("../lib/game");
 const tictac = require("../lib/tictac");
@@ -47,74 +48,6 @@ let block = JSON.parse(fs.readFileSync('./database/block.json'));
 let afk = JSON.parse(fs.readFileSync('./database/afk.json'));
 let saylist = JSON.parse(fs.readFileSync('./database/saylist.json'));
 
-//LEVELING
-const getLevelingXp = (sender) => {
-	let position = false
-	Object.keys(_level).forEach((i) => {
-		if (_level[i].id === sender) {
-			position = i
-		}
-	})
-	if (position !== false) {
-		return _level[position].xp
-	}
-}
-
-const getLevelingLevel = (sender) => {
-	let position = false
-	Object.keys(_level).forEach((i) => {
-		if (_level[i].id === sender) {
-			position = i
-		}
-	})
-	if (position !== false) {
-		return _level[position].level
-	}
-}
-
-const getLevelingId = (sender) => {
-	let position = false
-	Object.keys(_level).forEach((i) => {
-		if (_level[i].id === sender) {
-			position = i
-		}
-	})
-	if (position !== false) {
-		return _level[position].id
-	}
-}
-
-const addLevelingXp = (sender, amount) => {
-	let position = false
-	Object.keys(_level).forEach((i) => {
-		if (_level[i].id === sender) {
-			position = i
-		}
-	})
-	if (position !== false) {
-		_level[position].xp += amount
-		fs.writeFileSync('./database/level.json', JSON.stringify(_level))
-	}
-}
-
-const addLevelingLevel = (sender, amount) => {
-	let position = false
-	Object.keys(_level).forEach((i) => {
-		if (_level[i].id === sender) {
-			position = i
-		}
-	})
-	if (position !== false) {
-		_level[position].level += amount
-		fs.writeFileSync('./database/level.json', JSON.stringify(_level))
-	}
-}
-
-const addLevelingId = (sender) => {
-	const obj = {id: sender, xp: 1, level: 1}
-	_level.push(obj)
-	fs.writeFileSync('./database/level.json', JSON.stringify(_level), null, 2)
-}
 
 moment.tz.setDefault("Asia/Jakarta").locale("id");
 
@@ -124,12 +57,13 @@ module.exports = async(conn, msg, m, setting, store) => {
 		let { allmenu, levelup } = require('./help')
 		const { type, quotedMsg, mentioned, now, fromMe } = msg
 		if (msg.isBaileys) return
+		if (fromMe) return
 		const jam = moment.tz('asia/jakarta').format('HH:mm:ss')
 		let dt = moment(Date.now()).tz('Asia/Jakarta').locale('id').format('a')
 		const content = JSON.stringify(msg.message)
 		const from = msg.key.remoteJid
-		const chats = (type === 'conversation' && msg.message.conversation) ? msg.message.conversation : (type == 'imageMessage') && msg.message.imageMessage.caption ? msg.message.imageMessage.caption : (type == 'documentMessage') && msg.message.documentMessage.caption ? msg.message.documentMessage.caption : (type == 'videoMessage') && msg.message.videoMessage.caption ? msg.message.videoMessage.caption : (type == 'extendedTextMessage') && msg.message.extendedTextMessage.text ? msg.message.extendedTextMessage.text : (type == 'buttonsResponseMessage' && msg.message.buttonsResponseMessage.selectedButtonId) ? msg.message.buttonsResponseMessage.selectedButtonId : (type == 'templateButtonReplyMessage') && msg.message.templateButtonReplyMessage.selectedId ? msg.message.templateButtonReplyMessage.selectedId : ''
-		const toJSON = j => JSON.stringify(j, null,'\t')
+		const chats = (type === 'conversation' && msg.message.conversation) ? msg.message.conversation : (type === 'imageMessage') && msg.message.imageMessage.caption ? msg.message.imageMessage.caption : (type === 'videoMessage') && msg.message.videoMessage.caption ? msg.message.videoMessage.caption : (type === 'extendedTextMessage') && msg.message.extendedTextMessage.text ? msg.message.extendedTextMessage.text : (type === 'buttonsResponseMessage') && quotedMsg.fromMe && msg.message.buttonsResponseMessage.selectedButtonId ? msg.message.buttonsResponseMessage.selectedButtonId : (type === 'templateButtonReplyMessage') && quotedMsg.fromMe && msg.message.templateButtonReplyMessage.selectedId ? msg.message.templateButtonReplyMessage.selectedId : (type === 'messageContextInfo') ? (msg.message.buttonsResponseMessage?.selectedButtonId || msg.message.listResponseMessage?.singleSelectReply.selectedRowId) : (type == 'listResponseMessage') && quotedMsg.fromMe && msg.message.listResponseMessage.singleSelectReply.selectedRowId ? msg.message.listResponseMessage.singleSelectReply.selectedRowId : ""
+        const toJSON = j => JSON.stringify(j, null,'\t')
 		if (conn.multi) {
 			var prefix = '-'
 		} else {
@@ -543,7 +477,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 			addBalance(sender, randomNomor(20), balance)
 			console.log(color('[GROUP]', 'green'), color(moment(msg.messageTimestamp *1000).format('DD/MM/YYYY HH:mm:ss'), 'white'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(groupName))
 		}
-		if (!isCmd && !fromMe) {
+		if (chats && !isCmd && !fromMe) {
 			console.log(color('[MESSAGE]', 'yellow'), color(moment(msg.messageTimestamp *1000).format('DD/MM/YYYY HH:mm:ss'), 'white'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(groupName))
 		}
 		if (isGroup && isCmd && isBlocked && !fromMe) {
@@ -551,24 +485,24 @@ module.exports = async(conn, msg, m, setting, store) => {
 			console.log(color('[CMD FROM BLOKED USER]', 'red'), color(sender, 'yellow'))
 		}
 
-		if (fromMe) return
 		if (isBlocked) return
 		switch(command) {
 
-			case prefix+'tes123':
-				await conn.sendMessage(from, {text: 'tes',
-				contextInfo: { externalAdReply: { showAdAttribution: true,
-					mediaUrl: "https://Instagram.com/bot_whangsaf",
-					mediaType: "VIDEO",
-					description: "https://Instagram.com/bot_whangsaf", 
-					title: 'Simple Bot Esm',
-					body: 'tus',
-					thumbnailUrl: fs.readFileSync(setting.pathimg),
-					sourceUrl: 'https://wa.me/0'
-			}
-			}
-				}
-				)
+			case 'ftroli':
+				let prep = generateWAMessageFromContent(from, { orderMessage: {
+					itemCount: 12345, status: 500,
+					surface: 999, 
+					message: 'tes',
+					orderTitle: 'tesd',
+					token: '9', 
+					curreyCode: 'IDR',
+					totalAmount1000: '1000',
+					sellerJid: from,
+					thumbnail: setting.pathimg
+					}},
+					{quoted: msg})
+					
+				await conn.relayWAMessage(prep)
 				break
 
 			case prefix:
@@ -586,7 +520,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 					{ y: { displayText: `y`, id: `y` } }
 				]
 				if (isGroup) {
-				conn.sendMessage(from, {
+				await conn.sendMessage(from, {
 					 caption: cptn,
 					 document: fs.readFileSync(setting.pathaud),
 					 mimetype: 'audio/mp4',
@@ -656,7 +590,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 				+`*Bot Name:* ${setting.botName}\n`
 				+`*Prefix:* ${prefix}\n`
 				+`*Registered*: ${_user}\n`
-				+`*Library:* Baileys-md\n`
+				+`*Library:* Baileys\n`
 				+`*Language:* JavaScript (100%)\n`
 				+`*SpeedTest:* ${latensi.toFixed(4)} Second\n`
 				+`*RunTime:* ${runtime(process.uptime())}\n\n`
@@ -756,7 +690,7 @@ module.exports = async(conn, msg, m, setting, store) => {
         type: StickerTypes.FULL, // The sticker type
         categories: ['🤩', '🎉'], // The sticker category
         id: '12345', // The sticker id
-        quality: 30, // The quality of the output file
+        quality: 25, // The quality of the output file
         background: 'transparent' // The sticker background color (only for full stickers)
     })
     const stikk = await sticker.toBuffer() 
@@ -792,7 +726,7 @@ module.exports = async(conn, msg, m, setting, store) => {
         type: StickerTypes.CROPPED, // The sticker type
         categories: ['🤩', '🎉'], // The sticker category
         id: '12345', // The sticker id
-        quality: 30, // The quality of the output file
+        quality: 25, // The quality of the output file
         background: 'transparent' // The sticker background color (only for full stickers)
     })
     const stikk = await sticker.toBuffer() 
@@ -992,14 +926,15 @@ module.exports = async(conn, msg, m, setting, store) => {
                  +`█──█████──█████\n`
                  +`█▄──▀▀▀──▄█████\n`
                  +`███▄▄▄▄▄███████\n`
-				conn.sendMessage(from, {
+				await conn.sendMessage(from, {
 				   video: vid,
 				   caption: `${cptn}\n`,
 				   templateButtons: buttonsDefault,
 				   footer: setting.fake
 			      }, { quoted: msg })
-				  var data = await getBuffer(`https://api.lolhuman.xyz/api/tiktokmusic?apikey=Rafly11&url=${q}`)
-				  await conn.sendMessage(from, {audio: data}, {quoted: msg})
+				  await sleep(1000)
+				  var aud = await getBuffer(`https://api.lolhuman.xyz/api/tiktokmusic?apikey=Rafly11&url=${q}`)
+				  await conn.sendMessage(from, {document: aud, mimetype: "audio/mp4", fileName: 'Tiktok Audio'}, {quoted: msg})
 				  limitAdd(sender, limit)
 				  break
 			case prefix+'tiktokaudio':
@@ -1057,7 +992,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 				var aud = await getBuffer(hasil.audio)
 				conn.sendMessage(from, {document: aud, fileName: `${hasil.title}.mp3`, mimetype: "audio/mp3"}, {quoted: msg})
 				break
-			case prefix+'mp4': 
+			/*case prefix+'mp4': 
 			case prefix+'ytmp4':
 				try {
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
@@ -1097,7 +1032,12 @@ module.exports = async(conn, msg, m, setting, store) => {
 			} catch(err) {
 				reply(mess.error.api)
 			}
-			    break
+			    break*/
+
+				case prefix+'mp4': case prefix+'ytmp4':
+				case prefix+'mp3': case prefix+'ytmp3':
+					reply(`Fitur error\nUtk sementara gunakan fitur ${prefix}play\n\nContoh:\n${prefix}play https://youtube.com/watch?v=w3RDwQjUekU`)
+					break
 			
 				case prefix+'getvideo':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
@@ -1545,6 +1485,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 				}
 				reply('*Done*')
 				break
+			
 			case prefix+'leave':
 			    if (!isOwner) return reply(mess.OnlyOwner)
 				if (!isGroup) return reply(mess.OnlyGrup)
@@ -2168,7 +2109,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 				  } catch {
 					var pp_user = 'https://telegra.ph/file/697858c5140630f089f6e.jpg'
 				  }
-				let pp = await getBuffer(pp_user)
+				let pp = await getBuffer(`https://api.lolhuman.xyz/api/welcomeimage?apikey=Rafly11&img=${pp_user}&text=${sender.split("@")[0]}\nLevel: ${level}\nXp: ${xp}\nRole: ${role}`)
 				await conn.sendMessage(from, {image: pp ,caption: cptnp, fileLength: 1000000000000000 }, {quoted: ftokoo})
 				break
 
