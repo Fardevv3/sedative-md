@@ -5,10 +5,14 @@ const {
 	initInMemoryKeyStore,
 	DisconnectReason,
 	AnyMessageContent,
+	fetchLatestBaileysVersion, 
     makeInMemoryStore,
-	useSingleFileAuthState,
+    jidNormalizedUser, 
+	useMultiFileAuthState,
 	delay
 } = require("@adiwajshing/baileys")
+const { Boom } = require ('@hapi/boom')
+const path = require("path")
 const figlet = require("figlet");
 const lolcatjs = require('lolcatjs');
 const fs = require("fs");
@@ -23,7 +27,9 @@ const { encode } = require("punycode");
 const time = moment(new Date()).format('HH:mm:ss DD/MM/YYYY')
 let setting = JSON.parse(fs.readFileSync('./config.json'));
 let session = `./${setting.sessionName}.json`
-const { state, saveState } = useSingleFileAuthState(session)
+const { state, saveCreds } = await useMultiFileAuthState(path.resolve('./sessions'))
+let { version, isLatest } = await fetchLatestBaileysVersion()
+console.log(`using WA v${version.join('.')}, isLatest: ${isLatest}`)
 
 function title() {
     console.clear()
@@ -77,6 +83,7 @@ const store = makeInMemoryStore({ logger: logg().child({ level: 'silent', stream
 
 const connectToWhatsApp = async () => {
 	const conn = makeWASocket({
+		    version, 
             printQRInTerminal: true,
             logger: logg({ level: 'silent' }),
             auth: state,
@@ -101,18 +108,33 @@ const connectToWhatsApp = async () => {
 		msg.isBaileys = msg.key.id.startsWith('BAE5') || msg.key.id.startsWith('3EB0')
 		require('./message/msg')(conn, msg, m, setting, store)
 	})
-	conn.ev.on('connection.update', (update) => {
-		const { connection, lastDisconnect } = update
-		if (connection === 'close') {
-			status.stop()
-			reconnect.stop()
-			starting.stop()
-			console.log(mylog('Server Ready ✓'))
-			lastDisconnect.error?.output?.statusCode !== DisconnectReason.loggedOut 
-			? connectToWhatsApp()
-			: console.log(mylog('Wa web terlogout...'))
-		}
-	})
+	conn.ev.on("creds.update", saveCreds)
+
+    conn.ev.on("connection.update", async(update) => {
+        if (update.connection == "open" && conn.type == "legacy") {
+            killua.user = {
+                id: conn.state.legacy.user.id,
+                jid: conn.state.legacy.user.id,
+                name: conn.state.legacy.user.name
+            }
+        }
+        const { lastDisconnect, connection } = update
+        if (connection) {
+            console.info(`Connection Status : ${connection}`)
+        }
+
+        if (connection == "close") {
+            let reason = new Boom(lastDisconnect?.error)?.output.statusCode
+            if (reason === DisconnectReason.badSession) { console.log(`Bad Session File, Please Delete Session and Scan Again`); conn.logout(); }
+            else if (reason === DisconnectReason.connectionClosed) { console.log("Connection closed, reconnecting...."); connect(); }
+            else if (reason === DisconnectReason.connectionLost) { console.log("Connection Lost from Server, reconnecting..."); connect(); }
+            else if (reason === DisconnectReason.connectionReplaced) { console.log("Connection Replaced, Another New Session Opened, Please Close Current Session First"); conn.logout(); }
+            else if (reason === DisconnectReason.loggedOut) { console.log(`Device Logged Out, Please Scan Again And Run.`); process.exit(); }
+            else if (reason === DisconnectReason.restartRequired) { console.log("Restart Required, Restarting..."); connect(); }
+            else if (reason === DisconnectReason.timedOut) { console.log("Connection TimedOut, Reconnecting..."); connect(); }
+            else conn.end(`Unknown DisconnectReason: ${reason}|${connection}`)
+        }
+    })
 	conn.ev.on('creds.update', () => saveState)
 	
         conn.ev.on('group-participants.update', async (data) => {
