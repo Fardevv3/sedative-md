@@ -6,8 +6,7 @@ const {
 	DisconnectReason,
 	AnyMessageContent,
 	fetchLatestBaileysVersion, 
-    makeInMemoryStore,
-    jidNormalizedUser, 
+        jidNormalizedUser, 
 	useMultiFileAuthState,
 	delay
 } = require("@adiwajshing/baileys")
@@ -24,12 +23,11 @@ const { Spinner } = clui
 const { serialize, getBuffer } = require("./lib/myfunc");
 const { color, mylog, infolog } = require("./lib/color");
 const { encode } = require("punycode");
+const { makeInMemoryStore } = require("./lib/store");
 const time = moment(new Date()).format('HH:mm:ss DD/MM/YYYY')
 let setting = JSON.parse(fs.readFileSync('./config.json'));
-let session = `./${setting.sessionName}.json`
-const { state, saveCreds } = await useMultiFileAuthState(path.resolve('./sessions'))
-let { version, isLatest } = await fetchLatestBaileysVersion()
-console.log(`using WA v${version.join('.')}, isLatest: ${isLatest}`)
+let session = `./sessions`
+const { state, saveCreds } = useMultiFileAuthState(path.resolve('./sessions'))
 
 function title() {
     console.clear()
@@ -83,7 +81,6 @@ const store = makeInMemoryStore({ logger: logg().child({ level: 'silent', stream
 
 const connectToWhatsApp = async () => {
 	const conn = makeWASocket({
-		    version, 
             printQRInTerminal: true,
             logger: logg({ level: 'silent' }),
             auth: state,
