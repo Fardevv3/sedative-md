@@ -5,8 +5,7 @@ const {
 	initInMemoryKeyStore,
 	DisconnectReason,
 	AnyMessageContent,
-	fetchLatestBaileysVersion, 
-        jidNormalizedUser, 
+    jidNormalizedUser, 
 	useMultiFileAuthState,
 	delay
 } = require("@adiwajshing/baileys")
@@ -132,7 +131,7 @@ const connectToWhatsApp = async () => {
             else conn.end(`Unknown DisconnectReason: ${reason}|${connection}`)
         }
     })
-	conn.ev.on('creds.update', () => saveState)
+	conn.ev.on('creds.update', () => saveCreds)
 	
         conn.ev.on('group-participants.update', async (data) => {
             try {
