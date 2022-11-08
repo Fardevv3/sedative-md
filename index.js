@@ -77,14 +77,14 @@ const starting = new Spinner(chalk.cyan(` Preparing After Connect`))
 const reconnect = new Spinner(chalk.redBright(` Reconnecting WhatsApp Bot`))
 
 const store = makeInMemoryStore({ logger: logg().child({ level: 'silent', stream: 'store' }) })
+async function connectToWhatsApp()  {
 
-const connectToWhatsApp = async () => {
 	const conn = makeWASocket({
             printQRInTerminal: true,
             logger: logg({ level: 'silent' }),
             auth: state,
             browser: ["BOT-MD BY RAFLY", "Chrome", "3.0"]
-        })
+        })}
 	title()
         store.bind(conn.ev)
 	
@@ -108,7 +108,7 @@ const connectToWhatsApp = async () => {
 
     conn.ev.on("connection.update", async(update) => {
         if (update.connection == "open" && conn.type == "legacy") {
-            killua.user = {
+            conn.user = {
                 id: conn.state.legacy.user.id,
                 jid: conn.state.legacy.user.id,
                 name: conn.state.legacy.user.name
