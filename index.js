@@ -5,12 +5,10 @@ const {
 	initInMemoryKeyStore,
 	DisconnectReason,
 	AnyMessageContent,
-    jidNormalizedUser, 
+    makeInMemoryStore,
 	useMultiFileAuthState,
 	delay
 } = require("@adiwajshing/baileys")
-const { Boom } = require ('@hapi/boom')
-const path = require("path")
 const figlet = require("figlet");
 const lolcatjs = require('lolcatjs');
 const fs = require("fs");
@@ -22,11 +20,10 @@ const { Spinner } = clui
 const { serialize, getBuffer } = require("./lib/myfunc");
 const { color, mylog, infolog } = require("./lib/color");
 const { encode } = require("punycode");
-const { makeInMemoryStore } = require("./lib/store");
 const time = moment(new Date()).format('HH:mm:ss DD/MM/YYYY')
 let setting = JSON.parse(fs.readFileSync('./config.json'));
-let session = `./sessions`
-const { state, saveCreds } = useMultiFileAuthState(path.resolve('./sessions'))
+let session = `./${setting.sessionName}.json`
+const { state, saveCreds } = useMultiFileAuthState('./sessions')
 
 function title() {
     console.clear()
@@ -77,14 +74,14 @@ const starting = new Spinner(chalk.cyan(` Preparing After Connect`))
 const reconnect = new Spinner(chalk.redBright(` Reconnecting WhatsApp Bot`))
 
 const store = makeInMemoryStore({ logger: logg().child({ level: 'silent', stream: 'store' }) })
-async function connectToWhatsApp()  {
 
+const connectToWhatsApp = async () => {
 	const conn = makeWASocket({
             printQRInTerminal: true,
             logger: logg({ level: 'silent' }),
             auth: state,
-            browser: ["BOT-MD BY RAFLY", "Chrome", "3.0"]
-        })}
+            browser: ["BOT-MD BY RAFLY", "Safari", "3.0"]
+        })
 	title()
         store.bind(conn.ev)
 	
@@ -104,18 +101,19 @@ async function connectToWhatsApp()  {
 		msg.isBaileys = msg.key.id.startsWith('BAE5') || msg.key.id.startsWith('3EB0')
 		require('./message/msg')(conn, msg, m, setting, store)
 	})
-
-    conn.ev.on('connection.update', (update) => {
-        	if (global.qr !== update.qr) {
-            global.qr = update.qr
-        }
-                        const { connection, lastDisconnect } = update
-            if (connection === 'close') {
-          
-                lastDisconnect.error?.output?.statusCode !== DisconnectReason.loggedOut ? connectToWhatsApp() : console.log('connection logged out...')
-            }
-        })
-	conn.ev.on('creds.update', await saveCreds)
+	conn.ev.on('connection.update', (update) => {
+		const { connection, lastDisconnect } = update
+		if (connection === 'close') {
+			status.stop()
+			reconnect.stop()
+			starting.stop()
+			console.log(mylog('Server Ready ✓'))
+			lastDisconnect.error?.output?.statusCode !== DisconnectReason.loggedOut 
+			? connectToWhatsApp()
+			: console.log(mylog('Wa web terlogout...'))
+		}
+	})
+	conn.ev.on('creds.update', () => saveCreds)
 	
         conn.ev.on('group-participants.update', async (data) => {
             try {
@@ -129,7 +127,7 @@ async function connectToWhatsApp()  {
 				const mdata = await conn.groupMetadata(data.id)
 				const gcname = mdata.subject
 				const gcmem = mdata.participants.length
-				const bg = `https://i.postimg.cc/rFkw8MpX/IMG-20210807-151325.jpg`
+				const bg = `https://telegra.ph/file/334792947c7cde58b3078.jpg`
 
 				if (data.action == "add") {
 			    /*var buff = await getBuffer(`https://hardianto.xyz/api/welcome3?profile=${ppuser}&name=${i.split("@")[0]}&bg=https://telegra.ph/file/11f2e752e749f5412b52f.jpg&namegb=${encodeURI(mdata.subject)}&member=${mdata.participants.length}`)*/
