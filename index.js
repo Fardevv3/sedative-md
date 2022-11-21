@@ -1,11 +1,10 @@
-"use strict";
 const {
-	default: makeWASocket,
+	default: WASocket,
 	BufferJSON,
 	initInMemoryKeyStore,
 	DisconnectReason,
 	AnyMessageContent,
-    makeInMemoryStore,
+        makeInMemoryStore,
 	useMultiFileAuthState,
 	delay
 } = require("@adiwajshing/baileys")
