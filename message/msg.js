@@ -3,7 +3,7 @@ const {
 	downloadContentFromMessage
 } = require("@adiwajshing/baileys")
 const { color, bgcolor } = require('../lib/color')
-const { getBuffer, fetchJson, fetchText, getRandom, getGroupAdmins, runtime, sleep, makeid, convert } = require("../lib/myfunc");
+const { getBuffer, fetchJson, fetchText, getRandom, getGroupAdmins, runtime, sleep, makeid, convert, generateProfilePicture } = require("../lib/myfunc");
 const { webp2mp4File, ffmpeg, upload } = require("../lib/convert")
 const { pinterest } = require("../lib/pinterest")
 const { isLimit, limitAdd, getLimit, giveLimit, addBalance, kurangBalance, getBalance, isGame, gameAdd, givegame, cekGLimit } = require("../lib/limit");
@@ -21,7 +21,6 @@ const { exec, spawn } = require("child_process");
 const axios = require("axios");
 const hxz = require("hxz-api");
 const ra = require("ra-api");
-const Jimp = require("jimp");
 const { youtubeSearch } = require("@bochilteam/scraper");
 const speed = require("performance-now");
 const ms = require("parse-ms");
@@ -115,7 +114,7 @@ module.exports = async(conn, msg, m, setting, store) => {
       var ucapanWaktu = "Malam lord";
     }
     if (time2 < "18:00:00") {
-      var ucapanWaktu = "Sore";
+      var ucapanWaktu = "Sore lord";
     }
     if (time2 < "16:00:00") {
       var ucapanWaktu = "Siang lord";
@@ -129,16 +128,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 	if (time2 < "03:00:00") {
       var ucapanWaktu = "Gk tidur kak?";
     }
-                async function generateProfilePicture(buffer) {
-    const jimp = await Jimp.read(buffer)
-    const min = jimp.getWidth()
-    const max = jimp.getHeight()
-    const cropped = jimp.crop(0, 0, min, max)
-    return {
-        img: await cropped.scaleToFit(720, 720).getBufferAsync(Jimp.MIME_JPEG),
-        preview: await cropped.normalize().getBufferAsync(Jimp.MIME_JPEG)
-    }
-}
+
 		async function downloadAndSaveMediaMessage (type_file, path_file) {
 			if (type_file === 'image') {
 				var stream = await downloadContentFromMessage(msg.message.imageMessage || msg.message.extendedTextMessage?.contextInfo.quotedMessage.imageMessage, 'image')
@@ -1963,7 +1953,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 				if (!isBotGroupAdmins) return reply(mess.BotAdmin)
 			        var media = await downloadAndSaveMediaMessage(qmsg)
                 var group = from
-                var { img } = return generateProfilePicture(media)
+                var { img } = generateProfilePicture(media)
                 await conn.query({
                 tag: 'iq',
                 attrs: {
