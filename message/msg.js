@@ -95,6 +95,11 @@ module.exports = async(conn, msg, m, setting, store) => {
 		const isPremium = isOwner ? true : _prem.checkPremiumUser(sender, premium)
         const isBlocked = block.includes(sender, block)
 		
+                const text = q = args.join(" ")
+                const fatkuns = (m.quoted || m)
+                const quoted = (fatkuns.mtype == 'buttonsMessage') ? fatkuns[Object.keys(fatkuns)[1]] : (fatkuns.mtype == 'templateMessage') ? fatkuns.hydratedTemplate[Object.keys(fatkuns.hydratedTemplate)[1]] : (fatkuns.mtype == 'product') ? fatkuns[Object.keys(fatkuns)[0]] : m.quoted ? m.quoted : m
+                const mime = (quoted.msg || quoted).mimetype || ''
+                const qmsg = (quoted.msg || quoted)
 		const gcounti = setting.gcount
 		const gcount = isPremium ? gcounti.prem : gcounti.user
 
@@ -106,16 +111,16 @@ module.exports = async(conn, msg, m, setting, store) => {
 		
 		const time2 = moment().tz("Asia/Jakarta").format("HH:mm:ss");
     if (time2 < "24:59:00") {
-      var ucapanWaktu = "Selamat malam kak";
+      var ucapanWaktu = Malam lord";
     }
     if (time2 < "18:00:00") {
-      var ucapanWaktu = "Selamat sore kak";
+      var ucapanWaktu = "Sore";
     }
     if (time2 < "16:00:00") {
-      var ucapanWaktu = "Selamat siang kak";
+      var ucapanWaktu = "Siang lord";
     }
     if (time2 < "11:00:00") {
-      var ucapanWaktu = "Selamat pagi kak";
+      var ucapanWaktu = "Pagi lord";
     }
 	if (time2 < "05:00:00") {
       var ucapanWaktu = "Subuh lord";
@@ -1946,8 +1951,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 			    if (!isGroup) return reply(mess.OnlyGrup)
 				if (!isGroupAdmins) return reply(mess.GrupAdmin)
 				if (!isBotGroupAdmins) return reply(mess.BotAdmin)
-			        var image = (isImage || isQuotedImage) 
-				var media = await image.download()
+			        var media = await conn.downloadAndSaveMediaMessage(qmsg)
                 const group = from
                 var { img } = await conn.generateProfilePicture(media)
                 await conn.query({
@@ -1965,7 +1969,9 @@ module.exports = async(conn, msg, m, setting, store) => {
                }
                ]
                })
-               reply(`Success`)
+               await reply(`Success`)
+             } else {
+			      reply(`Kirim/balas gambar dengan caption ${command}`)}
 				break
 			case prefix+'setnamegrup': case prefix+'setnamegc':
 			    if (!isGroup) return reply(mess.OnlyGrup)
