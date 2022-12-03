@@ -97,9 +97,9 @@ module.exports = async(conn, msg, m, setting, store) => {
 		
                 const text = q = args.join(" ")
                 const fatkuns = (m.quoted || m)
-                const quoted = (fatkuns.mtype == 'buttonsMessage') ? fatkuns[Object.keys(fatkuns)[1]] : (fatkuns.mtype == 'templateMessage') ? fatkuns.hydratedTemplate[Object.keys(fatkuns.hydratedTemplate)[1]] : (fatkuns.mtype == 'product') ? fatkuns[Object.keys(fatkuns)[0]] : m.quoted ? m.quoted : m
-                const mime = (quoted.msg || quoted).mimetype || ''
-                const qmsg = (quoted.msg || quoted)
+                const q = (fatkuns.mtype == 'buttonsMessage') ? fatkuns[Object.keys(fatkuns)[1]] : (fatkuns.mtype == 'templateMessage') ? fatkuns.hydratedTemplate[Object.keys(fatkuns.hydratedTemplate)[1]] : (fatkuns.mtype == 'product') ? fatkuns[Object.keys(fatkuns)[0]] : m.quoted ? m.quoted : m
+                const mime = (q.msg || q).mimetype || ''
+                const qmsg = (q.msg || q)
 		const gcounti = setting.gcount
 		const gcount = isPremium ? gcounti.prem : gcounti.user
 
