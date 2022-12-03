@@ -14,6 +14,7 @@
   "license": "MIT",
   "dependencies": {
     "@adiwajshing/baileys": "github:amiruldev20/baileys",
+    "@bochilteam/scraper": "^3.0.0", 
     "@hapi/boom": "^10.0.0", 
     "awesome-phonenumber": "^3.2.0",
     "axios": "^0.24.0",
