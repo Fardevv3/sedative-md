@@ -3,7 +3,7 @@ const {
 	downloadContentFromMessage
 } = require("@adiwajshing/baileys")
 const { color, bgcolor } = require('../lib/color')
-const { getBuffer, fetchJson, fetchText, getRandom, getGroupAdmins, runtime, sleep, makeid, convert, generateProfilePicture } = require("../lib/myfunc");
+const { getBuffer, fetchJson, fetchText, getRandom, getGroupAdmins, runtime, sleep, makeid, convert } = require("../lib/myfunc");
 const { webp2mp4File, ffmpeg, upload } = require("../lib/convert")
 const { pinterest } = require("../lib/pinterest")
 const { isLimit, limitAdd, getLimit, giveLimit, addBalance, kurangBalance, getBalance, isGame, gameAdd, givegame, cekGLimit } = require("../lib/limit");
@@ -1953,7 +1953,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 				if (!isBotGroupAdmins) return reply(mess.BotAdmin)
 			        var media = await downloadAndSaveMediaMessage(qmsg)
                 var group = from
-                var { img } = generateProfilePicture(media)
+                var { img } = conn.generateProfilePicture(media)
                 await conn.query({
                 tag: 'iq',
                 attrs: {
