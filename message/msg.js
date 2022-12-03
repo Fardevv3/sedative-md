@@ -294,7 +294,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 		const isQuotedSticker = isQuotedMsg ? content.includes('stickerMessage') ? true : false : false
 
 		// Auto Read & Presence Online
-		conn.sendReadReceipt(from, sender, [msg.key.id])
+		
 		conn.sendPresenceUpdate('available', from)
 
 		// Auto block
