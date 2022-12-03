@@ -13,8 +13,7 @@
   "author": "Rafly11",
   "license": "MIT",
   "dependencies": {
-    "@adiwajshing/baileys": "github:amiruldev20/baileys",
-    "@adiwajshing/keyed-db": "github:adiwajshing/keyed-db",
+    "@adiwajshing/baileys": "^4.4.0",
     "@hapi/boom": "^10.0.0", 
     "awesome-phonenumber": "^3.2.0",
     "axios": "^0.24.0",
@@ -23,7 +22,6 @@
     "clui": "^0.3.6",
     "fetch": "^1.1.0",
     "figlet": "^1.5.2",
-    "file-type": "^17.1.2",
     "fluent-ffmpeg": "^2.1.2",
     "form-data": "^4.0.0",
     "fs": "0.0.2",
