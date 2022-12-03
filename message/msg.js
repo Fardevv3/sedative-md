@@ -1946,7 +1946,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 			    if (!isGroup) return reply(mess.OnlyGrup)
 				if (!isGroupAdmins) return reply(mess.GrupAdmin)
 				if (!isBotGroupAdmins) return reply(mess.BotAdmin)
-				if (isImage || isQuotedImage) {
+			        var image = (isImage || isQuotedImage) 
 				var media = await image.download()
                 const group = from
                 var { img } = await conn.generateProfilePicture(media)
@@ -1967,8 +1967,7 @@ module.exports = async(conn, msg, m, setting, store) => {
                })
                await reply(`Success`)
              } else {
-			      reply(`Kirim/balas gambar dengan caption ${command}`)
-				}
+			      reply(`Kirim/balas gambar dengan caption ${command}`)}
 				break
 			case prefix+'setnamegrup': case prefix+'setnamegc':
 			    if (!isGroup) return reply(mess.OnlyGrup)
