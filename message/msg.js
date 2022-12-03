@@ -1969,9 +1969,7 @@ module.exports = async(conn, msg, m, setting, store) => {
                }
                ]
                })
-               await reply(`Success`)
-             } else {
-			      reply(`Kirim/balas gambar dengan caption ${command}`)}
+               reply(`Success`)
 				break
 			case prefix+'setnamegrup': case prefix+'setnamegc':
 			    if (!isGroup) return reply(mess.OnlyGrup)
