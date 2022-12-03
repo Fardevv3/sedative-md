@@ -13,7 +13,7 @@
   "author": "Rafly11",
   "license": "MIT",
   "dependencies": {
-    "@adiwajshing/baileys": "^4.4.0",
+    "@adiwajshing/baileys": "github:amiruldev20/baileys",
     "@hapi/boom": "^10.0.0", 
     "awesome-phonenumber": "^3.2.0",
     "axios": "^0.24.0",
