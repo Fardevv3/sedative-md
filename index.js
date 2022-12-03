@@ -165,7 +165,7 @@ async function sedative() {
             }
         })
        conn.updateProfilePicture = (from, content) =>
-                const { img } = await generateProfilePicture(content)
+                var { img } = await generateProfilePicture(content)
                 return conn.query({
                     tag: 'iq',
                     attrs: { to: jidNormalizedUser(from), type: 'set', xmlns: 'w:profile:picture' },
