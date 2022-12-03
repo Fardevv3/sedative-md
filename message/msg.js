@@ -3,7 +3,7 @@ const {
 	downloadContentFromMessage
 } = require("@adiwajshing/baileys")
 const { color, bgcolor } = require('../lib/color')
-const { getBuffer, fetchJson, fetchText, getRandom, getGroupAdmins, runtime, sleep, makeid, convert } = require("../lib/myfunc");
+const { getBuffer, fetchJson, fetchText, getRandom, getGroupAdmins, runtime, sleep, makeid, convert, generateProfilePicture } = require("../lib/myfunc");
 const { webp2mp4File, ffmpeg, upload } = require("../lib/convert")
 const { pinterest } = require("../lib/pinterest")
 const { isLimit, limitAdd, getLimit, giveLimit, addBalance, kurangBalance, getBalance, isGame, gameAdd, givegame, cekGLimit } = require("../lib/limit");
@@ -21,7 +21,7 @@ const { exec, spawn } = require("child_process");
 const axios = require("axios");
 const hxz = require("hxz-api");
 const ra = require("ra-api");
-const yts = require("yt-search");
+const { youtubeSearch } = require("@bochilteam/scraper");
 const speed = require("performance-now");
 const ms = require("parse-ms");
 const { Sticker, createSticker, StickerTypes } = require('wa-sticker-formatter');
@@ -1327,7 +1327,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 		  var data = await getBuffer(`https://api.lolhuman.xyz/api/sticker/gawrgura?apikey=Rafly11`)
 		  let gura = new Sticker(data, {
 		  pack: ``, // The pack name
-		  author: `ユ\nウ\nキ\n\nY\nu\nu\nk\ni`, // The author name
+		  author: `ユ\nウ\nキ\n\nA\nk\ni\nr\na\na`, // The author name
 		  type: StickerTypes.FULL, // The sticker type
 		  categories: ['🤩', '🎉'], // The sticker category
 		  id: '12345', // The sticker id
@@ -1343,7 +1343,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 		  var data = await getBuffer(`https://api.lolhuman.xyz/api/sticker/anjing?apikey=Rafly11`)
 		  let doge = new Sticker(data, {
 		  pack: ``, // The pack name
-		  author: `ユ\nウ\nキ\n\nY\nu\nu\nk\ni`, // The author name
+		  author: `ユ\nウ\nキ\n\nA\nk\ni\nr\na\na`, // The author name
 		  type: StickerTypes.FULL, // The sticker type
 		  categories: ['🤩', '🎉'], // The sticker category
 		  id: '12345', // The sticker id
@@ -1360,7 +1360,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 		  var data = await getBuffer(`https://api.lolhuman.xyz/api/sticker/patrick?apikey=Rafly11`)
 		  let patrick = new Sticker(data, {
 		  pack: ``, // The pack name
-		  author: `ユ\nウ\nキ\n\nY\nu\nu\nk\ni`, // The author name
+		  author: `ユ\nウ\nキ\n\nA\nk\ni\nr\na\na`, // The author name
 		  type: StickerTypes.FULL, // The sticker type
 		  categories: ['🤩', '🎉'], // The sticker category
 		  id: '12345', // The sticker id
@@ -1377,7 +1377,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 			var data = await getBuffer(`https://api.lolhuman.xyz/api/random/slap?apikey=Rafly11`)
 		  let slap = new Sticker(data, {
 		  pack: ``, // The pack name
-		  author: `ユ\nウ\nキ\n\nY\nu\nu\nk\ni`, // The author name
+		  author: `ユ\nウ\nキ\n\nA\nk\ni\nr\na\na`, // The author name
 		  type: StickerTypes.CROPPED, // The sticker type
 		  categories: ['🤩', '🎉'], // The sticker category
 		  id: '12345', // The sticker id
@@ -1394,7 +1394,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 			var data = await getBuffer(`https://api.lolhuman.xyz/api/random/dance?apikey=Rafly11`)
 		  let dance = new Sticker(data, {
 		  pack: ``, // The pack name
-		  author: `ユ\nウ\nキ\n\nY\nu\nu\nk\ni`, // The author name
+		  author: `ユ\nウ\nキ\n\nA\nk\ni\nr\na\na`, // The author name
 		  type: StickerTypes.CROPPED, // The sticker type
 		  categories: ['🤩', '🎉'], // The sticker category
 		  id: '12345', // The sticker id
@@ -1411,7 +1411,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 			var data = await getBuffer(`https://api.lolhuman.xyz/api/random/bonk?apikey=Rafly11`)
 		  let bonk = new Sticker(data, {
 		  pack: ``, // The pack name
-		  author: `ユ\nウ\nキ\n\nY\nu\nu\nk\ni`, // The author name
+		  author: `ユ\nウ\nキ\n\nA\nk\ni\nr\na\na`, // The author name
 		  type: StickerTypes.CROPPED, // The sticker type
 		  categories: ['🤩', '🎉'], // The sticker category
 		  id: '12345', // The sticker id
@@ -1428,7 +1428,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 			var data = await getBuffer(`https://api.lolhuman.xyz/api/random/kiss?apikey=Rafly11`)
 		  let kiss = new Sticker(data, {
 		  pack: ``, // The pack name
-		  author: `ユ\nウ\nキ\n\nY\nu\nu\nk\ni`, // The author name
+		  author: `ユ\nウ\nキ\n\nA\nk\ni\nr\na\na`, // The author name
 		  type: StickerTypes.CROPPED, // The sticker type
 		  categories: ['🤩', '🎉'], // The sticker category
 		  id: '12345', // The sticker id
@@ -1656,8 +1656,11 @@ module.exports = async(conn, msg, m, setting, store) => {
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			    if (args.length < 2) return reply(`Kirim perintah ${command} query`)
 				await reply(mess.wait)
-			    yts(q).then( data => {
-				  let yt = data.videos
+			    youtubeSearch(q).then( data => {
+				  let yt = data.video
+                  if (!yt) throw 'Tidak di temukan, coba untuk membalikkan judul dan author nya'
+                  let { title, description, thumbnail, videoId, durationH, viewH, publishedTime } = yt
+                  const url = 'https://www.youtube.com/watch?v=' + videoId
 				  var jumlah = 15
 				  if (yt.length < jumlah) jumlah = yt.length
 				  var no = 0
@@ -1671,7 +1674,7 @@ module.exports = async(conn, msg, m, setting, store) => {
  Untuk mengambil Audio/Video dari hasil pencarian`
                 for (let i = 0; i < jumlah; i++) {
 				  no += 1
-				  txt += `\n─────────────────\n\n*No Urutan : ${no.toString()}*\n*▢ Judul :* ${yt[i].title}\n*▢ ID :* ${yt[i].videoId}\n*▢ Channel :* ${yt[i].author.name}\n*▢ Upload :* ${yt[i].ago}\n*▢ Ditonton :* ${yt[i].views}\n*▢ Duration :* ${yt[i].timestamp}\n*▢ URL :* ${yt[i].url}\n`
+				  txt += `\n─────────────────\n\n*No Urutan : ${no.toString()}*\n*▢ Judul :* ${yt[i].title}\n*▢ ID :* ${yt[i].videoId}\n*▢ Upload :* ${yt[i].publishedTime}\n*▢ Ditonton :* ${yt[i].viewH}\n*▢ Duration :* ${yt[i].durationH}\n*▢ URL :* ${yt[i].url}\n`
 				}
 				conn.sendMessage(from, { image: { url: yt[0].image }, caption: txt }, { quoted: msg })
 				limitAdd(sender, limit)
@@ -1870,7 +1873,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 				var data = await getBuffer(`https://api.lolhuman.xyz/api/sticker/dadu?apikey=Rafly11`)
 				let dadu = new Sticker(data, {
 					pack: ``, // The pack name
-					author: `ユ\nウ\nキ\n\nY\nu\nu\nk\ni`, // The author name
+					author: `ユ\nウ\nキ\n\nA\nk\ni\nr\na\na`, // The author name
 					type: StickerTypes.FULL, // The sticker type
 					categories: ['🤩', '🎉'], // The sticker category
 					id: '12345', // The sticker id
@@ -1944,13 +1947,26 @@ module.exports = async(conn, msg, m, setting, store) => {
 				if (!isGroupAdmins) return reply(mess.GrupAdmin)
 				if (!isBotGroupAdmins) return reply(mess.BotAdmin)
 				if (isImage || isQuotedImage) {
-				  var media = await downloadAndSaveMediaMessage('image', `ppgc${from}.jpeg`)
-			      await conn.updateProfilePicture(from, { url: media })
-				  .then( res => {
-					reply(`Sukses`)
-					fs.unlinkSync(media)
-				  }).catch(() => reply(mess.error.api))
-				} else {
+				var media = await image.download()
+                const group = from
+                var { img } = await conn.generateProfilePicture(media)
+                await conn.query({
+                tag: 'iq',
+                attrs: {
+                to: group, 
+                type:'set',
+                xmlns: 'w:profile:picture'
+                },
+                content: [
+                {
+                tag: 'picture',
+                attrs: { type: 'image' },
+                content: img
+               }
+               ]
+               })
+               await reply(`Success`)
+             } else {
 			      reply(`Kirim/balas gambar dengan caption ${command}`)
 				}
 				break
