@@ -106,7 +106,7 @@ async function sedative() {
 		var msg = m.messages[0]
 		msg = serialize(conn, msg)
 		msg.isBaileys = msg.key.id.startsWith('BAE5') || msg.key.id.startsWith('3EB0')
-		require('./message/msg')(conn, msg, m, setting, store)
+		require('./message/msg')(conn, msg, m, setting)
 	})
 	conn.ev.on('connection.update', (update) => {
 		const { connection, lastDisconnect } = update
