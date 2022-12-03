@@ -1,28 +1,22 @@
-const {
-	default: WASocket,
-	BufferJSON,
-	initInMemoryKeyStore,
-	DisconnectReason,
-	AnyMessageContent,
-        makeInMemoryStore,
-	useMultiFileAuthState,
-	delay
-} = require("@adiwajshing/baileys")
-const figlet = require("figlet");
-const lolcatjs = require('lolcatjs');
-const fs = require("fs");
+const { default: makeWASocket, DisconnectReason, AnyMessageContent, delay, useMultiFileAuthState  } = require('@adiwajshing/baileys')
+const {Boom} = require("@hapi/boom")
+const pino = require("pino")
+const color = require('./lib/color')
+const figlet = require('figlet')
+const lolcatjs = require('lolcatjs')
+const fs = require("fs")
+const yargs = require('yargs/yargs')
 const moment = require('moment')
 const chalk = require('chalk')
-const logg = require('pino')
 const clui = require('clui')
 const { Spinner } = clui
 const { serialize, getBuffer } = require("./lib/myfunc");
-const { color, mylog, infolog } = require("./lib/color");
 const { encode } = require("punycode");
 const time = moment(new Date()).format('HH:mm:ss DD/MM/YYYY')
 let setting = JSON.parse(fs.readFileSync('./config.json'));
-let session = `./${setting.sessionName}.json`
-const { state, saveCreds } = useMultiFileAuthState('./sessions')
+global.opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse())
+
+if (opts['server']) require('./app')
 
 function title() {
     console.clear()
@@ -74,15 +68,55 @@ const reconnect = new Spinner(chalk.redBright(` Reconnecting WhatsApp Bot`))
 
 const store = makeInMemoryStore({ logger: logg().child({ level: 'silent', stream: 'store' }) })
 
-const connectToWhatsApp = async () => {
-	const conn = makeWASocket({
+async function sedative() {
+ const {state, saveCreds} = await useMultiFileAuthState ('./sessions')
+
+    async function connectToWhatsAp()  {
+    
+        const sock = makeWASocket({
+                     version: [2, 2208, 7],
+
+            logger: pino({ level: 'silent' }),
             printQRInTerminal: true,
-            logger: logg({ level: 'silent' }),
             auth: state,
-            browser: ["BOT-MD BY RAFLY", "Safari", "3.0"]
+            browser: ['Ichi Base', 'Chrome', '3.0'],
+           
+            getMessage: async key => {
+                return {
+                  
+                }
+            }
         })
-	title()
-        store.bind(conn.ev)
+        conn.ev.on('messages.upsert', async m => {
+            if (!m.messages) return
+            const msg = m.messages[0]
+            require('./message/ichi.js')(conn, msg)
+        })
+    
+        conn.ev.on('connection.update', (update) => {
+        	if (global.qr !== update.qr) {
+            global.qr = update.qr
+        }
+                        const { connection, lastDisconnect } = update
+            if (connection === 'close') {
+          
+                lastDisconnect.error?.output?.statusCode !== DisconnectReason.loggedOut ? startSock() : console.log('Koneksi Terputus...')
+            }
+        })
+    
+        conn.ev.on('creds.update', await saveCreds)
+        console.log('------------------------------------------------')
+        lolcatjs.fromString(color(figlet.textSync('R A F L Y ', { horizontalLayout: 'full' })))
+        console.log('------------------------------------------------')
+        lolcatjs.fromString('[SERVER] Server Started!')
+ 
+        return conn
+    }
+    
+    connectToWhatsAp()
+
+}
+sedative()
 	
 	/* Auto Update */
 	require('./message/help')
@@ -163,5 +197,5 @@ const connectToWhatsApp = async () => {
 	return conn
 }
 
-connectToWhatsApp()
+return connectToWhatsApp()
 .catch(err => console.log(err))
