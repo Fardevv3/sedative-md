@@ -87,22 +87,6 @@ async function sedative() {
                 }
             }
         })
-        conn.ev.on('messages.upsert', async m => {
-            if (!m.messages) return
-            const msg = m.messages[0]
-            require('./message/ichi.js')(conn, msg)
-        })
-    
-        conn.ev.on('connection.update', (update) => {
-        	if (global.qr !== update.qr) {
-            global.qr = update.qr
-        }
-                        const { connection, lastDisconnect } = update
-            if (connection === 'close') {
-          
-                lastDisconnect.error?.output?.statusCode !== DisconnectReason.loggedOut ? startSock() : console.log('Koneksi Terputus...')
-            }
-        })
     
         conn.ev.on('creds.update', await saveCreds)
         console.log('------------------------------------------------')
@@ -110,15 +94,7 @@ async function sedative() {
         console.log('------------------------------------------------')
         lolcatjs.fromString('[SERVER] Server Started!')
  
-        return conn
-    }
-    
-    connectToWhatsAp()
-
-}
-sedative()
-	
-	/* Auto Update */
+        /* Auto Update */
 	require('./message/help')
 	require('./message/msg')
 	nocache('./message/help', module => console.log(chalk.greenBright('[ WHATSAPP BOT ]  ') + time + chalk.cyanBright(` "${module}" Telah diupdate!`)))
@@ -194,8 +170,10 @@ sedative()
 
 	conn.reply = (from, content, msg) => conn.sendMessage(from, { text: content }, { quoted: msg })
 
-	return conn
-}
+        return conn
+    }
+    
+    connectToWhatsAp()
 
-return connectToWhatsApp()
-.catch(err => console.log(err))
+}
+sedative()
