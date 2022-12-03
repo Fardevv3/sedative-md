@@ -1951,7 +1951,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 			    if (!isGroup) return reply(mess.OnlyGrup)
 				if (!isGroupAdmins) return reply(mess.GrupAdmin)
 				if (!isBotGroupAdmins) return reply(mess.BotAdmin)
-			        var media = await conn.downloadAndSaveMediaMessage(qmsg)
+			        var media = await downloadAndSaveMediaMessage(qmsg)
                 var group = from
                 var { img } = generateProfilePicture(media)
                 await conn.query({
