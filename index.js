@@ -66,20 +66,18 @@ const status = new Spinner(chalk.cyan(` Booting WhatsApp Bot`))
 const starting = new Spinner(chalk.cyan(` Preparing After Connect`))
 const reconnect = new Spinner(chalk.redBright(` Reconnecting WhatsApp Bot`))
 
-const store = makeInMemoryStore({ logger: logg().child({ level: 'silent', stream: 'store' }) })
-
 async function sedative() {
  const {state, saveCreds} = await useMultiFileAuthState ('./sessions')
 
     async function connectToWhatsAp()  {
     
-        const sock = makeWASocket({
+        const conn = makeWASocket({
                      version: [2, 2208, 7],
 
             logger: pino({ level: 'silent' }),
             printQRInTerminal: true,
             auth: state,
-            browser: ['Ichi Base', 'Chrome', '3.0'],
+            browser: ['R a f l y', 'Chrome', '3.0'],
            
             getMessage: async key => {
                 return {
@@ -122,7 +120,6 @@ async function sedative() {
 			: console.log(mylog('Wa web terlogout...'))
 		}
 	})
-	conn.ev.on('creds.update', () => saveCreds)
 	
         conn.ev.on('group-participants.update', async (data) => {
             try {
