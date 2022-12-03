@@ -111,7 +111,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 		
 		const time2 = moment().tz("Asia/Jakarta").format("HH:mm:ss");
     if (time2 < "24:59:00") {
-      var ucapanWaktu = Malam lord";
+      var ucapanWaktu = "Malam lord";
     }
     if (time2 < "18:00:00") {
       var ucapanWaktu = "Sore";
