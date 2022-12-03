@@ -1,10 +1,10 @@
 const { default: makeWASocket, DisconnectReason, AnyMessageContent, delay, useMultiFileAuthState  } = require('@adiwajshing/baileys')
 const {Boom} = require("@hapi/boom")
 const pino = require("pino")
-const color = require('./lib/color')
-const figlet = require('figlet')
-const lolcatjs = require('lolcatjs')
-const fs = require("fs")
+const color = require('./lib/color');
+const figlet = require('figlet');
+const lolcatjs = require('lolcatjs');
+const fs = require("fs");
 const yargs = require('yargs/yargs')
 const moment = require('moment')
 const chalk = require('chalk')
