@@ -572,7 +572,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 'showAdAttribution':true, 
 'mediaType':1,
 'previewType':'pdf',
-'title':'𝚂𝙴𝙳𝙰𝚃𝙸𝚅𝙴 | ボット ,
+'title':'𝚂𝙴𝙳𝙰𝚃𝙸𝚅𝙴 | ボット',
 'thumbnail':fs.readFileSync('./media/menupic.jpeg'),
 'renderLargerThumbnail': true,
 'sourceUrl':'https://nhentai.net/'}},
