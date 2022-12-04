@@ -576,7 +576,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 'thumbnail':fs.readFileSync('./media/menupic.jpeg'),
 'renderLargerThumbnail': true,
 'sourceUrl':'https://nhentai.net/'}},
-'caption':teks, ,
+'caption':teks,
 'footer':setting.fake,
 'buttons':[
 {'buttonId':'-owner','buttonText':{'displayText':'𝘰𝘸𝘯𝘦𝘳'},'type':1},
