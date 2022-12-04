@@ -579,8 +579,8 @@ module.exports = async(conn, msg, m, setting, store) => {
 'caption':teks,
 'footer':setting.fake,
 'buttons':[
-{'buttonId':'-owner','buttonText':{'displayText':'𝘰𝘸𝘯𝘦𝘳'},'type':1},
-{'buttonId':'-changelog':{'displayText':'𝘤𝘩𝘢𝘯𝘨𝘦𝘭𝘰𝘨'},'type':1}, 
+{'buttonId':'-owner','buttonText':{'displayText':'𝘖𝘸𝘯𝘦𝘳'},'type':1},
+{'buttonId':'-changelog','buttonText':{'displayText':'𝘊𝘩𝘢𝘯𝘨𝘦𝘭𝘰𝘨'},'type':1}, 
 {'buttonId':'bot','buttonText':{'displayText':'𝘛𝘦𝘴'},'type':1},
 ],
 'headerType':6}
