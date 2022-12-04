@@ -1951,25 +1951,14 @@ module.exports = async(conn, msg, m, setting, store) => {
 			    if (!isGroup) return reply(mess.OnlyGrup)
 				if (!isGroupAdmins) return reply(mess.GrupAdmin)
 				if (!isBotGroupAdmins) return reply(mess.BotAdmin)
-			        var media = await downloadAndSaveMediaMessage(qmsg)
-                var group = from
-                var cok = generateProfilePicture(media)
-                await conn.query({
-                tag: 'iq',
-                attrs: {
-                to: group, 
-                type:'set',
-                xmlns: 'w:profile:picture'
-                },
-                content: [
-                {
-                tag: 'picture',
-                attrs: { type: 'image' },
-                content: cok
-               }
-               ]
-               })
-               reply(`Success`)
+			        if (isImage || isQuotedImage) {
+				  var media = await downloadAndSaveMediaMessage('image', 'ppbot.jpeg')
+				  var data =  await conn.updateProfilePicture(botNumber, { url: media })
+			      fs.unlinkSync(media)
+				  reply(`Sukses`)
+				} else {
+				  reply(`Kirim/balas gambar dengan caption ${command} untuk mengubah foto profil bot`)
+				}
 				break
 			case prefix+'setnamegrup': case prefix+'setnamegc':
 			    if (!isGroup) return reply(mess.OnlyGrup)
