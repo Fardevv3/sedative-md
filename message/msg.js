@@ -561,30 +561,30 @@ module.exports = async(conn, msg, m, setting, store) => {
 			case prefix+'menu':
 			case prefix+'help':
 			    var teks = allmenu(pushname, prefix)
-				var buttonsDefault = [
-					{ callButton: { displayText: `OWNER NUMBER`, phoneNumber: `+62 812-3479-5656` } },
-					{ urlButton: { displayText: `BOT GROUP`, url : `https://chat.whatsapp.com/FdXRCtaTQrHG8jqmdNdEMn` } },
-					{ quickReplyButton: { displayText: `Info`, id: `${prefix}info` } },
-					{ quickReplyButton: { displayText: `Changelog`, id: `${prefix}changelog` } }
-				]
-				var buttonsDefault2 = [{ y: { displayText: `y`, id: `y` } }]
-				if (isGroup) {
-				conn.sendMessage(from, { 
-					caption: teks, 
-					video: fs.readFileSync(setting.pathgif), 
-					gifPlayback: true, 
-					fileLength: 887890909999999, 
-					templateButtons: buttonsDefault,
-					footer: setting.fake })
-				} else if (!isGroup) {
-				conn.sendMessage(from, { 
-					caption: teks, 
-					video: fs.readFileSync(setting.pathgif), 
-					gifPlayback: true, 
-					fileLength: 887890909999999, 
-					templateButtons: buttonsDefault2,
-					footer: setting.fake })
-				}
+			let buttonMessage= {
+'document':{'url':'https://github.com/'},
+'mimetype':'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+'fileName':setting.botName,
+'fileLength':'999999999999999',
+'pageCount':'505',
+'contextInfo':{
+'externalAdReply':{
+'showAdAttribution':true, 
+'mediaType':1,
+'previewType':'pdf',
+'title':'𝚂𝙴𝙳𝙰𝚃𝙸𝚅𝙴 | ボット ,
+'thumbnail':fs.readFileSync('./media/menupic.jpeg'),
+'renderLargerThumbnail': true,
+'sourceUrl':'https://nhentai.net/'}},
+'caption':teks, ,
+'footer':setting.fake,
+'buttons':[
+{'buttonId':'-owner','buttonText':{'displayText':'𝘰𝘸𝘯𝘦𝘳'},'type':1},
+{'buttonId':'-changelog':{'displayText':'𝘤𝘩𝘢𝘯𝘨𝘦𝘭𝘰𝘨'},'type':1}, 
+{'buttonId':'bot','buttonText':{'displayText':'𝘛𝘦𝘴'},'type':1},
+],
+'headerType':6}
+    await conn.sendMessage(from, buttonMessage, { quoted:ftokoo })
 				break
 			case prefix+'info':{
 				const user = JSON.parse(fs.readFileSync('./database/user.json'))
@@ -1953,7 +1953,7 @@ module.exports = async(conn, msg, m, setting, store) => {
 				if (!isBotGroupAdmins) return reply(mess.BotAdmin)
 			        var media = await downloadAndSaveMediaMessage(qmsg)
                 var group = from
-                var { img } = generateProfilePicture(media)
+                var cok = generateProfilePicture(media)
                 await conn.query({
                 tag: 'iq',
                 attrs: {
@@ -1965,7 +1965,7 @@ module.exports = async(conn, msg, m, setting, store) => {
                 {
                 tag: 'picture',
                 attrs: { type: 'image' },
-                content: img
+                content: cok
                }
                ]
                })
